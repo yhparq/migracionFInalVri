@@ -1,0 +1,18 @@
+id,nombre,descripcion
+1,Carga de proyecto,El tesista carga el proyecto
+2,Revisión de formato de proyecto,El formato es revisado por Coordinación de Investigación
+3,Revisión por el director de la tesis,El director(asesor) de la tesis revisa el contenido del proyecto para su aprobación
+4,Revisión por el subdirector de investigación,El sub/director de la unidad de investigación revisa el proyecto y los documento anexados para su aprobación
+5,Sorteo de jurados,El sub/director de la unidad de investigación realiza el sorteo de jurados
+6,Proyecto en revisión,El proyecto se encuentra en revisión por parte de los jurados
+7,Dictamen de proyecto de investigación,El proyecto se encuentra en la etapa de dictamen por parte de los jurados
+8,Generación de acta de dictamen,Los jurados finalizaron su dictaminación y se generó el acta de dictamen
+9,Etapa de borrador de tesis habilitado,El tesista ha cargado los requisitos necesarios para iniciar la etapa de borrador de tesis
+10,Carga de borrador de tesis,El tesista carga el borrador de tesis
+11,Revisión de formato de borrador,El formato es revisado por Coordinación de Investigación
+12,Revisión de borrador por jurados,El borrador es revisado por los jurados
+13,Dictamen de borrador de tesis,El presidente de jurado realiza el dictamen
+14,Carga archivos para sustentación,El tesista sube los archivos necesarios para sustentar como la tesis final y las diapositivas
+15,Sustentación,El tesista sustenta la tesis
+16,Carga de archivo final,El tesista carga el archivo final de su tesis
+17,Trámite Concluido,El proceso de tesis ha finalizado

@@ -1,0 +1,13 @@
+id,descripcion,id_etapa
+1,Corrección de proyecto de tesis pendiente,6
+2,Corrección de proyecto de tesis finalizada,6
+3,Dictaminacion proyecto de tesis aprobado,7
+4,Dictaminacion proyecto de tesis aprobado con observaciones,7
+6,Dictaminacion proyecto de tesis rechazado,7
+7,Corrección de borrador de tesis pendiente,12
+8,Corrección de borrador de tesis finalizada,12
+9,Dictaminacion Tesis aprobada,15
+10,Dictaminacion Tesis desaprobado,15
+11,Dictaminacion Tesis aprobada con distincion,15
+12,Dictaminacion proyecto de tesis pendiente,7
+13,Dictaminacion de tesis pendiente,15

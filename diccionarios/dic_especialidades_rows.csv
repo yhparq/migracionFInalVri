@@ -1,0 +1,15 @@
+id,id_carrera,nombre,estado_especialidad
+1,,no definido,1
+2,11,Artes Plásticas,1
+3,11,Danza,1
+4,11,Música,1
+5,11,Teatro,1
+6,16,Ecología,1
+7,16,Microbiología y Laboratorio Clínico,1
+8,16,Pesquería,1
+9,29,Física,1
+10,29,Matemáticas,1
+11,20,"Especialidad de Ciencia, Tecnología y Ambiente",1
+12,20,Especialidad de Ciencias Sociales,1
+13,20,"Especialidad de Lengua, Literatura, Psicología y Filosofía",1
+14,20,"Especialidad de Matemática, Física, Computación e Informática",1

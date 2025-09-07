@@ -1,0 +1,34 @@
+id,nombre,abreviatura,estado_dic_universidades,pais,tipo_institucion,tipo_gestion
+1,Universidad Nacional Mayor de San Marcos,UNMSM,true,Perú,U,N
+2,Universidad Nacional de Ingeniería,UNI,true,Perú,U,N
+3,Universidad Nacional Agraria la Molina,UNALM,true,Perú,U,N
+4,Universidad Nacional de San Antonio Abad del Cusco,UNSAAC,true,Perú,U,N
+5,Universidad Nacional de la Amazonía Peruana,UNAP,true,Perú,U,N
+6,Universidad Nacional de Piura,UNP,true,Perú,U,N
+7,Universidad Nacional de San Martín,UNSM,true,Perú,U,N
+8,Universidad Nacional del Centro del Perú,UNCP,true,Perú,U,N
+9,Universidad Nacional de Barranca,UNAB,true,Perú,U,N
+10,Universidad Nacional de Jaén,UNJ,true,Perú,U,N
+11,Universidad Nacional de Moquegua,UNAM,true,Perú,U,N
+12,Universidad Nacional José María Arguedas,UNAJMA,true,Perú,U,N
+13,Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas,UNTRM,true,Perú,U,N
+14,Universidad Nacional Autónoma de Huanta,UNAH,true,Perú,U,N
+15,Universidad Nacional de Frontera,UNF,true,Perú,U,N
+16,Universidad Nacional del Santa,UNS,true,Perú,U,N
+17,Universidad Nacional Autónoma de Tayacaja “Daniel Hernández Morillo”,UNAT,true,Perú,U,N
+18,Universidad Nacional Intercultural de Quillabamba,UNIQ,true,Perú,U,N
+19,Universidad Nacional Intercultural de la selva central Juan Santos Atahualpa,UNISCJSA,true,Perú,U,N
+20,Pontificia Universidad Católica del Perú,PUCP,true,Perú,U,P
+21,Universidad de Ciencias y Humanidades,UCH,true,Perú,U,P
+22,Universidad Católica de Santa María,UCSM,true,Perú,U,P
+23,Universidad Católica San Pablo,UCSP,true,Perú,U,P
+24,Universidad Andina del Cusco,UAC,true,Perú,U,P
+25,Universidad Antonio Ruiz de Montoya,UARM,true,Perú,U,P
+26,Universidad Autónoma del Perú,UA,true,Perú,U,P
+27,Facultad de Teología Pontificia y Civil de Lima,FTPCL,true,Perú,E,P
+28,Universidad Privada Norbert Wiener,UWIENER,true,Perú,U,P
+29,Universidad Privada San Juan Bautista,UPSJB,true,Perú,U,P
+30,Universidad Privada Peruano Alemana,UPAL,true,Perú,U,P
+31,Universidad de Ingeniería y Tecnología,UTEC,true,Perú,U,P
+32,Escuela de Posgrado Newman S.A.C.,EPN,true,Perú,E,P
+33,Escuela de Postgrado Gerens S.A.,GERENS,true,Perú,E,P

@@ -1,0 +1,33 @@
+id,nombre,descripcion,id_etapa_pertenencia
+1,generar codigo proyecto,el tesista da inicio a su trámite y generó el código de proyecto del trámite,1
+2,integrantes del proyecto,se definió los integrantes para el proyecto de tesis,1
+3,culminación de etapa 1,"el tesista subió y cargó todos los datos y documentos necesarios requeridos en la etapa 1 (metadatos, línea, asesor, archivos)",1
+4,inicio de etapa 2,el proyecto pasó a la etapa dos a ser revisado por el coordinador de investigación,2
+5,formato de proyecto desaprobado / enviado para corregir,el coordinador desaprueba el formato de proyecto y lo envia para corrección del tesista,2
+6,formato de proyecto aprobado,el coordinador aprueba el formato de proyecto,2
+7,envio de correcciones,el tesista envia correcciones hechas por el coordinador,2
+8,culminación de etapa 2,el tesista es aprobado y culmina etapa 2,2
+9,inicio de etapa 3,el proyecto pasa a la etapa 3,3
+10,proyecto desaprobado/enviado para corregir por asesor,director/asesor solicita correcciones etapa 3,3
+11,proyecto aprobado por director/asesor,"el director asesor aprueba el proyecto ",3
+12,envió de correcciones,el tesista envia correcciones hechas por el director/asesor,3
+13,culminación de etapa 3,el tesista es aprobado y culmina la etapa 3,3
+14,inicio de etapa 4,el proyecto pasa a la etapa 4,4
+15,proyecto desaprobado/enviado para corregir única vez,sub/director pide correcciones unica vez,4
+16,envió de correcciones,el tesista envía correcciones por única vez,4
+17,proyecto desaprobado y archivado,sub/director  desaprueba el proyecto,4
+18,proyecto aprobado por sub/director,el sub/director aprueba el proyecto,4
+19,culminación de etapa 4,proyecto aprobado y culmina etapa 4,4
+20,inicio de etapa 5,el proyecto pasa a la etapa 5,5
+21,sorteo de jurados,sub/director realiza sorteo,5
+22,culminación de etapa 5,proyecto cuenta con jurados y culmina etapa 5,5
+23,inicio de etapa 6,proyecto inicia etapa 6,6
+24,jurados finalizan correcion,los mienbros de jurado finalizan sus correciones,6
+25,envio de correciones a los jurados,el tesista envia sus correciones a los jurados,6
+26,proyecto aprobado por mayoria,dsad,8
+27,proyecto aprobado por unanimidad,asdsa,8
+28,proyecto aprobado por reglamento,asdsa,8
+29,proyecto desaprobado,asd,8
+30,tesis aprobada,sda,15
+31,tesis aprobada con distincion,123,15
+32,tesis desaprobada,sda,15

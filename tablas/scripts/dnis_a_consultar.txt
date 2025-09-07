@@ -1,0 +1,5 @@
+# Coloca aquí un DNI por cada línea.
+# El script ignorará las líneas vacías o que no tengan 8 dígitos.
+12345678
+87654321
+11223344
