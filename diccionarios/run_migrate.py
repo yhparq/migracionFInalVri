@@ -31,6 +31,8 @@ from migrar_dic_especialidades import migrate_dic_especialidades_from_csv
 from migrar_dic_denominaciones import migrate_dic_denominaciones_from_csv
 from migrar_dic_acciones import migrate_dic_acciones_from_csv
 from migrar_dic_visto_bueno import migrate_dic_visto_bueno_from_csv
+from migrar_dic_nivel_admin import migrar_dic_nivel_admin
+from migrar_dic_nivel_coordinador import migrar_dic_nivel_coordinador
 
 def clean_database_tables():
     """
@@ -115,6 +117,8 @@ def main():
     migrate_dic_denominaciones_from_csv()
     migrate_dic_acciones_from_csv()
     migrate_dic_visto_bueno_from_csv()
+    migrar_dic_nivel_admin()
+    migrar_dic_nivel_coordinador()
     
     # (Aquí se llamarán las demás migraciones)
     

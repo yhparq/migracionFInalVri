@@ -79,11 +79,11 @@ def migrate_tbl_docentes_lineas_historial():
             obs_text = row['Obs']
 
             if estado_val == 1:
-                data_for_copy.append((new_docente_id, id_linea, estado_val, fecha_original, None, 1))
+                data_for_copy.append((new_docente_id, id_linea, estado_val, fecha_original, 'S/R', 1))
             elif estado_val in [0, 2]:
                 fecha_registro_obs = parse_fecha_from_obs(obs_text, fecha_original)
-                data_for_copy.append((new_docente_id, id_linea, estado_val, fecha_registro_obs, None, 1))
-                data_for_copy.append((new_docente_id, id_linea, 1, fecha_original, None, 0))
+                data_for_copy.append((new_docente_id, id_linea, estado_val, fecha_registro_obs, 'S/R', 1))
+                data_for_copy.append((new_docente_id, id_linea, 1, fecha_original, 'S/R', 0))
 
         print(f"  Se prepararon {len(data_for_copy)} registros para la carga masiva.")
         if unmatched_docentes > 0:
