@@ -25,6 +25,15 @@ from migrar_tbl_dictamenes_sustentaciones   import migrate_tbl_dictamenes_susten
 from migrar_tbl_admins import migrar_tbl_admins
 from migrar_tbl_coordinadores import migrar_tbl_coordinadores
 from migrar_tbl_coordinador_carrera import migrar_tbl_coordinador_carrera
+from poblar_estudios_sunedu import populate_sunedu_data_directly
+from migrar_tbl_usuarios_servicios import migrar_tbl_usuarios_servicios
+from migrar_log_acciones import migrar_log_acciones
+from migrar_tbl_grado_docente import migrate_tbl_grado_docente
+from migrar_perfil_investigador import migrate_perfil_investigador_from_csv
+from migrar_tbl_coasesores import migrate_coasesores
+from migrar_tbl_coordinadores_historial import migrar_coordinadores_historial
+from migrar_tbl_coasesores_historial import migrar_tbl_coasesores_historial
+
 
 def clean_transactional_tables():
     """
@@ -94,18 +103,26 @@ def main():
     migrate_tbl_tramites_fast()
     migrate_docente_categoria_historial_mapeado()
     create_system_user()
-    # migrate_tbl_asignacion_jurado_fast()
-    # migrate_tbl_conformacion_jurado_fast()
-    # migrate_tbl_correcciones_jurados()
-    # migrate_tbl_tramites_det()
-    # migrate_tbl_docentes_lineas()
-    # migrate_tbl_docentes_lineas_historial()
-    # migrate_tbl_dictamenes_info()
-    # migrate_tbl_dictamenes_sustentaciones()
-    # migrar_tbl_admins()
+    migrate_tbl_asignacion_jurado_fast()
+    migrate_tbl_conformacion_jurado_fast()
+    migrate_tbl_correcciones_jurados()
+    migrate_tbl_tramites_det()
+    migrate_tbl_docentes_lineas()
+    migrate_tbl_docentes_lineas_historial()
+    migrate_tbl_dictamenes_info()
+    migrate_tbl_dictamenes_sustentaciones()
     migrar_tbl_coordinadores()
-    # migrar_tbl_coordinador_carrera()
-
+    migrar_tbl_admins()
+    migrar_tbl_coordinador_carrera()
+    migrar_coordinadores_historial()
+    # populate_sunedu_data_directly()
+    migrar_tbl_usuarios_servicios()
+    migrate_tbl_grado_docente()
+    migrate_perfil_investigador_from_csv()
+    migrate_coasesores()
+    migrar_tbl_coasesores_historial()
+    migrar_log_acciones()
+    
     
     print("\n--- PROCESO DE MIGRACIÓN DE TABLAS FINALIZADO ---")
 

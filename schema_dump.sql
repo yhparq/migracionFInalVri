@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict JaT1XVEijEHqZPPb0PCj5XSISlrJHqIJBCFEoYlreZwBuikCfmaZhYr3Yubracx
+\restrict wsod1mFO2jW2ZaehKs7NPNADM5COeEPGrV0Nx5F2wyxEzkhnROYcEggwTayMA5z
 
--- Dumped from database version 17.6 (Debian 17.6-0+deb13u1)
--- Dumped by pg_dump version 17.6 (Debian 17.6-0+deb13u1)
+-- Dumped from database version 17.6
+-- Dumped by pg_dump version 17.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -59,7 +59,8 @@ CREATE TABLE public.dic_acciones (
     id integer NOT NULL,
     nombre text NOT NULL,
     descripcion text NOT NULL,
-    id_etapa_pertenencia integer
+    id_etapa_pertenencia integer,
+    id_servicios integer
 );
 
 
@@ -602,41 +603,6 @@ CREATE TABLE public.dic_tipo_archivo (
 ALTER TABLE public.dic_tipo_archivo OWNER TO admin;
 
 --
--- Name: dic_tipo_obtencion; Type: TABLE; Schema: public; Owner: admin
---
-
-CREATE TABLE public.dic_tipo_obtencion (
-    id integer NOT NULL,
-    nombre character varying(100) NOT NULL,
-    descripcion text
-);
-
-
-ALTER TABLE public.dic_tipo_obtencion OWNER TO admin;
-
---
--- Name: dic_tipo_obtencion_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
---
-
-CREATE SEQUENCE public.dic_tipo_obtencion_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.dic_tipo_obtencion_id_seq OWNER TO admin;
-
---
--- Name: dic_tipo_obtencion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
---
-
-ALTER SEQUENCE public.dic_tipo_obtencion_id_seq OWNED BY public.dic_tipo_obtencion.id;
-
-
---
 -- Name: dic_tipo_trabajos; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -957,7 +923,8 @@ CREATE TABLE public.tbl_coasesores_historial (
     fecha_cambio timestamp without time zone NOT NULL,
     id_usuario_verificador integer NOT NULL,
     detalle text,
-    estado_coasesor smallint NOT NULL
+    estado_coasesor smallint NOT NULL,
+    id_accion integer
 );
 
 
@@ -1153,7 +1120,11 @@ CREATE TABLE public.tbl_coordinadores_historial (
     estado_coordinador_historial smallint NOT NULL,
     fecha timestamp without time zone NOT NULL,
     numero_resolucion text,
-    comentario text
+    comentario text,
+    id_accion integer,
+    id_facultad integer,
+    id_carrera integer,
+    id_nivel_coordinador integer
 );
 
 
@@ -1270,7 +1241,9 @@ CREATE TABLE public.tbl_dictamenes_info (
     token text,
     estado smallint,
     tipo_acta smallint,
-    folio integer
+    folio integer,
+    fecha_sustentacion timestamp without time zone,
+    lugar_sustentacion text
 );
 
 
@@ -2224,13 +2197,6 @@ ALTER TABLE ONLY public.dic_servicios ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- Name: dic_tipo_obtencion id; Type: DEFAULT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.dic_tipo_obtencion ALTER COLUMN id SET DEFAULT nextval('public.dic_tipo_obtencion_id_seq'::regclass);
-
-
---
 -- Name: dic_tipo_trabajos id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
@@ -2646,22 +2612,6 @@ ALTER TABLE ONLY public.dic_tipo_archivo
 
 
 --
--- Name: dic_tipo_obtencion dic_tipo_obtencion_nombre_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.dic_tipo_obtencion
-    ADD CONSTRAINT dic_tipo_obtencion_nombre_key UNIQUE (nombre);
-
-
---
--- Name: dic_tipo_obtencion dic_tipo_obtencion_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.dic_tipo_obtencion
-    ADD CONSTRAINT dic_tipo_obtencion_pkey PRIMARY KEY (id);
-
-
---
 -- Name: dic_tipo_trabajos dic_tipo_trabajos_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -2723,6 +2673,14 @@ ALTER TABLE ONLY public.tbl_archivos_tramites
 
 ALTER TABLE ONLY public.tbl_coasesores_historial
     ADD CONSTRAINT tbl_coasesores_historial_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tbl_coasesores tbl_coasesores_id_investigador_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coasesores
+    ADD CONSTRAINT tbl_coasesores_id_investigador_key UNIQUE (id_investigador);
 
 
 --
@@ -2862,6 +2820,14 @@ ALTER TABLE ONLY public.tbl_observaciones
 
 
 --
+-- Name: tbl_perfil_investigador tbl_perfil_investigador_id_usuario_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_perfil_investigador
+    ADD CONSTRAINT tbl_perfil_investigador_id_usuario_key UNIQUE (id_usuario);
+
+
+--
 -- Name: tbl_perfil_investigador tbl_perfil_investigador_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -2963,6 +2929,14 @@ ALTER TABLE ONLY public.tbl_usuarios
 
 ALTER TABLE ONLY public.tbl_usuarios_servicios
     ADD CONSTRAINT tbl_usuarios_servicios_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tbl_usuarios_servicios unique_usuario_servicio; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_usuarios_servicios
+    ADD CONSTRAINT unique_usuario_servicio UNIQUE (id_usuario, id_servicio);
 
 
 --
@@ -3508,6 +3482,14 @@ ALTER TABLE ONLY public.tbl_grado_docente
 
 
 --
+-- Name: tbl_coasesores_historial fk_coasesores_historial_id_accion; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coasesores_historial
+    ADD CONSTRAINT fk_coasesores_historial_id_accion FOREIGN KEY (id_accion) REFERENCES public.dic_acciones(id);
+
+
+--
 -- Name: tbl_conformacion_jurados fk_conf_asignacion; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -3577,6 +3559,14 @@ ALTER TABLE ONLY public.tbl_correcciones_jurados
 
 ALTER TABLE ONLY public.dic_acciones
     ADD CONSTRAINT fk_dic_acciones_id_etapa_pertenencia_dic_etapas_id FOREIGN KEY (id_etapa_pertenencia) REFERENCES public.dic_etapas(id);
+
+
+--
+-- Name: dic_acciones fk_dic_acciones_id_servicios; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.dic_acciones
+    ADD CONSTRAINT fk_dic_acciones_id_servicios FOREIGN KEY (id_servicios) REFERENCES public.dic_servicios(id);
 
 
 --
@@ -3697,6 +3687,38 @@ ALTER TABLE ONLY public.tbl_asignacion_jurado
 
 ALTER TABLE ONLY public.tbl_asignacion_jurado
     ADD CONSTRAINT fk_historial_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES public.dic_tipoevento_jurado(id);
+
+
+--
+-- Name: tbl_coordinadores_historial fk_historial_to_acciones; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_acciones FOREIGN KEY (id_accion) REFERENCES public.dic_acciones(id);
+
+
+--
+-- Name: tbl_coordinadores_historial fk_historial_to_carreras; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_carreras FOREIGN KEY (id_carrera) REFERENCES public.dic_carreras(id);
+
+
+--
+-- Name: tbl_coordinadores_historial fk_historial_to_facultades; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_facultades FOREIGN KEY (id_facultad) REFERENCES public.dic_facultades(id);
+
+
+--
+-- Name: tbl_coordinadores_historial fk_historial_to_nivel_coordinador; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_nivel_coordinador FOREIGN KEY (id_nivel_coordinador) REFERENCES public.dic_nivel_coordinador(id);
 
 
 --
@@ -4223,5 +4245,5 @@ ALTER TABLE ONLY public.tbl_grado_docente
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JaT1XVEijEHqZPPb0PCj5XSISlrJHqIJBCFEoYlreZwBuikCfmaZhYr3Yubracx
+\unrestrict wsod1mFO2jW2ZaehKs7NPNADM5COeEPGrV0Nx5F2wyxEzkhnROYcEggwTayMA5z
 

@@ -1,6 +1,5 @@
 import sys
 import os
-import pandas as pd
 import re
 import io
 import unicodedata
@@ -12,233 +11,233 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from db_connections import get_mysql_pilar3_connection, get_postgres_connection
 
 def normalize_name(name):
-    """
-    Normalizes a name for robust matching by removing accents, prefixes,
-    converting to uppercase, and standardizing whitespace.
-    """
-    if not isinstance(name, str):
-        return ''
-    
-    # Strip leading/trailing whitespace FIRST
+    if not isinstance(name, str): return ''
     name = name.strip()
-    
-    # Remove accents
     name = ''.join(c for c in unicodedata.normalize('NFD', name) if unicodedata.category(c) != 'Mn')
-    
-    # Uppercase
     name = name.upper()
-    
-    # Remove common prefixes (Dr., Mg., etc.) with optional dots.
-    # This is done BEFORE removing all dots to handle cases like 'D.Sc.'
-    prefix_pattern = r'^((DR|DRA|MG|MSC|ING|LIC|ENF|SC|D\.SC)\.?\s*)+' # Corrected escaping for dot
+    prefix_pattern = r'^((DR|DRA|MG|MSC|ING|LIC|ENF|SC|D\.SC)\.?\s*)+' # Corrected escaping for '.' in prefix_pattern
     name = re.sub(prefix_pattern, '', name)
-    
-    # Remove remaining commas and dots
     name = name.replace(',', '').replace('.', '')
-    
-    # Standardize internal whitespace to a single space
     return ' '.join(name.split())
 
 def clean_name_for_db(name):
-    """
-    A simpler cleaner for inserting names into the DB, preserving case.
-    """
-    if not isinstance(name, str):
-        return ''
-    name = re.sub(r'^(Dr\.|Dra\.|Mg\.|Msc\.|Ing\.|Lic\.|Enf\.|Sc\.)\s*', '', name, flags=re.IGNORECASE)
+    if not isinstance(name, str): return ''
+    name = re.sub(r'^(Dr\.|Dra\.|Mg\.|Msc\.|Ing\.|Lic\.|Enf\.|Sc\.)\s*', '', name, flags=re.IGNORECASE) # Corrected escaping for '.' in regex
     return ' '.join(name.split())
 
+def parse_full_name(name_str):
+    """
+    Corrected name parser to split a full name string into first names and last names,
+    assuming (Names) (Last Name 1) (Last Name 2) format.
+    """
+    parts = name_str.strip().split()
+    if len(parts) <= 1: return name_str, ''  # Only first name
+    elif len(parts) == 2: return parts[0], parts[1]  # One first name, one last name
+    elif len(parts) == 3: return parts[0], f"{parts[1]} {parts[2]}" # e.g., Juan Perez Garcia
+    elif len(parts) >= 4: return f"{parts[0]} {parts[1]}", f"{parts[2]} {parts[3]}" # e.g., Juan Carlos Perez Garcia
+    return name_str, '' # Fallback
+
 def sanitize_for_copy(value):
-    """
-    Sanitizes a value for the COPY command by removing newlines and tabs.
-    """
-    if value is None:
-        return r'\N' # Represents NULL for PostgreSQL COPY
-    
-    clean_value = str(value).replace('\r', ' ').replace('\n', ' ').replace('\t', ' ')
+    if value is None: return r'\N' # Corrected escaping for '\N'
+    clean_value = str(value).replace('\r', ' ').replace('\n', ' ').replace('\t', ' ') # Corrected escaping for '\r', '\n', '\t'
     return ' '.join(clean_value.split())
 
 def migrar_tbl_coordinadores():
     """
-    Migrates secretaries from tblSecres using fuzzy string matching with pg_trgm.
+    Migrates secretaries from tblSecres, applying a series of manual and automated
+    matching rules before inserting the data into tbl_coordinadores.
     """
     mysql_conn = None
     pg_conn = None
     
-    # Mapeo manual para IDs de coordinadores (MySQL) a IDs de usuarios (PostgreSQL)
-    # que el algoritmo no puede resolver correctamente.
+    # --- REGLAS DE DEPURACIÓN ACUMULADAS ---
     MAPEO_MANUAL_IDS = {
-        25: 99,  # Forzar que el Coordinador 25 (Pedro Coila- MEDICINA...) sea el Usuario 99
-        # Agrega aquí otros mapeos conocidos, por ejemplo:
-        # 29: ID_DEL_USUARIO_CORRECTO,
+        25: 99,
+        59: 17706,
+        98: 207
     }
+    MAPEO_POR_NOMBRE = {
+        235: "Katherine J. Cutimbo Samaniego"
+    }
+    CREATE_FROM_USERNAME_IDS = [
+        6, 15, 57, 58, 59, 60, 62, 63, 65, 67, 73, 74, 96, 97, 102, 
+        135, 139, 141, 180, 181, 197, 193, 233
+    ]
 
     try:
         mysql_conn = get_mysql_pilar3_connection()
         pg_conn = get_postgres_connection()
         pg_cur = pg_conn.cursor()
 
-        # Fetch secretaries from MySQL
         mysql_cur = mysql_conn.cursor(dictionary=True)
         mysql_cur.execute("SELECT Id, UserLevel, Estado, Resp, Usuario, Celular, Correo, Direccion, Horario FROM tblSecres")
         secretaries = mysql_cur.fetchall()
 
         coordinador_records_to_insert = []
-        
-        print("--- Iniciando migración de coordinadores ---")
+        print("--- Iniciando migración final de coordinadores con reglas de depuración ---")
 
-        # Process each secretary one by one
         for sec in secretaries:
             coordinador_id_mysql = sec['Id']
             original_sec_name = sec['Resp']
             mysql_user = sec['Usuario']
             id_usuario = None
 
-            print(f"\n--- Processing Coordinator ID: {coordinador_id_mysql}, Name: '{original_sec_name}' ---")
+            print(f"\n--- Procesando Coordinador ID: {coordinador_id_mysql}, Nombre: '{original_sec_name}' ---")
 
-            # Prioridad 1: Mapeo Manual
+            # Prioridad 1: Mapeo Manual por ID
             if coordinador_id_mysql in MAPEO_MANUAL_IDS:
                 id_usuario = MAPEO_MANUAL_IDS[coordinador_id_mysql]
-                print(f"DEBUG: Manual mapping found. Using User ID: {id_usuario}")
-            
-            # Prioridad 2: Placeholder names ('----', '-')
-            elif original_sec_name in ('----', '-'):
-                print("DEBUG: Placeholder name detected.")
-                if not mysql_user:
-                    print(f"DEBUG: Skipping coordinator ID {coordinador_id_mysql}, placeholder name and no mysql_user.")
-                    continue
-                
-                print(f"DEBUG: Searching for user with num_doc '{mysql_user}'.")
-                pg_cur.execute("SELECT id FROM tbl_usuarios WHERE num_doc_identidad = %s", (mysql_user,))
-                user_match = pg_cur.fetchone()
+                print(f"INFO: Regla de Mapeo Manual por ID. Usando Usuario ID: {id_usuario}")
 
+            # Prioridad 2: Mapeo por Nombre Exacto (con creación si no existe)
+            elif coordinador_id_mysql in MAPEO_POR_NOMBRE:
+                exact_name = MAPEO_POR_NOMBRE[coordinador_id_mysql]
+                print(f"INFO: Regla de Mapeo por Nombre. Buscando a '{exact_name}'...")
+                pg_cur.execute("SELECT id FROM tbl_usuarios WHERE TRIM(CONCAT_WS(' ', nombres, apellidos)) = %s", (exact_name,))
+                user_match = pg_cur.fetchone()
                 if user_match:
                     id_usuario = user_match[0]
-                    print(f"DEBUG: Found existing user for placeholder. User ID: {id_usuario}")
+                    print(f"INFO: Encontrado. Usando Usuario ID: {id_usuario}")
                 else:
-                    print("DEBUG: Placeholder user not found. Creating new user.")
-                    random_doc_id = str(random.randint(10000000, 99999999))
-                    new_user_name = f"Usuario Coordinador {mysql_user}"
-                    placeholder_email = f"coord.{mysql_user.lower()}.{random_doc_id}@migracion.vriunap.edu.pe"
+                    print(f"WARN: No se encontró al usuario '{exact_name}'. Se creará un nuevo usuario con este nombre.")
+                    doc_id_to_use = f"COORD_{coordinador_id_mysql}"
+                    nombres, apellidos = parse_full_name(exact_name)
+                    placeholder_email = f"coord.{coordinador_id_mysql}@migracion.vriunap.edu.pe"
                     
                     pg_cur.execute(
                         "INSERT INTO tbl_usuarios (num_doc_identidad, nombres, apellidos, correo) VALUES (%s, %s, %s, %s) RETURNING id;",
-                        (random_doc_id, new_user_name, '', placeholder_email)
+                        (doc_id_to_use, nombres, apellidos, placeholder_email)
                     )
-                    print("DEBUG: Executed INSERT for placeholder user.")
-                    insert_result = pg_cur.fetchone()
-                    if insert_result:
-                        id_usuario = insert_result[0]
-                        print(f"DEBUG: Successfully created placeholder user. New User ID: {id_usuario}")
+                    id_usuario = pg_cur.fetchone()[0]
+                    print(f"INFO: Nuevo usuario creado para '{exact_name}'. Usuario ID: {id_usuario}")
+
+            # Prioridad 3: Usar campo 'Usuario' (DNI) para buscar o crear
+            elif coordinador_id_mysql in CREATE_FROM_USERNAME_IDS:
+                print(f"INFO: Regla de Creación por Usuario. Usando DNI/Usuario: '{mysql_user}'")
+                if not mysql_user:
+                    print(f"WARN: Se esperaba un DNI/Usuario para el ID {coordinador_id_mysql}, pero está vacío. Saltando.")
+                    continue
+                
+                # CORRECCIÓN: Manejar DNI/Usuario demasiado largo
+                doc_id_to_use = mysql_user if len(mysql_user) <= 12 else f"s/d-{coordinador_id_mysql}"
+
+                pg_cur.execute("SELECT id FROM tbl_usuarios WHERE num_doc_identidad = %s", (doc_id_to_use,))
+                user_match = pg_cur.fetchone()
+                if user_match:
+                    id_usuario = user_match[0]
+                    print(f"INFO: Usuario existente encontrado por DNI. Usando Usuario ID: {id_usuario}")
+                else:
+                    print(f"INFO: Usuario no encontrado. Creando nuevo usuario para '{doc_id_to_use}'...")
+                    
+                    # Lógica condicional para determinar el nombre del nuevo usuario
+                    if coordinador_id_mysql in [6, 15]:
+                        # Para IDs 6 y 15, usar el nombre de usuario ya que 'Resp' está vacío
+                        nombres = f"Usuario Coordinador {mysql_user}"
+                        apellidos = ''
+                        print(f"INFO: Usando nombre de usuario para IDs especiales [6, 15].")
                     else:
-                        print(f"CRITICAL: Failed to create placeholder user for {mysql_user}. Skipping coordinator.")
-                        continue
+                        # Para otros IDs, usar el nombre del campo 'Resp'
+                        nombres, apellidos = parse_full_name(clean_name_for_db(original_sec_name))
+                        print(f"INFO: Usando nombre del responsable ('Resp'): '{original_sec_name}'")
 
-            # Prioridad 3: Lógica de Matching Inteligente
-            else:
-                print("DEBUG: Entering intelligent matching logic.")
-                cleaned_name = re.split(r'[-_]', original_sec_name)[0].strip()
-                normalized_sec_name = normalize_name(cleaned_name)
-                print(f"DEBUG: Original Name: '{original_sec_name}' -> Cleaned: '{cleaned_name}' -> Normalized: '{normalized_sec_name}'")
+                    placeholder_email = f"coord.{mysql_user.lower().replace(' ', '')}@migracion.vriunap.edu.pe"
+                    pg_cur.execute(
+                        "INSERT INTO tbl_usuarios (num_doc_identidad, nombres, apellidos, correo) VALUES (%s, %s, %s, %s) RETURNING id;",
+                        (doc_id_to_use, nombres, apellidos, placeholder_email)
+                    )
+                    id_usuario = pg_cur.fetchone()[0]
+                    print(f"INFO: Nuevo usuario creado. Usuario ID: {id_usuario}")
 
-                if not normalized_sec_name or len(normalized_sec_name) < 4:
-                    print(f"DEBUG: Skipping invalid coordinator name.")
+            # Prioridad 4: Lógica de Matching por Similitud (si no hay reglas manuales)
+            if id_usuario is None:
+                print("INFO: No hay reglas manuales. Aplicando lógica de búsqueda por similitud.")
+                if not original_sec_name or original_sec_name.strip() in ('----', '-'):
+                    print("WARN: Nombre inválido o vacío. Saltando.")
                     continue
 
-                find_user_query = """
+                cleaned_name = re.split(r'[-_]', original_sec_name)[0].strip()
+                normalized_sec_name = normalize_name(cleaned_name)
+
+                if len(normalized_sec_name) < 4:
+                    print("WARN: Nombre demasiado corto para una búsqueda fiable. Saltando.")
+                    continue
+
+                pg_cur.execute("""
                     SELECT id, full_name, similarity_score FROM (
-                        SELECT id, REGEXP_REPLACE(CONCAT_WS(' ', TRIM(nombres), TRIM(apellidos)), '\s+', ' ', 'g') as full_name,
-                        similarity(%s, UPPER(REGEXP_REPLACE(CONCAT_WS(' ', TRIM(nombres), TRIM(apellidos)), '\s+', ' ', 'g'))) as similarity_score
+                        SELECT id, TRIM(CONCAT_WS(' ', nombres, apellidos)) as full_name,
+                        similarity(%s, UPPER(TRIM(CONCAT_WS(' ', nombres, apellidos)))) as similarity_score
                         FROM tbl_usuarios
                     ) AS candidates
                     WHERE similarity_score >= 0.7 ORDER BY similarity_score DESC LIMIT 1;
-                """
-                print(f"DEBUG: Executing similarity search for '{normalized_sec_name}'.")
-                pg_cur.execute(find_user_query, (normalized_sec_name,))
+                """, (normalized_sec_name,))
                 best_match = pg_cur.fetchone()
 
                 if best_match:
                     user_id, matched_name, score = best_match
                     id_usuario = user_id
-                    print(f"DEBUG: Match found for '{original_sec_name}' -> '{matched_name}' with score {score:.2f}. Using user ID: {id_usuario}")
+                    print(f"INFO: Coincidencia encontrada para '{original_sec_name}' -> '{matched_name}' (Puntuación: {score:.2f}). Usando Usuario ID: {id_usuario}")
                 else:
+                    print(f"INFO: No se encontró coincidencia. Creando nuevo usuario para '{original_sec_name}'.")
                     doc_id_to_use = f"COORD_{coordinador_id_mysql}"
-                    print(f"DEBUG: No match found. Attempting to create new user with doc_id '{doc_id_to_use}'.")
-                    new_user_name = f"coordinador {clean_name_for_db(original_sec_name)}"
+                    nombres, apellidos = parse_full_name(clean_name_for_db(original_sec_name))
                     placeholder_email = f"coord.{coordinador_id_mysql}@migracion.vriunap.edu.pe"
-
-                    pg_cur.execute(
-                        "INSERT INTO tbl_usuarios (num_doc_identidad, nombres, apellidos, correo) VALUES (%s, %s, %s, %s) ON CONFLICT (num_doc_identidad) DO NOTHING RETURNING id;",
-                        (doc_id_to_use, new_user_name, '', placeholder_email)
-                    )
-                    print("DEBUG: Executed INSERT ON CONFLICT for new user.")
-                    result = pg_cur.fetchone()
-                    if result:
-                        id_usuario = result[0]
-                        print(f"DEBUG: Successfully created new user. New User ID: {id_usuario}")
+                    
+                    pg_cur.execute("SELECT id FROM tbl_usuarios WHERE num_doc_identidad = %s", (doc_id_to_use,))
+                    existing_user = pg_cur.fetchone()
+                    if existing_user:
+                        id_usuario = existing_user[0]
+                        print(f"INFO: El usuario ya existía con DNI temporal. Usando Usuario ID: {id_usuario}")
                     else:
-                        print(f"DEBUG: INSERT failed (likely conflict). Searching for existing user with doc_id '{doc_id_to_use}'.")
-                        pg_cur.execute("SELECT id FROM tbl_usuarios WHERE num_doc_identidad = %s", (doc_id_to_use,))
-                        select_result = pg_cur.fetchone()
-                        if select_result:
-                            id_usuario = select_result[0]
-                            print(f"DEBUG: Found existing user after conflict. User ID: {id_usuario}")
-                        else:
-                            print(f"CRITICAL: Failed to create or find user for COORD_{coordinador_id_mysql}. Skipping coordinator.")
-                            continue
-            
+                        pg_cur.execute(
+                            "INSERT INTO tbl_usuarios (num_doc_identidad, nombres, apellidos, correo) VALUES (%s, %s, %s, %s) RETURNING id;",
+                            (doc_id_to_use, nombres or f"Coordinador {original_sec_name}", apellidos, placeholder_email)
+                        )
+                        id_usuario = pg_cur.fetchone()[0]
+                        print(f"INFO: Nuevo usuario creado con DNI temporal. Usuario ID: {id_usuario}")
+
             if id_usuario:
-                print(f"DEBUG: Preparing to add Coordinator ID {coordinador_id_mysql} with User ID {id_usuario} to insert list.")
                 coordinador_records_to_insert.append({
                     'id': coordinador_id_mysql, 'id_usuario': id_usuario, 'nivel_coordinador': sec['UserLevel'],
                     'correo_oficina': sec['Correo'], 'direccion_oficina': sec['Direccion'], 'horario': sec['Horario'],
                     'telefono': sec['Celular'], 'estado_coordinador': sec['Estado']
                 })
             else:
-                print(f"WARNING: No id_usuario was assigned for Coordinator ID {coordinador_id_mysql}. This record will be skipped.")
+                print(f"ERROR: No se pudo asignar un Usuario ID para el Coordinador ID {coordinador_id_mysql}. Se omitirá este registro.")
 
-        # Use COPY for bulk insert
         if coordinador_records_to_insert:
-            print(f"\nDEBUG: Preparing {len(coordinador_records_to_insert)} coordinator records for bulk insert...")
-            pg_cur.execute("CREATE TEMP TABLE temp_coordinadores (LIKE tbl_coordinadores INCLUDING DEFAULTS);")
+            print(f"\nINFO: Preparando {len(coordinador_records_to_insert)} registros de coordinadores para la inserción masiva...")
             
             csv_buffer = io.StringIO()
             for rec in coordinador_records_to_insert:
-                sanitized_values = [
+                csv_buffer.write('\t'.join([
                     sanitize_for_copy(rec['id']), sanitize_for_copy(rec['id_usuario']), sanitize_for_copy(rec['nivel_coordinador']),
                     sanitize_for_copy(rec['correo_oficina']), sanitize_for_copy(rec['direccion_oficina']), sanitize_for_copy(rec['horario']),
                     sanitize_for_copy(rec['telefono']), sanitize_for_copy(rec['estado_coordinador'])
-                ]
-                csv_buffer.write('\t'.join(sanitized_values) + '\n')
-            
+                ]) + '\n')
             csv_buffer.seek(0)
-            copy_sql = "COPY temp_coordinadores (id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador) FROM STDIN"
-            pg_cur.copy_expert(sql=copy_sql, file=csv_buffer)
-            print("DEBUG: COPY to temp table complete.")
-            
-            merge_sql = """
-                INSERT INTO tbl_coordinadores (id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador)
-                SELECT id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador FROM temp_coordinadores
-                ON CONFLICT (id) DO UPDATE SET
-                    id_usuario = EXCLUDED.id_usuario, nivel_coordinador = EXCLUDED.nivel_coordinador,
-                    correo_oficina = EXCLUDED.correo_oficina, direccion_oficina = EXCLUDED.direccion_oficina,
-                    horario = EXCLUDED.horario, telefono = EXCLUDED.telefono, estado_coordinador = EXCLUDED.estado_coordinador;
-            """
-            pg_cur.execute(merge_sql)
-            print(f"DEBUG: Merged {pg_cur.rowcount} records into tbl_coordinadores.")
+
+            with pg_conn.cursor() as cur:
+                cur.execute("CREATE TEMP TABLE temp_coordinadores (LIKE tbl_coordinadores INCLUDING DEFAULTS);")
+                cur.copy_expert("COPY temp_coordinadores (id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador) FROM STDIN", csv_buffer)
+                cur.execute("""
+                    INSERT INTO tbl_coordinadores (id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador)
+                    SELECT id, id_usuario, nivel_coordinador, correo_oficina, direccion_oficina, horario, telefono, estado_coordinador FROM temp_coordinadores
+                    ON CONFLICT (id) DO UPDATE SET
+                        id_usuario = EXCLUDED.id_usuario, nivel_coordinador = EXCLUDED.nivel_coordinador,
+                        correo_oficina = EXCLUDED.correo_oficina, direccion_oficina = EXCLUDED.direccion_oficina,
+                        horario = EXCLUDED.horario, telefono = EXCLUDED.telefono, estado_coordinador = EXCLUDED.estado_coordinador;
+                """)
+                print(f"INFO: Se han insertado o actualizado {cur.rowcount} registros en tbl_coordinadores.")
 
         pg_conn.commit()
-        print("\nSuccessfully migrated tbl_coordinadores data with fuzzy matching.")
+        print("\n--- Migración de tbl_coordinadores finalizada exitosamente. ---")
 
     except Exception as e:
-        print(f"An error occurred: {e}")
-        if pg_conn:
-            pg_conn.rollback()
+        print(f"ERROR: Ocurrió un error crítico: {e}")
+        if pg_conn: pg_conn.rollback()
     finally:
-        if mysql_conn:
-            mysql_conn.close()
-        if pg_conn:
-            pg_conn.close()
+        if mysql_conn: mysql_conn.close()
+        if pg_conn: pg_conn.close()
 
 if __name__ == "__main__":
     migrar_tbl_coordinadores()

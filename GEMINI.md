@@ -89,3 +89,46 @@ No existe una tabla `dicDenominaciones` en MySQL. La información estaba mezclad
     3.  Usar ese `id` para poblar la tabla de trámites en PostgreSQL.
 
 En resumen: **`dic_especialidades` es un remapeo directo de IDs, mientras que `dic_denominaciones` requerirá una búsqueda por nombre para encontrar el nuevo ID.**
+
+---
+# Resumen de la Sesión (14/09/2025)
+
+Durante esta sesión, hemos trabajado en la depuración y ajuste de varios scripts de migración.
+
+## Tareas Completadas:
+
+1.  **`migrar_tbl_coordinadores_historial.py`**:
+    *   Se corrigió un `IndentationError` causado por una cadena de texto SQL mal formada.
+
+2.  **`migrar_tbl_coordinador_carrera.py`**:
+    *   Se diagnosticó un error de "tabla no encontrada" en MySQL.
+    *   Se reescribió completamente la lógica para leer desde la tabla `tblSecres` de MySQL.
+    *   Se implementó la regla de negocio para asignar todas las carreras de una facultad a un coordinador cuando el `IdCarrera` es `0`.
+
+3.  **`migrar_dic_acciones.py`**:
+    *   Se corrigió un error de "columna no encontrada" al cambiar `id_servicio` por `id_servicios` para que coincidiera con el esquema de PostgreSQL.
+
+4.  **`migrar_tbl_usuarios_servicios.py`**:
+    *   Se amplió el script para incluir la asignación de roles a los **coasesores**, asignándoles el servicio "Asesor externo" (ID 7).
+
+5.  **`migrar_tbl_coasesores_historial.py`**:
+    *   Se creó un script completamente nuevo para poblar el historial de los coasesores.
+    *   Se añadieron 3 nuevas acciones (`coasesor registrado`, `aceptado`, `rechazado`) al archivo `dic_acciones_rows.csv`.
+    *   Se implementó la lógica condicional para generar 1 o 2 registros de historial según el estado del coasesor.
+    *   Se ajustó el script para usar la fecha actual si no se encuentra una fecha de registro en MySQL.
+    *   Se actualizó el ID del usuario verificador a `27271`.
+
+6.  **`migrar_log_acciones.py`**:
+    *   Se ajustó la lógica de mapeo de usuarios para tratar el tipo `'A'` como un administrador.
+    *   Se implementó la regla para asignar los logs con `IdUser = 0` al administrador con `id = 7`.
+    *   Se mejoró el script para que reporte detalladamente por qué se omiten registros durante la migración.
+
+## Estado Actual:
+
+Los scripts de migración están considerablemente más robustos y alineados con las reglas de negocio específicas. El proceso de depuración ha avanzado significativamente.
+
+## Próximos Pasos:
+
+*   Continuar con la ejecución y depuración de los scripts de migración restantes.
+*   Analizar y corregir cualquier otro error que surja durante la ejecución del proceso completo.
+*   Verificar la integridad de los datos migrados en las tablas afectadas.

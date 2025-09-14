@@ -103,7 +103,7 @@ def main():
     migrate_dic_categoria_fast()
     migrate_dic_etapas_from_csv()
     migrate_dic_grados_academicos_from_csv()
-    migrate_dic_universidades_from_csv()
+    # migrate_dic_universidades_from_csv()
     migrate_dic_modalidades_from_csv()
     migrate_dic_lineas_universidad_fast()
     migrate_dic_obtencion_studios_from_csv()
