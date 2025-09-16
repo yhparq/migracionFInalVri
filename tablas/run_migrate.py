@@ -33,6 +33,10 @@ from migrar_perfil_investigador import migrate_perfil_investigador_from_csv
 from migrar_tbl_coasesores import migrate_coasesores
 from migrar_tbl_coordinadores_historial import migrar_coordinadores_historial
 from migrar_tbl_coasesores_historial import migrar_tbl_coasesores_historial
+from migrar_tbl_integrantes import migrate_tbl_integrantes
+from actualizar_sustentaciones import insertar_actas_de_sustentacion
+from migrar_tbl_tramites_metadatos import migrate_tbl_tramites_metadatos
+from migrar_tbl_archivos_tramites import migrate_tbl_archivos_tramites
 
 
 def clean_transactional_tables():
@@ -111,6 +115,7 @@ def main():
     migrate_tbl_docentes_lineas_historial()
     migrate_tbl_dictamenes_info()
     migrate_tbl_dictamenes_sustentaciones()
+    insertar_actas_de_sustentacion()
     migrar_tbl_coordinadores()
     migrar_tbl_admins()
     migrar_tbl_coordinador_carrera()
@@ -122,6 +127,9 @@ def main():
     migrate_coasesores()
     migrar_tbl_coasesores_historial()
     migrar_log_acciones()
+    migrate_tbl_integrantes()
+    migrate_tbl_tramites_metadatos()
+    migrate_tbl_archivos_tramites()
     
     
     print("\n--- PROCESO DE MIGRACIÓN DE TABLAS FINALIZADO ---")

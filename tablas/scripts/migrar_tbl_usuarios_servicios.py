@@ -29,7 +29,7 @@ def migrar_tbl_usuarios_servicios():
             (1, 'tbl_tesistas', 'Tesistas'),
             (2, 'tbl_docentes', 'Docentes'),
             (3, 'tbl_coordinadores', 'Coordinadores'),
-            (4, 'tbl_admins', 'Administradores')
+            (4, 'tbl_admins', 'Administradores'),
             (5, 'tbl_coasesores', 'Coasesores')
         ]
 
@@ -39,17 +39,35 @@ def migrar_tbl_usuarios_servicios():
         for id_servicio, tabla_origen, nombre_rol in roles_a_migrar:
             print(f"INFO: Asignando rol de '{nombre_rol}' (Servicio ID: {id_servicio}) a usuarios desde '{tabla_origen}'...")
             
-            insert_query = f"""
-                INSERT INTO public.tbl_usuarios_servicios (id_usuario, id_servicio, fecha_asignacion, estado)
-                SELECT
-                    t.id_usuario,
-                    %s AS id_servicio,
-                    NOW() AS fecha_asignacion,
-                    1 AS estado
-                FROM
-                    public.{tabla_origen} t
-                ON CONFLICT (id_usuario, id_servicio) DO NOTHING;
-            """
+            insert_query = ""
+            if tabla_origen == 'tbl_coasesores':
+                # Consulta especial para coasesores con JOIN para obtener el id_usuario
+                insert_query = f"""
+                    INSERT INTO public.tbl_usuarios_servicios (id_usuario, id_servicio, fecha_asignacion, estado)
+                    SELECT
+                        pi.id_usuario,
+                        %s AS id_servicio,
+                        NOW() AS fecha_asignacion,
+                        1 AS estado
+                    FROM
+                        public.tbl_coasesores c
+                    JOIN
+                        public.tbl_perfil_investigador pi ON c.id_investigador = pi.id
+                    ON CONFLICT (id_usuario, id_servicio) DO NOTHING;
+                """
+            else:
+                # Consulta estándar para las demás tablas
+                insert_query = f"""
+                    INSERT INTO public.tbl_usuarios_servicios (id_usuario, id_servicio, fecha_asignacion, estado)
+                    SELECT
+                        t.id_usuario,
+                        %s AS id_servicio,
+                        NOW() AS fecha_asignacion,
+                        1 AS estado
+                    FROM
+                        public.{tabla_origen} t
+                    ON CONFLICT (id_usuario, id_servicio) DO NOTHING;
+                """
             
             pg_cur.execute(insert_query, (id_servicio,))
             count = pg_cur.rowcount

@@ -1,7 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
+*.pyd
 
 # C extensions
 *.so
@@ -84,7 +85,7 @@ ipython_config.py
 # pyenv
 .python-version
 
-# PEP 582; used by PDM, PEP 582 compatible tools and python itself
+# PEP 582; used by poetry and pdm
 __pypackages__/
 
 # Celery stuff
@@ -105,7 +106,7 @@ venv.bak/
 
 # Spyder project settings
 .spyderproject
-.spyderworkspace
+.spyproject
 
 # Rope project settings
 .ropeproject
@@ -120,3 +121,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# pytype static analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/

@@ -4,3 +4,15 @@ id,nombre,descripcion
 3,declaracion uso IA,El tesista debe subir su declaración de uso ético de IA
 4,CIEI,Constancia CIEI para investigaciones con muestras biológicas
 5,INS,Constancia INS para ensayos clínicos
+6,informe correcciones proyecto para jurados,documento PDF donde el tesista indique que correci√≥nes hizo respecto a su version anterior de proyecto de tesis
+7,Constancia Bachiller Integrante 1,√âl integrante principal de la tesis subir√° en un pdf la constancia de bachiller de SUNEDU
+8,Constancia Bachiller Integrante 2,√âl integrante secundario de la tesis subir√° en un pdf la constancia de bachiller de SUNEDU
+9,Borrador de tesis,El tesista debe subir el borrador de tesis con el formato adecuado
+10,Reporte Turnitin (borrador),El tesista debe subir su reporte de turnitin firmado por su asesor
+11,Declaracion uso IA (borrador),El tesista debe subir su declaraci√≥n de uso √©tico de IA
+12,CIEI (borrador),Constancia CIEI para investigaciones con muestras biol√≥gicas
+13,INS (borrador),Constancia INS para ensayos cl√≠nicos
+14,memorandum de reunion de dictamen,documento pdf que valide el memorandum de reunion de dictamen donde el presidente convoca a los jurados
+15,acta de reunion de dictamen,"es el acta que determina el lugar, fecha y hora acordado para sustentar"
+16,Turnitin Tesis Sustentaci√≥n,El tesista sube su tesis pre sustentaci√≥n archivo PDF necesario para sustentar
+17,Diapositivas Sustentaci√≥n,El tesista sube sus diapositivas en formato pdf para sustentaci√≥n
