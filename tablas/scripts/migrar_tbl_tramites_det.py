@@ -34,7 +34,7 @@ def migrate_tbl_tramites_det():
         # 2. Mapa de búsqueda para jurados por ID NUEVO
         #    Clave: (id_tramite_NUEVO, id_orden) -> Valor: id_docente_NUEVO
         print("  Paso 2: Creando mapa de búsqueda para jurados por ID nuevo...")
-        pg_cur.execute("SELECT id_tramite, id_orden, id_docente FROM tbl_conformacion_jurados")
+        pg_cur.execute("SELECT id_tramite, orden, id_docente FROM tbl_conformacion_jurados")
         jurado_map = {(row[0], row[1]): row[2] for row in pg_cur.fetchall()}
         print(f"  Se mapearon {len(jurado_map)} jurados para búsqueda.")
 

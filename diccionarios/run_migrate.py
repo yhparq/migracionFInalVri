@@ -26,12 +26,12 @@ from migrar_dic_sedes import migrate_dic_sedes_from_csv
 from migrar_dic_servicios import migrate_dic_servicios_from_csv
 from migrar_dic_tipo_trabajos import migrate_dic_tipo_trabajos_from_csv
 from migrar_dic_tipo_archivo import migrate_dic_tipo_archivo_from_csv
-from migrar_dic_tipoevento_jurado import migrate_dic_tipoevento_jurado_from_csv
+from scripts.migrar_dic_tipo_evento import migrate_dic_tipo_evento_from_csv
 from migrar_dic_especialidades import migrate_dic_especialidades_from_csv
 from migrar_dic_denominaciones import migrate_dic_denominaciones_from_csv
 from migrar_dic_acciones import migrate_dic_acciones_from_csv
 from migrar_dic_visto_bueno import migrate_dic_visto_bueno_from_csv
-from migrar_dic_nivel_admin import migrar_dic_nivel_admin
+from migrar_dic_nivel_admins import migrate_dic_nivel_admins_from_csv
 from migrar_dic_nivel_coordinador import migrar_dic_nivel_coordinador
 
 def clean_database_tables():
@@ -112,12 +112,12 @@ def main():
     migrate_dic_servicios_from_csv()
     migrate_dic_tipo_trabajos_from_csv()
     migrate_dic_tipo_archivo_from_csv()
-    migrate_dic_tipoevento_jurado_from_csv()
+    migrate_dic_tipo_evento_from_csv()
     migrate_dic_especialidades_from_csv()
     migrate_dic_denominaciones_from_csv()
     migrate_dic_acciones_from_csv()
     migrate_dic_visto_bueno_from_csv()
-    migrar_dic_nivel_admin()
+    migrate_dic_nivel_admins_from_csv()
     migrar_dic_nivel_coordinador()
     
     # (Aquí se llamarán las demás migraciones)

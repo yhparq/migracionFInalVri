@@ -1,19 +1,20 @@
 import psycopg2
 import sys
 import os
+import io
+import csv
 from db_connections import get_postgres_connection, get_mysql_pilar3_connection, get_mysql_absmain_connection
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 def migrate_tbl_dictamenes_info():
     """
-    VERSIÓN MEJORADA: Puebla la tabla tbl_dictamenes_info consolidando datos.
-    - tipo_aprobacion es un INTEGER mapeado a dic_acciones.
-    - Incluye valores por defecto para 'tipo_acta' y 'folio'.
-    - Añade logging detallado para identificar registros omitidos o con datos faltantes.
-    - Lógica de denominación y escuela profesional corregida.
+    VERSIÓN MEJORADA Y OPTIMIZADA: Puebla tbl_dictamenes_info usando COPY.
+    - Consolida datos de múltiples fuentes.
+    - Mapea tipo_aprobacion a un INTEGER.
+    - Utiliza carga masiva para un rendimiento superior.
     """
-    print("--- Iniciando migración MEJORADA para poblar tbl_dictamenes_info ---")
+    print("--- Iniciando migración OPTIMIZADA para tbl_dictamenes_info (COPY) ---")
     pg_conn = None
     mysql_conn_pilar3 = None
     mysql_conn_absmain = None
@@ -55,7 +56,7 @@ def migrate_tbl_dictamenes_info():
         mysql_cur_absmain.execute("SELECT Id, Denominacion FROM dicEspecialis")
         especialis_denominacion_map = {row['Id']: row['Denominacion'] for row in mysql_cur_absmain.fetchall()}
 
-        print(f"  Mapeos completados.")
+        print("  Mapeos completados.")
 
         print("  Paso 2: Obteniendo dictámenes de Iteración 3 desde MySQL...")
         mysql_cur_pilar3.execute("SELECT Id, IdTramite, Titulo, vb1, vb2, vb3, Fecha FROM tesTramsDet WHERE Iteracion = 3")
@@ -69,8 +70,6 @@ def migrate_tbl_dictamenes_info():
         
         for idx, det in enumerate(source_dictamenes):
             id_tramite_antiguo = det['IdTramite']
-            id_detalle_antiguo = det['Id']
-
             new_tramite_id = tramites_map.get(id_tramite_antiguo)
             if not new_tramite_id:
                 omitted_count += 1
@@ -81,27 +80,24 @@ def migrate_tbl_dictamenes_info():
                 omitted_count += 1
                 continue
 
-            def get_user_name_from_docente(id_jurado_antiguo, role):
+            def get_user_name_from_docente(id_jurado_antiguo):
                 if not id_jurado_antiguo: return 'N/A'
                 new_docente_id = docentes_map.get(id_jurado_antiguo)
-                if not new_docente_id: return 'N/A'
-                return usuarios_map.get(new_docente_id, 'N/A')
+                return usuarios_map.get(new_docente_id, 'N/A') if new_docente_id else 'N/A'
 
-            presidente = get_user_name_from_docente(tramite_info.get('IdJurado1'), 'Presidente')
-            primer_miembro = get_user_name_from_docente(tramite_info.get('IdJurado2'), '1er Miembro')
-            segundo_miembro = get_user_name_from_docente(tramite_info.get('IdJurado3'), '2do Miembro')
-            asesor = get_user_name_from_docente(tramite_info.get('IdJurado4'), 'Asesor')
+            presidente = get_user_name_from_docente(tramite_info.get('IdJurado1'))
+            primer_miembro = get_user_name_from_docente(tramite_info.get('IdJurado2'))
+            segundo_miembro = get_user_name_from_docente(tramite_info.get('IdJurado3'))
+            asesor = get_user_name_from_docente(tramite_info.get('IdJurado4'))
 
-            def get_user_name_from_tesista(id_tesista_antiguo, role):
+            def get_user_name_from_tesista(id_tesista_antiguo):
                 if not id_tesista_antiguo: return None
                 id_usuario_nuevo = tesistas_map.get(id_tesista_antiguo)
-                if not id_usuario_nuevo: return 'N/A'
-                return usuarios_map.get(id_usuario_nuevo, 'N/A')
+                return usuarios_map.get(id_usuario_nuevo, 'N/A') if id_usuario_nuevo else 'N/A'
 
-            tesista1 = get_user_name_from_tesista(tramite_info.get('IdTesista1'), 'Tesista 1')
-            tesista2 = get_user_name_from_tesista(tramite_info.get('IdTesista2'), 'Tesista 2')
+            tesista1 = get_user_name_from_tesista(tramite_info.get('IdTesista1'))
+            tesista2 = get_user_name_from_tesista(tramite_info.get('IdTesista2'))
 
-            # --- LÓGICA PARA ESCUELA PROFESIONAL Y DENOMINACIÓN ---
             id_tesista1_antiguo = tramite_info.get('IdTesista1')
             tesista_academico_info = tesistas_academic_map.get(id_tesista1_antiguo)
             
@@ -109,47 +105,54 @@ def migrate_tbl_dictamenes_info():
             denominacion_final = "Denominación no encontrada"
 
             if tesista_academico_info:
-                id_carrera = tesista_academico_info['IdCarrera']
-                id_especialidad = tesista_academico_info['idEspec']
-                
-                carrera_info = carreras_info_map.get(id_carrera)
+                carrera_info = carreras_info_map.get(tesista_academico_info['IdCarrera'])
                 if carrera_info:
                     escuela_profesional = carrera_info.get('Nombre', escuela_profesional)
                 
-                if id_especialidad == 0:
+                if tesista_academico_info['idEspec'] == 0:
                     if carrera_info:
                         denominacion_final = carrera_info.get('Titulo', "Título no encontrado")
                 else:
-                    denominacion_final = especialis_denominacion_map.get(id_especialidad, "Denominación de especialidad no encontrada")
-            # --- FIN DE LA LÓGICA ---
+                    denominacion_final = especialis_denominacion_map.get(tesista_academico_info['idEspec'], "Denominación de especialidad no encontrada")
 
             vb_sum = (det.get('vb1') or 0) + (det.get('vb2') or 0) + (det.get('vb3') or 0)
             if vb_sum == 3: tipo_aprobacion_id = 27
             elif vb_sum == 2: tipo_aprobacion_id = 26
             else: tipo_aprobacion_id = 28
 
-            record = (
+            records_to_insert.append((
                 new_tramite_id, tramite_info.get('Codigo'), tipo_aprobacion_id,
                 det.get('Titulo'), denominacion_final, tesista1, tesista2, escuela_profesional,
                 presidente, primer_miembro, segundo_miembro, asesor,
                 None, det.get('Fecha'), None, 1, 1, None
-            )
-            records_to_insert.append(record)
+            ))
 
         print(f"\n  Resumen del procesamiento: {total_source} registros leídos, {len(records_to_insert)} preparados para inserción, {omitted_count} omitidos.")
 
         if records_to_insert:
-            print("  Paso 4: Insertando datos en tbl_dictamenes_info...")
-            insert_query = """
-                INSERT INTO tbl_dictamenes_info (
-                    id_tramite, codigo_proyecto, tipo_aprobacion, titulo, denominacion, tesista1, tesista2,
-                    escuela_profesional, presidente, primer_miembro, segundo_miembro, asesor,
-                    coasesor, fecha_dictamen, token, estado, tipo_acta, folio
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            pg_cur.executemany(insert_query, records_to_insert)
+            print("  Paso 4: Cargando datos en tbl_dictamenes_info con COPY...")
+            
+            buffer = io.StringIO()
+            for record in records_to_insert:
+                # Limpiar tabs y newlines de cada item antes de unir
+                clean_record = [str(item).replace('\t', ' ').replace('\n', ' ').replace('\r', ' ') if item is not None else '\\N' for item in record]
+                line = '\t'.join(clean_record)
+                buffer.write(line + '\n')
+            buffer.seek(0)
+
+            columns = (
+                'id_tramite', 'codigo_proyecto', 'tipo_aprobacion', 'titulo', 'denominacion', 'tesista1', 'tesista2',
+                'escuela_profesional', 'presidente', 'primer_miembro', 'segundo_miembro', 'asesor',
+                'coasesor', 'fecha_dictamen', 'token', 'estado', 'tipo_acta', 'folio'
+            )
+            
+            pg_cur.copy_expert(
+                sql=f"COPY public.tbl_dictamenes_info ({', '.join(columns)}) FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', NULL '\\N')",
+                file=buffer
+            )
+            
             pg_conn.commit()
-            print(f"  ¡Éxito! Se insertaron {pg_cur.rowcount} registros.")
+            print(f"  ¡Éxito! Se insertaron {len(records_to_insert)} registros.")
 
         print("--- Migración de tbl_dictamenes_info completada con éxito. ---")
 

@@ -1,7 +1,5 @@
 import sys
 import os
-import io
-import csv
 import psycopg2
 
 # Añadir el directorio raíz al sys.path
@@ -12,12 +10,14 @@ from db_connections import get_postgres_connection
 def migrate_tbl_estructura_academica_from_csv():
     """
     Migra datos desde un CSV a la tabla tbl_estructura_academica en PostgreSQL
-    utilizando el método de carga masiva COPY.
+    utilizando el método de carga masiva COPY de forma directa.
     """
     print("--- Iniciando migración de Estructura Académica desde CSV ---")
     
     pg_conn = None
+    pg_cursor = None
     
+    # Ruta directa al archivo CSV original
     csv_file_path = os.path.join(os.path.dirname(__file__), '..', 'tbl_estructura_academica_rows.csv')
 
     if not os.path.exists(csv_file_path):
@@ -31,37 +31,24 @@ def migrate_tbl_estructura_academica_from_csv():
 
         pg_cursor = pg_conn.cursor()
 
-        # 1. Leer el CSV y cargarlo en un buffer, seleccionando solo las columnas necesarias
-        print(f"Leyendo y transformando datos desde: {csv_file_path}")
+        # SQL para COPY. Asume que el orden de columnas en el CSV es:
+        # id,nombre,id_carrera,id_facultad,id_especialidad,id_sede,estado_ea
+        # y que la tabla tbl_estructura_academica tiene estas columnas.
+        sql_copy = """
+            COPY public.tbl_estructura_academica(id, nombre, id_carrera, id_facultad, id_especialidad, id_sede, estado_ea)
+            FROM STDIN WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',');
+        """
         
-        transformed_data = []
+        print("Iniciando carga masiva con COPY desde el archivo CSV...")
+        
         with open(csv_file_path, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
-            next(reader) # Omitir la cabecera
-            for row in reader:
-                # CSV: id,nombre,id_carrera,id_facultad,id_especialidad,id_sede,estado_ea
-                # Seleccionamos: id, nombre, id_especialidad, id_sede, estado_ea
-                transformed_data.append((row[0], row[1], row[4], row[5], row[6]))
+            pg_cursor.copy_expert(sql=sql_copy, file=f)
 
-        if not transformed_data:
-            print("No hay datos para migrar.")
-            return
-
-        # 2. Usar COPY desde el buffer en memoria
-        buffer = io.StringIO()
-        writer = csv.writer(buffer, delimiter='\t', quotechar='"')
-        writer.writerows(transformed_data)
-        buffer.seek(0)
-
-        columns = ('id', 'nombre', 'id_especialidad', 'id_sede', 'estado_ea')
-        sql_copy = f"COPY public.tbl_estructura_academica ({', '.join(columns)}) FROM STDIN WITH CSV DELIMITER AS E'\t'"
-        
-        print("Iniciando carga masiva con COPY en PostgreSQL...")
-        pg_cursor.copy_expert(sql=sql_copy, file=buffer)
-
+        # Contar las filas insertadas para confirmación
+        row_count = pg_cursor.rowcount
         pg_conn.commit()
         
-        print(f"¡Éxito! Se han cargado {len(transformed_data)} registros en 'tbl_estructura_academica'.")
+        print(f"¡Éxito! Se han cargado {row_count} registros en 'tbl_estructura_academica'.")
 
     except (Exception, psycopg2.Error) as e:
         print(f"Ocurrió un error: {e}")

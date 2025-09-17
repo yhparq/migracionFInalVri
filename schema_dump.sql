@@ -122,10 +122,10 @@ COMMENT ON COLUMN public.dic_carreras.estado_carrera IS '0 = inactivo
 
 CREATE TABLE public.dic_categoria (
     id integer NOT NULL,
-    tipo character(1) NOT NULL,
+    tipo character varying(10) NOT NULL,
     nombre text NOT NULL,
     abreviatura character varying,
-    estado_categoria character varying NOT NULL
+    estado_categoria smallint DEFAULT 1
 );
 
 
@@ -159,6 +159,7 @@ ALTER SEQUENCE public.dic_categoria_id_seq OWNED BY public.dic_categoria.id;
 
 CREATE TABLE public.dic_denominaciones (
     id integer NOT NULL,
+    id_carrera integer NOT NULL,
     id_especialidad integer NOT NULL,
     nombre text NOT NULL,
     denominacion_actual smallint NOT NULL
@@ -356,24 +357,23 @@ ALTER SEQUENCE public.dic_modalidades_id_seq OWNED BY public.dic_modalidades.id;
 
 
 --
--- Name: dic_nivel_admin; Type: TABLE; Schema: public; Owner: admin
+-- Name: dic_nivel_admins; Type: TABLE; Schema: public; Owner: admin
 --
 
-CREATE TABLE public.dic_nivel_admin (
+CREATE TABLE public.dic_nivel_admins (
     id integer NOT NULL,
-    nombre text,
-    descripcion text,
-    estado smallint
+    nombre text NOT NULL,
+    descripcion text NOT NULL
 );
 
 
-ALTER TABLE public.dic_nivel_admin OWNER TO admin;
+ALTER TABLE public.dic_nivel_admins OWNER TO admin;
 
 --
--- Name: dic_nivel_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: dic_nivel_admins_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
 --
 
-CREATE SEQUENCE public.dic_nivel_admin_id_seq
+CREATE SEQUENCE public.dic_nivel_admins_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -382,13 +382,13 @@ CREATE SEQUENCE public.dic_nivel_admin_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.dic_nivel_admin_id_seq OWNER TO admin;
+ALTER SEQUENCE public.dic_nivel_admins_id_seq OWNER TO admin;
 
 --
--- Name: dic_nivel_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: dic_nivel_admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
 --
 
-ALTER SEQUENCE public.dic_nivel_admin_id_seq OWNED BY public.dic_nivel_admin.id;
+ALTER SEQUENCE public.dic_nivel_admins_id_seq OWNED BY public.dic_nivel_admins.id;
 
 
 --
@@ -504,7 +504,8 @@ ALTER SEQUENCE public.dic_orden_jurado_id_seq OWNED BY public.dic_orden_jurado.i
 
 CREATE TABLE public.dic_sedes (
     id integer NOT NULL,
-    nombre text NOT NULL
+    nombre text NOT NULL,
+    estado_sede smallint DEFAULT 1
 );
 
 
@@ -647,23 +648,24 @@ ALTER SEQUENCE public.dic_tipo_trabajos_id_seq OWNED BY public.dic_tipo_trabajos
 
 
 --
--- Name: dic_tipoevento_jurado; Type: TABLE; Schema: public; Owner: admin
+-- Name: dic_tipo_evento; Type: TABLE; Schema: public; Owner: admin
 --
 
-CREATE TABLE public.dic_tipoevento_jurado (
+CREATE TABLE public.dic_tipo_evento (
     id integer NOT NULL,
-    nombre character varying(100) NOT NULL,
-    estado smallint DEFAULT 1 NOT NULL
+    nombre text NOT NULL,
+    descripcion text,
+    estado smallint DEFAULT 1
 );
 
 
-ALTER TABLE public.dic_tipoevento_jurado OWNER TO admin;
+ALTER TABLE public.dic_tipo_evento OWNER TO admin;
 
 --
--- Name: dic_tipoevento_jurado_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: dic_tipo_evento_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
 --
 
-CREATE SEQUENCE public.dic_tipoevento_jurado_id_seq
+CREATE SEQUENCE public.dic_tipo_evento_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -672,13 +674,13 @@ CREATE SEQUENCE public.dic_tipoevento_jurado_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.dic_tipoevento_jurado_id_seq OWNER TO admin;
+ALTER SEQUENCE public.dic_tipo_evento_id_seq OWNER TO admin;
 
 --
--- Name: dic_tipoevento_jurado_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: dic_tipo_evento_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
 --
 
-ALTER SEQUENCE public.dic_tipoevento_jurado_id_seq OWNED BY public.dic_tipoevento_jurado.id;
+ALTER SEQUENCE public.dic_tipo_evento_id_seq OWNED BY public.dic_tipo_evento.id;
 
 
 --
@@ -778,10 +780,11 @@ COMMENT ON COLUMN public.tbl_admins.nivel_admin IS 'nivel de autoridad y permiso
 CREATE TABLE public.tbl_admins_historial (
     id bigint NOT NULL,
     id_admin integer NOT NULL,
+    nivel_admin integer NOT NULL,
     cargo text NOT NULL,
-    estado_admin smallint NOT NULL,
+    estado_admin smallint DEFAULT 1 NOT NULL,
     detalle text,
-    fecha_cambio timestamp without time zone NOT NULL
+    fecha_cambio timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -843,8 +846,9 @@ CREATE TABLE public.tbl_archivos_tramites (
     nombre_archivo text NOT NULL,
     storage text NOT NULL,
     bucket text NOT NULL,
-    fecha timestamp without time zone NOT NULL,
-    estado_archivo smallint NOT NULL
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_archivo smallint DEFAULT 1 NOT NULL,
+    max_size numeric DEFAULT 4
 );
 
 
@@ -873,24 +877,25 @@ ALTER SEQUENCE public.tbl_archivos_tramites_id_seq OWNED BY public.tbl_archivos_
 
 
 --
--- Name: tbl_asignacion_jurado; Type: TABLE; Schema: public; Owner: admin
+-- Name: tbl_asignacion; Type: TABLE; Schema: public; Owner: admin
 --
 
-CREATE TABLE public.tbl_asignacion_jurado (
+CREATE TABLE public.tbl_asignacion (
     id integer NOT NULL,
-    tramite_id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_docente integer NOT NULL,
+    orden smallint,
     id_etapa integer NOT NULL,
-    id_orden integer NOT NULL,
-    iteracion smallint NOT NULL,
-    id_tipo_evento integer NOT NULL,
-    docente_id integer NOT NULL,
     id_usuario_asignador integer NOT NULL,
-    fecha_evento timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    estado smallint DEFAULT 1 NOT NULL
+    fecha_asignacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    iteracion integer,
+    tipo_evento integer NOT NULL,
+    estado_asignacion smallint DEFAULT 1,
+    imagen_sorteo text
 );
 
 
-ALTER TABLE public.tbl_asignacion_jurado OWNER TO admin;
+ALTER TABLE public.tbl_asignacion OWNER TO admin;
 
 --
 -- Name: tbl_coasesores; Type: TABLE; Schema: public; Owner: admin
@@ -974,10 +979,10 @@ ALTER SEQUENCE public.tbl_coasesores_id_seq OWNED BY public.tbl_coasesores.id;
 
 
 --
--- Name: tbl_conformacion_jurado_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: tbl_asignacion_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
 --
 
-CREATE SEQUENCE public.tbl_conformacion_jurado_historial_id_seq
+CREATE SEQUENCE public.tbl_asignacion_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -986,13 +991,13 @@ CREATE SEQUENCE public.tbl_conformacion_jurado_historial_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.tbl_conformacion_jurado_historial_id_seq OWNER TO admin;
+ALTER SEQUENCE public.tbl_asignacion_id_seq OWNER TO admin;
 
 --
--- Name: tbl_conformacion_jurado_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: tbl_asignacion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
 --
 
-ALTER SEQUENCE public.tbl_conformacion_jurado_historial_id_seq OWNED BY public.tbl_asignacion_jurado.id;
+ALTER SEQUENCE public.tbl_asignacion_id_seq OWNED BY public.tbl_asignacion.id;
 
 
 --
@@ -1003,12 +1008,12 @@ CREATE TABLE public.tbl_conformacion_jurados (
     id integer NOT NULL,
     id_tramite integer NOT NULL,
     id_docente integer NOT NULL,
-    id_orden integer NOT NULL,
+    orden smallint NOT NULL,
     id_etapa integer NOT NULL,
     id_usuario_asignador integer NOT NULL,
     id_asignacion integer,
-    fecha_asignacion timestamp without time zone,
-    estado_cj smallint NOT NULL
+    fecha_asignacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_cj smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -1082,12 +1087,13 @@ ALTER SEQUENCE public.tbl_coordinador_carrera_id_seq OWNED BY public.tbl_coordin
 CREATE TABLE public.tbl_coordinadores (
     id integer NOT NULL,
     id_usuario integer NOT NULL,
+    id_facultad integer NOT NULL,
     nivel_coordinador bigint NOT NULL,
     correo_oficina character varying(320),
     direccion_oficina text,
     horario text,
     telefono character varying(20),
-    estado_coordinador smallint
+    estado_coordinador smallint DEFAULT 1
 );
 
 
@@ -1117,8 +1123,8 @@ COMMENT ON COLUMN public.tbl_coordinadores.estado_coordinador IS '0 = inactivo
 CREATE TABLE public.tbl_coordinadores_historial (
     id bigint NOT NULL,
     id_coordinador integer NOT NULL,
-    estado_coordinador_historial smallint NOT NULL,
-    fecha timestamp without time zone NOT NULL,
+    estado_coordinador_historial smallint DEFAULT 1 NOT NULL,
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     numero_resolucion text,
     comentario text,
     id_accion integer,
@@ -1186,12 +1192,12 @@ ALTER SEQUENCE public.tbl_coordinadores_id_seq OWNED BY public.tbl_coordinadores
 
 CREATE TABLE public.tbl_correcciones_jurados (
     id bigint NOT NULL,
-    id_conformacion_jurado integer NOT NULL,
-    orden smallint NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_docente integer NOT NULL,
     mensaje_correccion text,
-    "Fecha_correccion" timestamp without time zone NOT NULL,
-    estado_correccion smallint NOT NULL,
-    id_etapa integer
+    fecha_correccion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_correccion smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -1324,8 +1330,9 @@ CREATE TABLE public.tbl_docentes (
     id_usuario integer NOT NULL,
     id_categoria integer NOT NULL,
     codigo_airhs character varying(10) NOT NULL,
+    id_carrera integer NOT NULL,
     id_especialidad integer NOT NULL,
-    estado_docente smallint NOT NULL,
+    estado_docente smallint DEFAULT 1 NOT NULL,
     id_antiguo bigint
 );
 
@@ -1470,9 +1477,11 @@ ALTER SEQUENCE public.tbl_docentes_lineas_id_seq OWNED BY public.tbl_docentes_li
 CREATE TABLE public.tbl_estructura_academica (
     id integer NOT NULL,
     nombre text,
+    id_carrera integer NOT NULL,
+    id_facultad integer NOT NULL,
     id_especialidad integer NOT NULL,
     id_sede integer NOT NULL,
-    estado_ea smallint NOT NULL
+    estado_ea smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -1543,11 +1552,11 @@ ALTER SEQUENCE public.tbl_estudios_id_seq1 OWNED BY public.tbl_estudios.id;
 
 CREATE TABLE public.tbl_grado_docente (
     id integer NOT NULL,
-    id_docente integer,
+    id_docente integer NOT NULL,
+    grado_academico text,
+    categoria_descripcion text,
     antiguedad_categoria date,
-    estado_tbl_grado_docente smallint,
-    id_grado_academico integer,
-    id_categoria integer
+    estado_grado_docente smallint DEFAULT 1
 );
 
 
@@ -1843,8 +1852,8 @@ CREATE TABLE public.tbl_tramites_historial (
     id bigint NOT NULL,
     id_tramite bigint NOT NULL,
     id_etapa integer NOT NULL,
-    estado_tramite_historial smallint NOT NULL,
-    fecha_cambio timestamp without time zone NOT NULL,
+    estado_tramite_historial smallint DEFAULT 1 NOT NULL,
+    fecha_cambio timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     comentario text NOT NULL
 );
 
@@ -2021,28 +2030,6 @@ ALTER SEQUENCE public.tbl_tramitesdoc_id_seq OWNED BY public.tbl_tramitesdoc.id;
 
 
 --
--- Name: tbl_universidades_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
---
-
-CREATE SEQUENCE public.tbl_universidades_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.tbl_universidades_id_seq OWNER TO admin;
-
---
--- Name: tbl_universidades_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
---
-
-ALTER SEQUENCE public.tbl_universidades_id_seq OWNED BY public.dic_universidades.id;
-
-
---
 -- Name: tbl_usuarios; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -2061,7 +2048,8 @@ CREATE TABLE public.tbl_usuarios (
     fecha_nacimiento date,
     contrasenia character varying(255),
     ruta_foto character varying(500),
-    estado smallint
+    estado smallint,
+    uuid uuid
 );
 
 
@@ -2155,10 +2143,10 @@ ALTER TABLE ONLY public.dic_modalidades ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: dic_nivel_admin id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: dic_nivel_admins id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
-ALTER TABLE ONLY public.dic_nivel_admin ALTER COLUMN id SET DEFAULT nextval('public.dic_nivel_admin_id_seq'::regclass);
+ALTER TABLE ONLY public.dic_nivel_admins ALTER COLUMN id SET DEFAULT nextval('public.dic_nivel_admins_id_seq'::regclass);
 
 
 --
@@ -2197,24 +2185,17 @@ ALTER TABLE ONLY public.dic_servicios ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: dic_tipo_evento id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.dic_tipo_evento ALTER COLUMN id SET DEFAULT nextval('public.dic_tipo_evento_id_seq'::regclass);
+
+
+--
 -- Name: dic_tipo_trabajos id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
 ALTER TABLE ONLY public.dic_tipo_trabajos ALTER COLUMN id SET DEFAULT nextval('public.dic_tipo_trabajos_id_seq'::regclass);
-
-
---
--- Name: dic_tipoevento_jurado id; Type: DEFAULT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.dic_tipoevento_jurado ALTER COLUMN id SET DEFAULT nextval('public.dic_tipoevento_jurado_id_seq'::regclass);
-
-
---
--- Name: dic_universidades id; Type: DEFAULT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.dic_universidades ALTER COLUMN id SET DEFAULT nextval('public.tbl_universidades_id_seq'::regclass);
 
 
 --
@@ -2246,10 +2227,10 @@ ALTER TABLE ONLY public.tbl_archivos_tramites ALTER COLUMN id SET DEFAULT nextva
 
 
 --
--- Name: tbl_asignacion_jurado id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: tbl_asignacion id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
-ALTER TABLE ONLY public.tbl_asignacion_jurado ALTER COLUMN id SET DEFAULT nextval('public.tbl_conformacion_jurado_historial_id_seq'::regclass);
+ALTER TABLE ONLY public.tbl_asignacion ALTER COLUMN id SET DEFAULT nextval('public.tbl_asignacion_id_seq'::regclass);
 
 
 --
@@ -2425,6 +2406,34 @@ ALTER TABLE ONLY public.tbl_usuarios ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.tbl_usuarios_servicios ALTER COLUMN id SET DEFAULT nextval('public.tbl_usuarios_servicios_id_seq'::regclass);
+
+
+--
+-- Name: tabla_metadatos_dictamen_borrador id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tabla_metadatos_dictamen_borrador ALTER COLUMN id SET DEFAULT nextval('public.tabla_metadatos_dictamen_borrador_id_seq'::regclass);
+
+
+--
+-- Name: tbl_coasesor_tramites id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coasesor_tramites ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesor_tramites_id_seq'::regclass);
+
+
+--
+-- Name: tbl_coasesor_tramites_historial id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesor_tramites_historial_id_seq'::regclass);
+
+
+--
+-- Name: tbl_programacion_sustentacion id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tbl_programacion_sustentacion ALTER COLUMN id SET DEFAULT nextval('public.tbl_programacion_sustentacion_id_seq'::regclass);
 
 
 --
@@ -4242,8 +4251,7 @@ ALTER TABLE ONLY public.tbl_grado_docente
 
 
 --
--- PostgreSQL database dump complete
+-- Name: PostgreSQL database dump complete
 --
 
 \unrestrict wsod1mFO2jW2ZaehKs7NPNADM5COeEPGrV0Nx5F2wyxEzkhnROYcEggwTayMA5z
-

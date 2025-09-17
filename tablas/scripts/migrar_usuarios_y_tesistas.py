@@ -78,7 +78,7 @@ def migrate_usuarios_y_tesistas_fast_v2():
             new_users_to_create[full_name_key] = (
                 nombres, apellidos, 'DNI', dni, email, None, record.get('NroCelular'),
                 None, record.get('Direccion'), record.get('Sexo'), None,
-                record.get('Clave'), None, 1 if record.get('Activo') == 'A' else 0
+                record.get('Clave'), None, 1
             )
 
         if new_users_to_create:
@@ -119,7 +119,7 @@ def migrate_usuarios_y_tesistas_fast_v2():
 
                 tesistas_to_insert_final.append(
                     (new_user_id, codigo_estudiante, record.get('IdCarrera'), 
-                     1 if record.get('Activo') == 'A' else 0, record.get('Id'))
+                     1, record.get('Id'))
                 )
 
         if tesistas_to_insert_final:

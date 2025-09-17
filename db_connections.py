@@ -55,35 +55,35 @@ def get_mysql_pilar3_connection():
         print(f"Error al conectar a MySQL (vriunap_pilar3): {err}")
         return None
 
-def get_postgres_connection():
-    """Devuelve una conexión a la base de datos de PostgreSQL local."""
-    try:
-        # --- Conexión a PostgreSQL Local ---
-        conn = psycopg2.connect(
-            host="localhost",
-            port="5432",
-            user="admin",
-            password="admin123",
-            dbname="postgres"
-        )
-        print("Conexión exitosa a PostgreSQL Local.")
-        return conn
-    except psycopg2.Error as err:
-        print(f"Error al conectar a PostgreSQL Local: {err}")
-        return None
+# def get_postgres_connection():
+#     """Devuelve una conexión a la base de datos de PostgreSQL local."""
+#     try:
+#         # --- Conexión a PostgreSQL Local ---
+#         conn = psycopg2.connect(
+#             host="localhost",
+#             port="5432",
+#             user="admin",
+#             password="admin123",
+#             dbname="postgres"
+#         )
+#         print("Conexión exitosa a PostgreSQL Local.")
+#         return conn
+#     except psycopg2.Error as err:
+#         print(f"Error al conectar a PostgreSQL Local: {err}")
+#         return None
 
 # --- Conexión a Supabase (Desactivada) ---
-# def get_postgres_connection():
-#     """Devuelve una conexión a la base de datos de PostgreSQL usando DATABASE_URL."""
-#     try:
-#         if not DATABASE_URL:
-#             raise ValueError("La variable de entorno DATABASE_URL no está definida.")
-#         conn = psycopg2.connect(DATABASE_URL)
-#         print("Conexión exitosa a PostgreSQL (Supabase).")
-#         return conn
-#     except (psycopg2.Error, ValueError) as err:
-#         print(f"Error al conectar a PostgreSQL (Supabase): {err}")
-#         return None
+def get_postgres_connection():
+    """Devuelve una conexión a la base de datos de PostgreSQL usando DATABASE_URL."""
+    try:
+        if not DATABASE_URL:
+            raise ValueError("La variable de entorno DATABASE_URL no está definida.")
+        conn = psycopg2.connect(DATABASE_URL)
+        print("Conexión exitosa a PostgreSQL (Supabase).")
+        return conn
+    except (psycopg2.Error, ValueError) as err:
+        print(f"Error al conectar a PostgreSQL (Supabase): {err}")
+        return None
 
 
 

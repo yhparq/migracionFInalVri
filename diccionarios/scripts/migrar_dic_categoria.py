@@ -41,8 +41,8 @@ def migrate_dic_categoria_fast():
         print(f"Se encontraron {len(source_data)} registros. Preparando para carga masiva.")
         
         # Añadir el valor por defecto para estado_categoria
-        # El campo estado_categoria en postgres es VARCHAR, por lo que enviamos '1' como string
-        transformed_data = [(row[0], row[1], row[2], row[3], '1') for row in source_data]
+        # El campo estado_categoria en postgres es SMALLINT, por lo que enviamos 1 como número
+        transformed_data = [(row[0], row[1], row[2], row[3], 1) for row in source_data]
 
         # 3. Usar COPY para una carga masiva y eficiente
         buffer = io.StringIO()

@@ -3,6 +3,7 @@ import psycopg2
 import sys
 import os
 import io
+import csv
 from db_connections import get_postgres_connection, get_mysql_pilar3_connection
 
 # Ajuste del sys.path para permitir importaciones desde el directorio raíz del proyecto
@@ -36,24 +37,17 @@ def migrate_tbl_correcciones_jurados():
         tramites_map = {row[1]: row[0] for row in pg_cur.fetchall()}
         print(f"  Mapeo inicial completado: {len(docente_map)} docentes, {len(tramites_map)} trámites.")
 
-        # 2. Crear mapa de búsqueda para la conformación de jurados
-        print("  Paso 2: Creando mapa de búsqueda para la conformación de jurados...")
-        pg_cur.execute("SELECT id, id_tramite, id_docente, id_orden FROM tbl_conformacion_jurados")
-        conformacion_map = {(row[1], row[2]): (row[0], row[3]) for row in pg_cur.fetchall()}
-        print(f"  Se mapearon {len(conformacion_map)} registros de conformación para búsqueda.")
-
-        # 3. Leer correcciones de la tabla de origen en MySQL (tesCorrects)
-        print("  Paso 3: Leyendo correcciones desde MySQL (tesCorrects)...")
+        # 2. Leer correcciones de la tabla de origen en MySQL (tesCorrects)
+        print("  Paso 2: Leyendo correcciones desde MySQL (tblCorrects)...")
         mysql_cur.execute("SELECT IdTramite, IdDocente, Fecha, Mensaje, Iteracion FROM tblCorrects")
         source_correcciones = mysql_cur.fetchall()
         print(f"  Se encontraron {len(source_correcciones)} correcciones en origen.")
 
-        # 4. Preparar datos para la inserción, aplicando la lógica de negocio
-        print("  Paso 4: Procesando y transformando datos...")
+        # 3. Preparar datos para la inserción, aplicando la lógica de negocio
+        print("  Paso 3: Procesando y transformando datos...")
         data_for_copy = []
         unmatched_count = 0
-        unmatched_log = []
-
+        
         for corr in source_correcciones:
             id_tramite_antiguo = corr['IdTramite']
             id_docente_antiguo = corr['IdDocente']
@@ -64,61 +58,39 @@ def migrate_tbl_correcciones_jurados():
 
             if not new_tramite_id or not new_docente_id:
                 unmatched_count += 1
-                unmatched_log.append(f"  - Razón: No se encontró mapeo de ID para Trámite Antiguo '{id_tramite_antiguo}' o Docente Antiguo '{id_docente_antiguo}'.")
                 continue
-
-            match = conformacion_map.get((new_tramite_id, new_docente_id))
-            
-            if not match:
-                unmatched_count += 1
-                unmatched_log.append(f"  - Razón: No se encontró registro de conformación para Trámite Nuevo '{new_tramite_id}' y Docente Nuevo '{new_docente_id}'.")
-                continue
-
-            id_conformacion_jurado, id_orden = match
 
             id_etapa = None
-            if iteracion == 1:
-                id_etapa = 6
-            elif iteracion in [2, 3]:
-                id_etapa = 7
-            elif iteracion == 4:
-                id_etapa = 12
+            if iteracion == 1: id_etapa = 6
+            elif iteracion in [2, 3]: id_etapa = 7
+            elif iteracion == 4: id_etapa = 12
             
             if id_etapa is None:
                 unmatched_count += 1
-                unmatched_log.append(f"  - Razón: Iteración '{iteracion}' no mapea a una etapa válida para Trámite Antiguo '{id_tramite_antiguo}'.")
                 continue
 
+            mensaje_limpio = str(corr['Mensaje']).replace('\t', ' ').replace('\n', ' ').replace('\r', ' ')
+
             data_for_copy.append(
-                (id_conformacion_jurado, id_orden, corr['Mensaje'], 
-                 corr['Fecha'], 1, id_etapa)
+                (new_tramite_id, new_docente_id, id_etapa, mensaje_limpio, 
+                 corr['Fecha'], 1)
             )
         
         print(f"  Se prepararon {len(data_for_copy)} correcciones para la carga masiva.")
         if unmatched_count > 0:
-            print(f"  Se ignoraron {unmatched_count} correcciones.")
-            # (Opcional: imprimir logs si es necesario para depuración)
+            print(f"  Se ignoraron {unmatched_count} correcciones por falta de mapeo o etapa inválida.")
 
-        # 5. Cargar los datos en PostgreSQL usando el método COPY
+        # 4. Cargar los datos en PostgreSQL usando el método COPY
         if data_for_copy:
-            print("  Paso 5: Cargando datos en PostgreSQL con COPY...")
+            print("  Paso 4: Cargando datos en PostgreSQL con COPY...")
             buffer = io.StringIO()
-            for record in data_for_copy:
-                # Limpiar saltos de línea y tabulaciones en el mensaje para no romper el formato CSV
-                mensaje_limpio = str(record[2]).replace('\t', ' ').replace('\n', ' ').replace('\r', ' ')
-                
-                # Reconstruir la tupla con el mensaje limpio
-                clean_record = (record[0], record[1], mensaje_limpio, record[3], record[4], record[5])
-                
-                line = '\t'.join(str(item) if item is not None else '\\N' for item in clean_record)
-                buffer.write(line + '\n')
-            
+            writer = csv.writer(buffer, delimiter='\t', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerows(data_for_copy)
             buffer.seek(0)
 
-            # OJO: "Fecha_correccion" va entre comillas dobles porque es case-sensitive en PostgreSQL
             columns = (
-                'id_conformacion_jurado', 'orden', 'mensaje_correccion', 
-                '"Fecha_correccion"', 'estado_correccion', 'id_etapa'
+                'id_tramite', 'id_docente', 'id_etapa', 'mensaje_correccion', 
+                'fecha_correccion', 'estado_correccion'
             )
             
             pg_cur.copy_expert(

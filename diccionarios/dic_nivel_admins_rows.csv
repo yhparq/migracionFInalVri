@@ -1,4 +1,6 @@
 id,nombre,descripcion
-1,Super Admin,"Tiene acceso completo a todas las funcionalidades del sistema, sin restricciones."
-2,Administrador Secretaria,"Tiene permisos para gestionar trámites, usuarios y reportes, pero con acceso limitado a la configuración del sistema."
-3,Administrador Básico,"Tiene permisos de solo lectura y para realizar acciones básicas de seguimiento."
+1,"admin general","acceso completo al sistema"
+2,"admin sistema","acceso parcial"
+3,"admin parcial","acceso parcial"
+4,"admin consulta total","acceso para consultas"
+5,"admin consulta parcial","acceso solo consulta parcial"

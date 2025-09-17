@@ -30,38 +30,24 @@ def migrate_dic_denominaciones_from_csv():
 
         pg_cursor = pg_conn.cursor()
 
-        # 1. Leer el CSV y cargarlo en un buffer, seleccionando solo las columnas necesarias
-        print(f"Leyendo y transformando datos desde: {csv_file_path}")
+        # 1. Leer el CSV y cargarlo directamente en el buffer para COPY
+        print(f"Leyendo archivo CSV: {csv_file_path}")
         
-        transformed_data = []
+        # Las columnas en el CSV coinciden con la tabla de destino.
+        columns = ('id', 'id_carrera', 'id_especialidad', 'nombre', 'denominacion_actual')
+        
         with open(csv_file_path, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
-            next(reader) # Omitir la cabecera
-            for row in reader:
-                # CSV: id,id_carrera,id_especialidad,nombre,denominacion_actual
-                # Seleccionamos: id, id_especialidad, nombre, denominacion_actual
-                transformed_data.append((row[0], row[2], row[3], row[4]))
-
-        if not transformed_data:
-            print("No hay datos para migrar.")
-            return
-
-        # 2. Usar COPY desde el buffer en memoria
-        buffer = io.StringIO()
-        writer = csv.writer(buffer, delimiter='\t', quotechar='"')
-        writer.writerows(transformed_data)
-        buffer.seek(0)
-
-        # Especificamos las columnas que vamos a insertar
-        columns = ('id', 'id_especialidad', 'nombre', 'denominacion_actual')
-        sql_copy = f"COPY public.dic_denominaciones ({', '.join(columns)}) FROM STDIN WITH CSV DELIMITER AS E'\t'"
-        
-        print("Iniciando carga masiva con COPY en PostgreSQL...")
-        pg_cursor.copy_expert(sql=sql_copy, file=buffer)
+            # Usamos copy_expert que es más directo y eficiente
+            sql_copy = f"COPY public.dic_denominaciones ({', '.join(columns)}) FROM STDIN WITH CSV HEADER DELIMITER ','"
+            
+            print("Iniciando carga masiva con COPY en PostgreSQL...")
+            pg_cursor.copy_expert(sql=sql_copy, file=f)
 
         pg_conn.commit()
         
-        print(f"¡Éxito! Se han cargado {len(transformed_data)} registros en 'dic_denominaciones'.")
+        # Para obtener el número de filas, podríamos hacer un COUNT, pero es más simple
+        # confiar en que si no hay error, se cargó todo el archivo.
+        print(f"¡Éxito! Se han cargado los datos en 'dic_denominaciones' desde el CSV.")
 
     except Exception as e:
         print(f"Ocurrió un error: {e}")

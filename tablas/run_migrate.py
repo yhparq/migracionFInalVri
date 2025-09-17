@@ -13,7 +13,7 @@ from migrar_usuarios_y_tesistas import migrate_usuarios_y_tesistas_fast_v2
 from migrar_tbl_sublineas_vri import migrate_tbl_sublineas_vri_fast
 from migrar_tbl_tramites import migrate_tbl_tramites_fast
 from migrar_tbl_docente_categoria_historial import migrate_docente_categoria_historial_mapeado
-from migrar_tbl_asignacion_jurado import migrate_tbl_asignacion_jurado_fast
+from migrar_tbl_asignacion import migrate_tbl_asignacion_fast
 from crear_usuario_sistema import create_system_user
 from migrar_tbl_conformacion_jurado import migrate_tbl_conformacion_jurado_fast
 from migrar_tbl_correcciones import migrate_tbl_correcciones_jurados
@@ -95,41 +95,41 @@ def main():
     print("--- INICIANDO PROCESO DE MIGRACIÓN DE TABLAS ---")
     
     # 1. Limpiar las tablas transaccionales antes de empezar
-    clean_transactional_tables()
+    # clean_transactional_tables()
     
     # 2. Ejecutar migraciones de tablas en el orden correcto
     print("\n--- Ejecutando scripts de migración de tablas ---")
     
-    migrate_tbl_estructura_academica_from_csv()
-    migrate_usuarios_y_docentes_fast()
-    migrate_tbl_sublineas_vri_fast()
-    migrate_usuarios_y_tesistas_fast_v2()
-    migrate_tbl_tramites_fast()
-    migrate_docente_categoria_historial_mapeado()
-    create_system_user()
-    migrate_tbl_asignacion_jurado_fast()
-    migrate_tbl_conformacion_jurado_fast()
-    migrate_tbl_correcciones_jurados()
-    migrate_tbl_tramites_det()
-    migrate_tbl_docentes_lineas()
-    migrate_tbl_docentes_lineas_historial()
-    migrate_tbl_dictamenes_info()
-    migrate_tbl_dictamenes_sustentaciones()
-    insertar_actas_de_sustentacion()
-    migrar_tbl_coordinadores()
-    migrar_tbl_admins()
-    migrar_tbl_coordinador_carrera()
-    migrar_coordinadores_historial()
+    # migrate_tbl_estructura_academica_from_csv()
+    # migrate_usuarios_y_docentes_fast()
+    # migrate_tbl_sublineas_vri_fast()
+    # migrate_usuarios_y_tesistas_fast_v2()
+    # migrate_tbl_tramites_fast()
+    # migrate_docente_categoria_historial_mapeado()
+    # create_system_user()
+    # migrate_tbl_asignacion_fast()
+    # migrate_tbl_conformacion_jurado_fast()
+    # migrate_tbl_correcciones_jurados()
+    # migrate_tbl_tramites_det()
+    # migrate_tbl_docentes_lineas()
+    # migrate_tbl_docentes_lineas_historial()
+    # migrate_tbl_dictamenes_info()
+    # migrate_tbl_dictamenes_sustentaciones()
+    # # insertar_actas_de_sustentacion()
+    # migrar_tbl_coordinadores()
+    # migrar_tbl_admins()
+    # migrar_tbl_coordinador_carrera()
+    # migrar_coordinadores_historial()
     # populate_sunedu_data_directly()
-    migrar_tbl_usuarios_servicios()
-    migrate_tbl_grado_docente()
-    migrate_perfil_investigador_from_csv()
-    migrate_coasesores()
-    migrar_tbl_coasesores_historial()
-    migrar_log_acciones()
-    migrate_tbl_integrantes()
-    migrate_tbl_tramites_metadatos()
-    migrate_tbl_archivos_tramites()
+    # migrar_tbl_usuarios_servicios()
+    # migrate_tbl_grado_docente()
+    # migrate_perfil_investigador_from_csv()
+    # migrate_coasesores()
+    # migrar_tbl_coasesores_historial()
+    # migrar_log_acciones()
+    # migrate_tbl_integrantes()
+    # migrate_tbl_tramites_metadatos()
+    migrate_tbl_archivos_tramites() 
     
     
     print("\n--- PROCESO DE MIGRACIÓN DE TABLAS FINALIZADO ---")

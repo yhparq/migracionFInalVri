@@ -99,7 +99,7 @@ def migrate_tbl_conformacion_jurado_fast():
             buffer.seek(0)
 
             columns = (
-                'id_tramite', 'id_docente', 'id_orden', 'id_etapa', 
+                'id_tramite', 'id_docente', 'orden', 'id_etapa', 
                 'id_usuario_asignador', 'id_asignacion', 'fecha_asignacion', 'estado_cj'
             )
             

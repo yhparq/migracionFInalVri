@@ -101,29 +101,46 @@ def migrate_tbl_tramites_metadatos():
             print("No hay datos de metadatos para migrar.")
             return
 
-        # 4. Cargar datos en PostgreSQL
+        # 4. Cargar datos en PostgreSQL en lotes
         df_final = pd.DataFrame(metadatos_list)
         
         print("  Paso 4: Iniciando carga de datos a tbl_tramites_metadatos...")
-        buffer = io.StringIO()
-        df_final.to_csv(buffer, index=False, header=False, sep='\t', na_rep='\\N')
-        buffer.seek(0)
-
+        
         with postgres_conn.cursor() as cursor:
             # Limpiar la tabla antes de insertar para evitar duplicados en re-ejecuciones
             print("    Limpiando la tabla tbl_tramites_metadatos...")
             cursor.execute("TRUNCATE TABLE public.tbl_tramites_metadatos RESTART IDENTITY CASCADE;")
 
-            print("    Cargando nuevos datos...")
-            cursor.copy_expert(
-                sql=r"""
-                    COPY public.tbl_tramites_metadatos (
-                        id_tramite, titulo, abstract, keywords, conclusiones,
-                        presupuesto, id_etapa, fecha, estado_tm
-                    ) FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', NULL '\\N')
-                """,
-                file=buffer
-            )
+            # Procesar en lotes
+            batch_size = 10000
+            total_rows = len(df_final)
+            
+            print(f"    Cargando {total_rows} registros en lotes de {batch_size}...")
+            
+            for i in range(0, total_rows, batch_size):
+                batch_df = df_final.iloc[i:i + batch_size]
+                
+                buffer = io.StringIO()
+                batch_df.to_csv(buffer, index=False, header=False, sep='\t', na_rep='\\N')
+                buffer.seek(0)
+
+                try:
+                    cursor.copy_expert(
+                        sql=r"""
+                            COPY public.tbl_tramites_metadatos (
+                                id_tramite, titulo, abstract, keywords, conclusiones,
+                                presupuesto, id_etapa, fecha, estado_tm
+                            ) FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', NULL '\\N')
+                        """,
+                        file=buffer
+                    )
+                    print(f"      - Lote {i // batch_size + 1}/{(total_rows // batch_size) + 1} cargado exitosamente.")
+                except (Exception, psycopg2.Error) as batch_error:
+                    print(f"      - ERROR en el lote {i // batch_size + 1}: {batch_error}")
+                    postgres_conn.rollback() # Revertir el lote fallido
+                    # Opcional: decidir si continuar con el siguiente lote o detener todo
+                    continue 
+
         postgres_conn.commit()
         print(f"  Carga masiva completada. Se han migrado {len(df_final)} registros.")
 

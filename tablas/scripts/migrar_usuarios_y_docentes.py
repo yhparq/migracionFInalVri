@@ -65,13 +65,11 @@ def migrate_usuarios_y_docentes_fast():
             record['generated_email'] = email # Guardamos el email que se usará
             valid_docente_records.append(record)
 
-            estado = 1 if str(record.get('Activo')).strip().upper() == 'A' else 0
-
             usuarios_to_insert.append(( 
                 record.get('Nombres'), record.get('Apellidos'), 'DNI', dni, email,
                 None, record.get('NroCelular'), None, record.get('Direccion'),
                 record.get('Sexo'), record.get('FechaNac'), record.get('Clave'),
-                None, estado
+                None, 1 # Se establece el estado a 1 (activo) por defecto
             ))
 
         if usuarios_to_insert:
@@ -105,24 +103,26 @@ def migrate_usuarios_y_docentes_fast():
         for record in valid_docente_records:
             new_user_id = user_map.get(record['generated_email'])
             if new_user_id:
-                # **AQUÍ ESTÁ LA CORRECCIÓN**
-                # Si CodAIRH es nulo o vacío, usar 'S/C' como placeholder
                 codigo_airhs = record.get('CodAIRH')
                 if not codigo_airhs or not codigo_airhs.strip():
                     codigo_airhs = 'S/C'
 
-                # **AQUÍ ESTÁ LA NUEVA CORRECCIÓN**
-                # Si IdEspecialidad es nulo o 0, usar 1 como placeholder
                 id_especialidad = record.get('IdEspecialidad')
                 if not id_especialidad or id_especialidad == 0:
                     id_especialidad = 1
 
+                # **CORRECCIÓN: Obtener IdCarrera directamente del registro**
+                id_carrera = record.get('IdCarrera')
+                if not id_carrera or id_carrera == 0:
+                    id_carrera = 1 # Usar 1 como valor por defecto
+
                 docentes_to_insert.append(( 
                     new_user_id,
                     record.get('IdCategoria'),
+                    id_carrera,
                     codigo_airhs,
                     id_especialidad,
-                    1 if str(record.get('Activo')).strip().upper() == 'A' else 0,
+                    1, # Se establece el estado a 1 (activo) por defecto
                     record.get('Id') # id_antiguo
                 ))
 
@@ -133,7 +133,7 @@ def migrate_usuarios_y_docentes_fast():
             writer_docentes.writerows(docentes_to_insert)
             buffer_docentes.seek(0)
 
-            cols_docentes = ('id_usuario', 'id_categoria', 'codigo_airhs', 'id_especialidad', 'estado_docente', 'id_antiguo')
+            cols_docentes = ('id_usuario', 'id_categoria', 'id_carrera', 'codigo_airhs', 'id_especialidad', 'estado_docente', 'id_antiguo')
             
             print("Iniciando carga masiva en tbl_docentes...")
             postgres_cursor.copy_expert(f"COPY public.tbl_docentes ({', '.join(cols_docentes)}) FROM STDIN WITH CSV DELIMITER AS E'\t'", buffer_docentes)

@@ -1,19 +1,17 @@
 import psycopg2
 import sys
 import os
+import io
+import csv
 from db_connections import get_postgres_connection, get_mysql_pilar3_connection, get_mysql_absmain_connection
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 def migrate_tbl_dictamenes_sustentaciones():
     """
-    Puebla tbl_dictamenes_info con datos de sustentaciones (tesSustenAct).
-    - No borra registros existentes.
-    - La lógica de aprobación se basa en el campo 'Obs'.
-    - El folio se mapea desde el ID de tesSustenAct.
-    - Lógica de denominación y escuela profesional corregida.
+    OPTIMIZADO: Puebla tbl_dictamenes_info con datos de sustentaciones (tesSustenAct) usando COPY.
     """
-    print("--- Iniciando migración de sustentaciones para poblar tbl_dictamenes_info (v2 CORREGIDA) ---")
+    print("--- Iniciando migración OPTIMIZADA de sustentaciones para tbl_dictamenes_info (COPY) ---")
     pg_conn = None
     mysql_conn_pilar3 = None
     mysql_conn_absmain = None
@@ -129,29 +127,38 @@ def migrate_tbl_dictamenes_sustentaciones():
 
             titulo = titulos_map.get(id_tramite_antiguo, 'Título no encontrado')
 
-            record = (
+            records_to_insert.append((
                 new_tramite_id, tramite_info.get('Codigo'), tipo_aprobacion_id,
                 titulo, denominacion_final, tesista1, tesista2,
                 escuela_profesional,
                 presidente, primer_miembro, segundo_miembro, asesor,
                 None, sus.get('Fecha'), None, 1, 2, id_sustentacion_antiguo
-            )
-            records_to_insert.append(record)
+            ))
 
         print(f"\n  Resumen del procesamiento: {total_source} registros leídos, {len(records_to_insert)} preparados para inserción, {omitted_count} omitidos.")
 
         if records_to_insert:
-            print("  Paso 4: Insertando datos de sustentaciones en tbl_dictamenes_info...")
-            insert_query = """
-                INSERT INTO tbl_dictamenes_info (
-                    id_tramite, codigo_proyecto, tipo_aprobacion, titulo, denominacion, tesista1, tesista2,
-                    escuela_profesional, presidente, primer_miembro, segundo_miembro, asesor,
-                    coasesor, fecha_dictamen, token, estado, tipo_acta, folio
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            pg_cur.executemany(insert_query, records_to_insert)
+            print("  Paso 4: Cargando datos de sustentaciones en tbl_dictamenes_info con COPY...")
+            
+            buffer = io.StringIO()
+            for record in records_to_insert:
+                clean_record = [str(item).replace('\t', ' ').replace('\n', ' ').replace('\r', ' ').replace('"', "'") if item is not None else '\\N' for item in record]
+                line = '\t'.join(clean_record)
+                buffer.write(line + '\n')
+            buffer.seek(0)
+
+            columns = (
+                'id_tramite', 'codigo_proyecto', 'tipo_aprobacion', 'titulo', 'denominacion', 'tesista1', 'tesista2',
+                'escuela_profesional', 'presidente', 'primer_miembro', 'segundo_miembro', 'asesor',
+                'coasesor', 'fecha_dictamen', 'token', 'estado', 'tipo_acta', 'folio'
+            )
+            
+            pg_cur.copy_expert(
+                sql=f"COPY public.tbl_dictamenes_info ({', '.join(columns)}) FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', NULL '\\N')",
+                file=buffer
+            )
             pg_conn.commit()
-            print(f"  ¡Éxito! Se insertaron {pg_cur.rowcount} registros nuevos.")
+            print(f"  ¡Éxito! Se insertaron {len(records_to_insert)} registros nuevos.")
 
         print("--- Migración de sustentaciones para tbl_dictamenes_info completada. ---")
 
