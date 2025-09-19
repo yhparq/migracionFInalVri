@@ -38,6 +38,7 @@ from actualizar_sustentaciones import insertar_actas_de_sustentacion
 from migrar_tbl_tramites_metadatos import migrate_tbl_tramites_metadatos
 from migrar_tbl_archivos_tramites import migrate_tbl_archivos_tramites
 from migrar_tbl_programacion_sustentacion import migrate_tbl_programacion_sustentacion
+from subir_archivos_a_supabase import subir_archivos_a_supabase
 
 
 def clean_transactional_tables():
@@ -125,7 +126,7 @@ def main():
     # migrar_coordinadores_historial()
 
 
-    populate_sunedu_data_directly()
+    # populate_sunedu_data_directly()
     # migrate_tbl_grado_docente()
 
     # migrate_perfil_investigador_from_csv()
@@ -136,12 +137,8 @@ def main():
     # migrar_log_acciones()
     # migrate_tbl_tramites_metadatos()
     # migrate_tbl_programacion_sustentacion()
-
-
-
-
-
     # migrate_tbl_archivos_tramites()
+    subir_archivos_a_supabase()
 
 
 

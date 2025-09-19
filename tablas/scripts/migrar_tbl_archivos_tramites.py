@@ -1,6 +1,7 @@
 import io
 import os
 import sys
+import re
 import pandas as pd
 import psycopg2
 from collections import defaultdict
@@ -74,6 +75,8 @@ def migrate_tbl_archivos_tramites():
             id_tramite_nuevo = tramite_info['id']
             codigo_proyecto_original = tramite_info['codigo']
             codigo_proyecto_limpio = codigo_proyecto_original.replace('T-', '') if codigo_proyecto_original else ''
+            if codigo_proyecto_limpio:
+                codigo_proyecto_limpio = re.sub(r'P\d+-', '', codigo_proyecto_limpio)
 
             # Lógica de mapeo de Etapa y Tipo de Archivo basada en Iteracion
             id_etapa_candidata = None
@@ -104,9 +107,8 @@ def migrate_tbl_archivos_tramites():
             version_letter = chr(version_tracker[version_key])
             version_tracker[version_key] += 1
 
-            year_part = pd.to_datetime(row['Fecha']).strftime('%y') if pd.notna(row['Fecha']) else "00"
             _, extension = os.path.splitext(original_filename)
-            nuevo_nombre_archivo = f"{version_letter}{id_tipo_archivo}-P{year_part}-{codigo_proyecto_limpio}{extension}"
+            nuevo_nombre_archivo = f"{version_letter}{id_tipo_archivo}-{codigo_proyecto_limpio}{extension}"
 
             original_file_path = os.path.join(source_files_path, original_filename)
             new_file_path = os.path.join(source_files_path, nuevo_nombre_archivo)
