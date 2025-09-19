@@ -30,9 +30,22 @@ def migrate_tbl_sublineas_vri_fast():
         mysql_cursor = mysql_conn.cursor(dictionary=True)
         postgres_cursor = postgres_conn.cursor()
 
-        # 2. Extraer y transformar datos de MySQL
+        # 2. Extraer y transformar datos de MySQL directamente
         print("Extrayendo datos de 'tblLineas' desde MySQL...")
-        mysql_cursor.execute("SELECT Id, id_lineaV, Nombre, IdDiscip, IdCarrera, fecha, Estado FROM tblLineas;")
+        mysql_query = """
+            SELECT 
+                Id, 
+                id_lineaV, 
+                Nombre, 
+                IdDiscip, 
+                IdCarrera, 
+                fecha, 
+                Estado,
+                IdArea AS id_area,
+                IdSubArea AS id_subarea
+            FROM tblLineas;
+        """
+        mysql_cursor.execute(mysql_query)
         source_data = mysql_cursor.fetchall()
         
         if not source_data:
@@ -41,7 +54,7 @@ def migrate_tbl_sublineas_vri_fast():
             
         print(f"Se encontraron {len(source_data)} registros. Preparando para carga masiva.")
         
-        # 3. Preparar los datos para la inserción, duplicando la fecha
+        # 3. Preparar los datos para la inserción
         transformed_data = []
         for row in source_data:
             transformed_data.append([
@@ -52,7 +65,9 @@ def migrate_tbl_sublineas_vri_fast():
                 row['IdCarrera'],
                 row['fecha'],      # fecha_registro
                 row['fecha'],      # fecha_modificacion
-                row['Estado']
+                row['Estado'],
+                row.get('id_area') or 1,  # Usar 1 como valor por defecto si es NULL
+                row.get('id_subarea') or 1 # Usar 1 como valor por defecto si es NULL
             ])
 
         # 4. Usar COPY para una carga masiva y eficiente
@@ -63,7 +78,7 @@ def migrate_tbl_sublineas_vri_fast():
 
         print("Iniciando carga masiva con COPY en PostgreSQL...")
         
-        columns = ('id', 'id_linea_universidad', 'nombre', 'id_disciplina', 'id_carrera', 'fecha_registro', 'fecha_modificacion', 'estado_sublinea_vri')
+        columns = ('id', 'id_linea_universidad', 'nombre', 'id_disciplina', 'id_carrera', 'fecha_registro', 'fecha_modificacion', 'estado_sublinea_vri', 'id_area', 'id_subarea')
         postgres_cursor.copy_expert(f"COPY public.tbl_sublineas_vri ({', '.join(columns)}) FROM STDIN WITH CSV DELIMITER AS E'\t'", buffer)
 
         postgres_conn.commit()

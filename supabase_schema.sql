@@ -2,15 +2,13 @@
 -- PostgreSQL database dump
 --
 
-\restrict rynNyeweF47t5oDaqYYm24PUGI90Sc16yduNtADkDCOrczxqyz0RFYOJr3V5b0Z
+\restrict AYoCfz1mg2l75hrhnFN9cN057eilyte5wVofof9JbALOdua6UpNJoYsEWEbFyPs
 
--- Dumped from database version 17.6
--- Dumped by pg_dump version 17.6
+-- Dumped from database version 16.10 (Ubuntu 16.10-0ubuntu0.24.04.1)
+-- Dumped by pg_dump version 16.10 (Ubuntu 16.10-0ubuntu0.24.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -20,1974 +18,110 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: auth; Type: SCHEMA; Schema: -; Owner: supabase_admin
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
 --
 
-CREATE SCHEMA auth;
 
 
-ALTER SCHEMA auth OWNER TO supabase_admin;
-
---
--- Name: extensions; Type: SCHEMA; Schema: -; Owner: postgres
---
-
-CREATE SCHEMA extensions;
-
-
-ALTER SCHEMA extensions OWNER TO postgres;
-
---
--- Name: graphql; Type: SCHEMA; Schema: -; Owner: supabase_admin
---
-
-CREATE SCHEMA graphql;
-
-
-ALTER SCHEMA graphql OWNER TO supabase_admin;
-
---
--- Name: graphql_public; Type: SCHEMA; Schema: -; Owner: supabase_admin
---
-
-CREATE SCHEMA graphql_public;
-
-
-ALTER SCHEMA graphql_public OWNER TO supabase_admin;
-
---
--- Name: pgbouncer; Type: SCHEMA; Schema: -; Owner: pgbouncer
---
-
-CREATE SCHEMA pgbouncer;
-
-
-ALTER SCHEMA pgbouncer OWNER TO pgbouncer;
-
---
--- Name: realtime; Type: SCHEMA; Schema: -; Owner: supabase_admin
---
-
-CREATE SCHEMA realtime;
-
-
-ALTER SCHEMA realtime OWNER TO supabase_admin;
-
---
--- Name: storage; Type: SCHEMA; Schema: -; Owner: supabase_admin
---
-
-CREATE SCHEMA storage;
-
-
-ALTER SCHEMA storage OWNER TO supabase_admin;
-
---
--- Name: vault; Type: SCHEMA; Schema: -; Owner: supabase_admin
---
-
-CREATE SCHEMA vault;
-
-
-ALTER SCHEMA vault OWNER TO supabase_admin;
-
---
--- Name: pg_graphql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_graphql WITH SCHEMA graphql;
-
-
---
--- Name: EXTENSION pg_graphql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pg_graphql IS 'pg_graphql: GraphQL support';
-
-
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA extensions;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
-
-
---
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
-
-
---
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
-
-
---
--- Name: supabase_vault; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS supabase_vault WITH SCHEMA vault;
-
-
---
--- Name: EXTENSION supabase_vault; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION supabase_vault IS 'Supabase Vault Extension';
-
-
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
---
--- Name: aal_level; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.aal_level AS ENUM (
-    'aal1',
-    'aal2',
-    'aal3'
-);
-
-
-ALTER TYPE auth.aal_level OWNER TO supabase_auth_admin;
-
---
--- Name: code_challenge_method; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.code_challenge_method AS ENUM (
-    's256',
-    'plain'
-);
-
-
-ALTER TYPE auth.code_challenge_method OWNER TO supabase_auth_admin;
-
---
--- Name: factor_status; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.factor_status AS ENUM (
-    'unverified',
-    'verified'
-);
-
-
-ALTER TYPE auth.factor_status OWNER TO supabase_auth_admin;
-
---
--- Name: factor_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.factor_type AS ENUM (
-    'totp',
-    'webauthn',
-    'phone'
-);
-
-
-ALTER TYPE auth.factor_type OWNER TO supabase_auth_admin;
-
---
--- Name: oauth_registration_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.oauth_registration_type AS ENUM (
-    'dynamic',
-    'manual'
-);
-
-
-ALTER TYPE auth.oauth_registration_type OWNER TO supabase_auth_admin;
-
---
--- Name: one_time_token_type; Type: TYPE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TYPE auth.one_time_token_type AS ENUM (
-    'confirmation_token',
-    'reauthentication_token',
-    'recovery_token',
-    'email_change_token_new',
-    'email_change_token_current',
-    'phone_change_token'
-);
-
-
-ALTER TYPE auth.one_time_token_type OWNER TO supabase_auth_admin;
-
---
--- Name: action; Type: TYPE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TYPE realtime.action AS ENUM (
-    'INSERT',
-    'UPDATE',
-    'DELETE',
-    'TRUNCATE',
-    'ERROR'
-);
-
-
-ALTER TYPE realtime.action OWNER TO supabase_admin;
-
---
--- Name: equality_op; Type: TYPE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TYPE realtime.equality_op AS ENUM (
-    'eq',
-    'neq',
-    'lt',
-    'lte',
-    'gt',
-    'gte',
-    'in'
-);
-
-
-ALTER TYPE realtime.equality_op OWNER TO supabase_admin;
-
---
--- Name: user_defined_filter; Type: TYPE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TYPE realtime.user_defined_filter AS (
-	column_name text,
-	op realtime.equality_op,
-	value text
-);
-
-
-ALTER TYPE realtime.user_defined_filter OWNER TO supabase_admin;
-
---
--- Name: wal_column; Type: TYPE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TYPE realtime.wal_column AS (
-	name text,
-	type_name text,
-	type_oid oid,
-	value jsonb,
-	is_pkey boolean,
-	is_selectable boolean
-);
-
-
-ALTER TYPE realtime.wal_column OWNER TO supabase_admin;
-
---
--- Name: wal_rls; Type: TYPE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TYPE realtime.wal_rls AS (
-	wal jsonb,
-	is_rls_enabled boolean,
-	subscription_ids uuid[],
-	errors text[]
-);
-
-
-ALTER TYPE realtime.wal_rls OWNER TO supabase_admin;
-
---
--- Name: email(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE FUNCTION auth.email() RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select 
-  coalesce(
-    nullif(current_setting('request.jwt.claim.email', true), ''),
-    (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'email')
-  )::text
-$$;
-
-
-ALTER FUNCTION auth.email() OWNER TO supabase_auth_admin;
-
---
--- Name: FUNCTION email(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON FUNCTION auth.email() IS 'Deprecated. Use auth.jwt() -> ''email'' instead.';
-
-
---
--- Name: jwt(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE FUNCTION auth.jwt() RETURNS jsonb
-    LANGUAGE sql STABLE
-    AS $$
-  select 
-    coalesce(
-        nullif(current_setting('request.jwt.claim', true), ''),
-        nullif(current_setting('request.jwt.claims', true), '')
-    )::jsonb
-$$;
-
-
-ALTER FUNCTION auth.jwt() OWNER TO supabase_auth_admin;
-
---
--- Name: role(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE FUNCTION auth.role() RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select 
-  coalesce(
-    nullif(current_setting('request.jwt.claim.role', true), ''),
-    (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'role')
-  )::text
-$$;
-
-
-ALTER FUNCTION auth.role() OWNER TO supabase_auth_admin;
-
---
--- Name: FUNCTION role(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON FUNCTION auth.role() IS 'Deprecated. Use auth.jwt() -> ''role'' instead.';
-
-
---
--- Name: uid(); Type: FUNCTION; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE FUNCTION auth.uid() RETURNS uuid
-    LANGUAGE sql STABLE
-    AS $$
-  select 
-  coalesce(
-    nullif(current_setting('request.jwt.claim.sub', true), ''),
-    (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub')
-  )::uuid
-$$;
-
-
-ALTER FUNCTION auth.uid() OWNER TO supabase_auth_admin;
-
---
--- Name: FUNCTION uid(); Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON FUNCTION auth.uid() IS 'Deprecated. Use auth.jwt() -> ''sub'' instead.';
-
-
---
--- Name: grant_pg_cron_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.grant_pg_cron_access() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-  IF EXISTS (
-    SELECT
-    FROM pg_event_trigger_ddl_commands() AS ev
-    JOIN pg_extension AS ext
-    ON ev.objid = ext.oid
-    WHERE ext.extname = 'pg_cron'
-  )
-  THEN
-    grant usage on schema cron to postgres with grant option;
-
-    alter default privileges in schema cron grant all on tables to postgres with grant option;
-    alter default privileges in schema cron grant all on functions to postgres with grant option;
-    alter default privileges in schema cron grant all on sequences to postgres with grant option;
-
-    alter default privileges for user supabase_admin in schema cron grant all
-        on sequences to postgres with grant option;
-    alter default privileges for user supabase_admin in schema cron grant all
-        on tables to postgres with grant option;
-    alter default privileges for user supabase_admin in schema cron grant all
-        on functions to postgres with grant option;
-
-    grant all privileges on all tables in schema cron to postgres with grant option;
-    revoke all on table cron.job from postgres;
-    grant select on table cron.job to postgres with grant option;
-  END IF;
-END;
-$$;
-
-
-ALTER FUNCTION extensions.grant_pg_cron_access() OWNER TO supabase_admin;
-
---
--- Name: FUNCTION grant_pg_cron_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
---
-
-COMMENT ON FUNCTION extensions.grant_pg_cron_access() IS 'Grants access to pg_cron';
-
-
---
--- Name: grant_pg_graphql_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.grant_pg_graphql_access() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $_$
-DECLARE
-    func_is_graphql_resolve bool;
-BEGIN
-    func_is_graphql_resolve = (
-        SELECT n.proname = 'resolve'
-        FROM pg_event_trigger_ddl_commands() AS ev
-        LEFT JOIN pg_catalog.pg_proc AS n
-        ON ev.objid = n.oid
-    );
-
-    IF func_is_graphql_resolve
-    THEN
-        -- Update public wrapper to pass all arguments through to the pg_graphql resolve func
-        DROP FUNCTION IF EXISTS graphql_public.graphql;
-        create or replace function graphql_public.graphql(
-            "operationName" text default null,
-            query text default null,
-            variables jsonb default null,
-            extensions jsonb default null
-        )
-            returns jsonb
-            language sql
-        as $$
-            select graphql.resolve(
-                query := query,
-                variables := coalesce(variables, '{}'),
-                "operationName" := "operationName",
-                extensions := extensions
-            );
-        $$;
-
-        -- This hook executes when `graphql.resolve` is created. That is not necessarily the last
-        -- function in the extension so we need to grant permissions on existing entities AND
-        -- update default permissions to any others that are created after `graphql.resolve`
-        grant usage on schema graphql to postgres, anon, authenticated, service_role;
-        grant select on all tables in schema graphql to postgres, anon, authenticated, service_role;
-        grant execute on all functions in schema graphql to postgres, anon, authenticated, service_role;
-        grant all on all sequences in schema graphql to postgres, anon, authenticated, service_role;
-        alter default privileges in schema graphql grant all on tables to postgres, anon, authenticated, service_role;
-        alter default privileges in schema graphql grant all on functions to postgres, anon, authenticated, service_role;
-        alter default privileges in schema graphql grant all on sequences to postgres, anon, authenticated, service_role;
-
-        -- Allow postgres role to allow granting usage on graphql and graphql_public schemas to custom roles
-        grant usage on schema graphql_public to postgres with grant option;
-        grant usage on schema graphql to postgres with grant option;
-    END IF;
-
-END;
-$_$;
-
-
-ALTER FUNCTION extensions.grant_pg_graphql_access() OWNER TO supabase_admin;
-
---
--- Name: FUNCTION grant_pg_graphql_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
---
-
-COMMENT ON FUNCTION extensions.grant_pg_graphql_access() IS 'Grants access to pg_graphql';
-
-
---
--- Name: grant_pg_net_access(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.grant_pg_net_access() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-  IF EXISTS (
-    SELECT 1
-    FROM pg_event_trigger_ddl_commands() AS ev
-    JOIN pg_extension AS ext
-    ON ev.objid = ext.oid
-    WHERE ext.extname = 'pg_net'
-  )
-  THEN
-    IF NOT EXISTS (
-      SELECT 1
-      FROM pg_roles
-      WHERE rolname = 'supabase_functions_admin'
-    )
-    THEN
-      CREATE USER supabase_functions_admin NOINHERIT CREATEROLE LOGIN NOREPLICATION;
-    END IF;
-
-    GRANT USAGE ON SCHEMA net TO supabase_functions_admin, postgres, anon, authenticated, service_role;
-
-    IF EXISTS (
-      SELECT FROM pg_extension
-      WHERE extname = 'pg_net'
-      -- all versions in use on existing projects as of 2025-02-20
-      -- version 0.12.0 onwards don't need these applied
-      AND extversion IN ('0.2', '0.6', '0.7', '0.7.1', '0.8', '0.10.0', '0.11.0')
-    ) THEN
-      ALTER function net.http_get(url text, params jsonb, headers jsonb, timeout_milliseconds integer) SECURITY DEFINER;
-      ALTER function net.http_post(url text, body jsonb, params jsonb, headers jsonb, timeout_milliseconds integer) SECURITY DEFINER;
-
-      ALTER function net.http_get(url text, params jsonb, headers jsonb, timeout_milliseconds integer) SET search_path = net;
-      ALTER function net.http_post(url text, body jsonb, params jsonb, headers jsonb, timeout_milliseconds integer) SET search_path = net;
-
-      REVOKE ALL ON FUNCTION net.http_get(url text, params jsonb, headers jsonb, timeout_milliseconds integer) FROM PUBLIC;
-      REVOKE ALL ON FUNCTION net.http_post(url text, body jsonb, params jsonb, headers jsonb, timeout_milliseconds integer) FROM PUBLIC;
-
-      GRANT EXECUTE ON FUNCTION net.http_get(url text, params jsonb, headers jsonb, timeout_milliseconds integer) TO supabase_functions_admin, postgres, anon, authenticated, service_role;
-      GRANT EXECUTE ON FUNCTION net.http_post(url text, body jsonb, params jsonb, headers jsonb, timeout_milliseconds integer) TO supabase_functions_admin, postgres, anon, authenticated, service_role;
-    END IF;
-  END IF;
-END;
-$$;
-
-
-ALTER FUNCTION extensions.grant_pg_net_access() OWNER TO supabase_admin;
-
---
--- Name: FUNCTION grant_pg_net_access(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
---
-
-COMMENT ON FUNCTION extensions.grant_pg_net_access() IS 'Grants access to pg_net';
-
-
---
--- Name: pgrst_ddl_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.pgrst_ddl_watch() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  cmd record;
-BEGIN
-  FOR cmd IN SELECT * FROM pg_event_trigger_ddl_commands()
-  LOOP
-    IF cmd.command_tag IN (
-      'CREATE SCHEMA', 'ALTER SCHEMA'
-    , 'CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO', 'ALTER TABLE'
-    , 'CREATE FOREIGN TABLE', 'ALTER FOREIGN TABLE'
-    , 'CREATE VIEW', 'ALTER VIEW'
-    , 'CREATE MATERIALIZED VIEW', 'ALTER MATERIALIZED VIEW'
-    , 'CREATE FUNCTION', 'ALTER FUNCTION'
-    , 'CREATE TRIGGER'
-    , 'CREATE TYPE', 'ALTER TYPE'
-    , 'CREATE RULE'
-    , 'COMMENT'
-    )
-    -- don't notify in case of CREATE TEMP table or other objects created on pg_temp
-    AND cmd.schema_name is distinct from 'pg_temp'
-    THEN
-      NOTIFY pgrst, 'reload schema';
-    END IF;
-  END LOOP;
-END; $$;
-
-
-ALTER FUNCTION extensions.pgrst_ddl_watch() OWNER TO supabase_admin;
-
---
--- Name: pgrst_drop_watch(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.pgrst_drop_watch() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  obj record;
-BEGIN
-  FOR obj IN SELECT * FROM pg_event_trigger_dropped_objects()
-  LOOP
-    IF obj.object_type IN (
-      'schema'
-    , 'table'
-    , 'foreign table'
-    , 'view'
-    , 'materialized view'
-    , 'function'
-    , 'trigger'
-    , 'type'
-    , 'rule'
-    )
-    AND obj.is_temporary IS false -- no pg_temp objects
-    THEN
-      NOTIFY pgrst, 'reload schema';
-    END IF;
-  END LOOP;
-END; $$;
-
-
-ALTER FUNCTION extensions.pgrst_drop_watch() OWNER TO supabase_admin;
-
---
--- Name: set_graphql_placeholder(); Type: FUNCTION; Schema: extensions; Owner: supabase_admin
---
-
-CREATE FUNCTION extensions.set_graphql_placeholder() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $_$
-    DECLARE
-    graphql_is_dropped bool;
-    BEGIN
-    graphql_is_dropped = (
-        SELECT ev.schema_name = 'graphql_public'
-        FROM pg_event_trigger_dropped_objects() AS ev
-        WHERE ev.schema_name = 'graphql_public'
-    );
-
-    IF graphql_is_dropped
-    THEN
-        create or replace function graphql_public.graphql(
-            "operationName" text default null,
-            query text default null,
-            variables jsonb default null,
-            extensions jsonb default null
-        )
-            returns jsonb
-            language plpgsql
-        as $$
-            DECLARE
-                server_version float;
-            BEGIN
-                server_version = (SELECT (SPLIT_PART((select version()), ' ', 2))::float);
-
-                IF server_version >= 14 THEN
-                    RETURN jsonb_build_object(
-                        'errors', jsonb_build_array(
-                            jsonb_build_object(
-                                'message', 'pg_graphql extension is not enabled.'
-                            )
-                        )
-                    );
-                ELSE
-                    RETURN jsonb_build_object(
-                        'errors', jsonb_build_array(
-                            jsonb_build_object(
-                                'message', 'pg_graphql is only available on projects running Postgres 14 onwards.'
-                            )
-                        )
-                    );
-                END IF;
-            END;
-        $$;
-    END IF;
-
-    END;
-$_$;
-
-
-ALTER FUNCTION extensions.set_graphql_placeholder() OWNER TO supabase_admin;
-
---
--- Name: FUNCTION set_graphql_placeholder(); Type: COMMENT; Schema: extensions; Owner: supabase_admin
---
-
-COMMENT ON FUNCTION extensions.set_graphql_placeholder() IS 'Reintroduces placeholder function for graphql_public.graphql';
-
-
---
--- Name: get_auth(text); Type: FUNCTION; Schema: pgbouncer; Owner: supabase_admin
---
-
-CREATE FUNCTION pgbouncer.get_auth(p_usename text) RETURNS TABLE(username text, password text)
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $_$
-begin
-    raise debug 'PgBouncer auth request: %', p_usename;
-
-    return query
-    select 
-        rolname::text, 
-        case when rolvaliduntil < now() 
-            then null 
-            else rolpassword::text 
-        end 
-    from pg_authid 
-    where rolname=$1 and rolcanlogin;
-end;
-$_$;
-
-
-ALTER FUNCTION pgbouncer.get_auth(p_usename text) OWNER TO supabase_admin;
-
---
--- Name: apply_rls(jsonb, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer DEFAULT (1024 * 1024)) RETURNS SETOF realtime.wal_rls
-    LANGUAGE plpgsql
-    AS $$
-declare
--- Regclass of the table e.g. public.notes
-entity_ regclass = (quote_ident(wal ->> 'schema') || '.' || quote_ident(wal ->> 'table'))::regclass;
-
--- I, U, D, T: insert, update ...
-action realtime.action = (
-    case wal ->> 'action'
-        when 'I' then 'INSERT'
-        when 'U' then 'UPDATE'
-        when 'D' then 'DELETE'
-        else 'ERROR'
-    end
-);
-
--- Is row level security enabled for the table
-is_rls_enabled bool = relrowsecurity from pg_class where oid = entity_;
-
-subscriptions realtime.subscription[] = array_agg(subs)
-    from
-        realtime.subscription subs
-    where
-        subs.entity = entity_;
-
--- Subscription vars
-roles regrole[] = array_agg(distinct us.claims_role::text)
-    from
-        unnest(subscriptions) us;
-
-working_role regrole;
-claimed_role regrole;
-claims jsonb;
-
-subscription_id uuid;
-subscription_has_access bool;
-visible_to_subscription_ids uuid[] = '{}';
-
--- structured info for wal's columns
-columns realtime.wal_column[];
--- previous identity values for update/delete
-old_columns realtime.wal_column[];
-
-error_record_exceeds_max_size boolean = octet_length(wal::text) > max_record_bytes;
-
--- Primary jsonb output for record
-output jsonb;
-
-begin
-perform set_config('role', null, true);
-
-columns =
-    array_agg(
-        (
-            x->>'name',
-            x->>'type',
-            x->>'typeoid',
-            realtime.cast(
-                (x->'value') #>> '{}',
-                coalesce(
-                    (x->>'typeoid')::regtype, -- null when wal2json version <= 2.4
-                    (x->>'type')::regtype
-                )
-            ),
-            (pks ->> 'name') is not null,
-            true
-        )::realtime.wal_column
-    )
-    from
-        jsonb_array_elements(wal -> 'columns') x
-        left join jsonb_array_elements(wal -> 'pk') pks
-            on (x ->> 'name') = (pks ->> 'name');
-
-old_columns =
-    array_agg(
-        (
-            x->>'name',
-            x->>'type',
-            x->>'typeoid',
-            realtime.cast(
-                (x->'value') #>> '{}',
-                coalesce(
-                    (x->>'typeoid')::regtype, -- null when wal2json version <= 2.4
-                    (x->>'type')::regtype
-                )
-            ),
-            (pks ->> 'name') is not null,
-            true
-        )::realtime.wal_column
-    )
-    from
-        jsonb_array_elements(wal -> 'identity') x
-        left join jsonb_array_elements(wal -> 'pk') pks
-            on (x ->> 'name') = (pks ->> 'name');
-
-for working_role in select * from unnest(roles) loop
-
-    -- Update `is_selectable` for columns and old_columns
-    columns =
-        array_agg(
-            (
-                c.name,
-                c.type_name,
-                c.type_oid,
-                c.value,
-                c.is_pkey,
-                pg_catalog.has_column_privilege(working_role, entity_, c.name, 'SELECT')
-            )::realtime.wal_column
-        )
-        from
-            unnest(columns) c;
-
-    old_columns =
-            array_agg(
-                (
-                    c.name,
-                    c.type_name,
-                    c.type_oid,
-                    c.value,
-                    c.is_pkey,
-                    pg_catalog.has_column_privilege(working_role, entity_, c.name, 'SELECT')
-                )::realtime.wal_column
-            )
-            from
-                unnest(old_columns) c;
-
-    if action <> 'DELETE' and count(1) = 0 from unnest(columns) c where c.is_pkey then
-        return next (
-            jsonb_build_object(
-                'schema', wal ->> 'schema',
-                'table', wal ->> 'table',
-                'type', action
-            ),
-            is_rls_enabled,
-            -- subscriptions is already filtered by entity
-            (select array_agg(s.subscription_id) from unnest(subscriptions) as s where claims_role = working_role),
-            array['Error 400: Bad Request, no primary key']
-        )::realtime.wal_rls;
-
-    -- The claims role does not have SELECT permission to the primary key of entity
-    elsif action <> 'DELETE' and sum(c.is_selectable::int) <> count(1) from unnest(columns) c where c.is_pkey then
-        return next (
-            jsonb_build_object(
-                'schema', wal ->> 'schema',
-                'table', wal ->> 'table',
-                'type', action
-            ),
-            is_rls_enabled,
-            (select array_agg(s.subscription_id) from unnest(subscriptions) as s where claims_role = working_role),
-            array['Error 401: Unauthorized']
-        )::realtime.wal_rls;
-
-    else
-        output = jsonb_build_object(
-            'schema', wal ->> 'schema',
-            'table', wal ->> 'table',
-            'type', action,
-            'commit_timestamp', to_char(
-                ((wal ->> 'timestamp')::timestamptz at time zone 'utc'),
-                'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
-            ),
-            'columns', (
-                select
-                    jsonb_agg(
-                        jsonb_build_object(
-                            'name', pa.attname,
-                            'type', pt.typname
-                        )
-                        order by pa.attnum asc
-                    )
-                from
-                    pg_attribute pa
-                    join pg_type pt
-                        on pa.atttypid = pt.oid
-                where
-                    attrelid = entity_
-                    and attnum > 0
-                    and pg_catalog.has_column_privilege(working_role, entity_, pa.attname, 'SELECT')
-            )
-        )
-        -- Add "record" key for insert and update
-        || case
-            when action in ('INSERT', 'UPDATE') then
-                jsonb_build_object(
-                    'record',
-                    (
-                        select
-                            jsonb_object_agg(
-                                -- if unchanged toast, get column name and value from old record
-                                coalesce((c).name, (oc).name),
-                                case
-                                    when (c).name is null then (oc).value
-                                    else (c).value
-                                end
-                            )
-                        from
-                            unnest(columns) c
-                            full outer join unnest(old_columns) oc
-                                on (c).name = (oc).name
-                        where
-                            coalesce((c).is_selectable, (oc).is_selectable)
-                            and ( not error_record_exceeds_max_size or (octet_length((c).value::text) <= 64))
-                    )
-                )
-            else '{}'::jsonb
-        end
-        -- Add "old_record" key for update and delete
-        || case
-            when action = 'UPDATE' then
-                jsonb_build_object(
-                        'old_record',
-                        (
-                            select jsonb_object_agg((c).name, (c).value)
-                            from unnest(old_columns) c
-                            where
-                                (c).is_selectable
-                                and ( not error_record_exceeds_max_size or (octet_length((c).value::text) <= 64))
-                        )
-                    )
-            when action = 'DELETE' then
-                jsonb_build_object(
-                    'old_record',
-                    (
-                        select jsonb_object_agg((c).name, (c).value)
-                        from unnest(old_columns) c
-                        where
-                            (c).is_selectable
-                            and ( not error_record_exceeds_max_size or (octet_length((c).value::text) <= 64))
-                            and ( not is_rls_enabled or (c).is_pkey ) -- if RLS enabled, we can't secure deletes so filter to pkey
-                    )
-                )
-            else '{}'::jsonb
-        end;
-
-        -- Create the prepared statement
-        if is_rls_enabled and action <> 'DELETE' then
-            if (select 1 from pg_prepared_statements where name = 'walrus_rls_stmt' limit 1) > 0 then
-                deallocate walrus_rls_stmt;
-            end if;
-            execute realtime.build_prepared_statement_sql('walrus_rls_stmt', entity_, columns);
-        end if;
-
-        visible_to_subscription_ids = '{}';
-
-        for subscription_id, claims in (
-                select
-                    subs.subscription_id,
-                    subs.claims
-                from
-                    unnest(subscriptions) subs
-                where
-                    subs.entity = entity_
-                    and subs.claims_role = working_role
-                    and (
-                        realtime.is_visible_through_filters(columns, subs.filters)
-                        or (
-                          action = 'DELETE'
-                          and realtime.is_visible_through_filters(old_columns, subs.filters)
-                        )
-                    )
-        ) loop
-
-            if not is_rls_enabled or action = 'DELETE' then
-                visible_to_subscription_ids = visible_to_subscription_ids || subscription_id;
-            else
-                -- Check if RLS allows the role to see the record
-                perform
-                    -- Trim leading and trailing quotes from working_role because set_config
-                    -- doesn't recognize the role as valid if they are included
-                    set_config('role', trim(both '"' from working_role::text), true),
-                    set_config('request.jwt.claims', claims::text, true);
-
-                execute 'execute walrus_rls_stmt' into subscription_has_access;
-
-                if subscription_has_access then
-                    visible_to_subscription_ids = visible_to_subscription_ids || subscription_id;
-                end if;
-            end if;
-        end loop;
-
-        perform set_config('role', null, true);
-
-        return next (
-            output,
-            is_rls_enabled,
-            visible_to_subscription_ids,
-            case
-                when error_record_exceeds_max_size then array['Error 413: Payload Too Large']
-                else '{}'
-            end
-        )::realtime.wal_rls;
-
-    end if;
-end loop;
-
-perform set_config('role', null, true);
-end;
-$$;
-
-
-ALTER FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) OWNER TO supabase_admin;
-
---
--- Name: broadcast_changes(text, text, text, text, text, record, record, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text DEFAULT 'ROW'::text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    -- Declare a variable to hold the JSONB representation of the row
-    row_data jsonb := '{}'::jsonb;
-BEGIN
-    IF level = 'STATEMENT' THEN
-        RAISE EXCEPTION 'function can only be triggered for each row, not for each statement';
-    END IF;
-    -- Check the operation type and handle accordingly
-    IF operation = 'INSERT' OR operation = 'UPDATE' OR operation = 'DELETE' THEN
-        row_data := jsonb_build_object('old_record', OLD, 'record', NEW, 'operation', operation, 'table', table_name, 'schema', table_schema);
-        PERFORM realtime.send (row_data, event_name, topic_name);
-    ELSE
-        RAISE EXCEPTION 'Unexpected operation type: %', operation;
-    END IF;
-EXCEPTION
-    WHEN OTHERS THEN
-        RAISE EXCEPTION 'Failed to process the row: %', SQLERRM;
-END;
-
-$$;
-
-
-ALTER FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text) OWNER TO supabase_admin;
-
---
--- Name: build_prepared_statement_sql(text, regclass, realtime.wal_column[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) RETURNS text
-    LANGUAGE sql
-    AS $$
-      /*
-      Builds a sql string that, if executed, creates a prepared statement to
-      tests retrive a row from *entity* by its primary key columns.
-      Example
-          select realtime.build_prepared_statement_sql('public.notes', '{"id"}'::text[], '{"bigint"}'::text[])
-      */
-          select
-      'prepare ' || prepared_statement_name || ' as
-          select
-              exists(
-                  select
-                      1
-                  from
-                      ' || entity || '
-                  where
-                      ' || string_agg(quote_ident(pkc.name) || '=' || quote_nullable(pkc.value #>> '{}') , ' and ') || '
-              )'
-          from
-              unnest(columns) pkc
-          where
-              pkc.is_pkey
-          group by
-              entity
-      $$;
-
-
-ALTER FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) OWNER TO supabase_admin;
-
---
--- Name: cast(text, regtype); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
 --
-
-CREATE FUNCTION realtime."cast"(val text, type_ regtype) RETURNS jsonb
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
-    declare
-      res jsonb;
-    begin
-      execute format('select to_jsonb(%L::'|| type_::text || ')', val)  into res;
-      return res;
-    end
-    $$;
-
-
-ALTER FUNCTION realtime."cast"(val text, type_ regtype) OWNER TO supabase_admin;
-
---
--- Name: check_equality_op(realtime.equality_op, regtype, text, text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) RETURNS boolean
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
-      /*
-      Casts *val_1* and *val_2* as type *type_* and check the *op* condition for truthiness
-      */
-      declare
-          op_symbol text = (
-              case
-                  when op = 'eq' then '='
-                  when op = 'neq' then '!='
-                  when op = 'lt' then '<'
-                  when op = 'lte' then '<='
-                  when op = 'gt' then '>'
-                  when op = 'gte' then '>='
-                  when op = 'in' then '= any'
-                  else 'UNKNOWN OP'
-              end
-          );
-          res boolean;
-      begin
-          execute format(
-              'select %L::'|| type_::text || ' ' || op_symbol
-              || ' ( %L::'
-              || (
-                  case
-                      when op = 'in' then type_::text || '[]'
-                      else type_::text end
-              )
-              || ')', val_1, val_2) into res;
-          return res;
-      end;
-      $$;
-
-
-ALTER FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) OWNER TO supabase_admin;
-
---
--- Name: is_visible_through_filters(realtime.wal_column[], realtime.user_defined_filter[]); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) RETURNS boolean
-    LANGUAGE sql IMMUTABLE
-    AS $_$
-    /*
-    Should the record be visible (true) or filtered out (false) after *filters* are applied
-    */
-        select
-            -- Default to allowed when no filters present
-            $2 is null -- no filters. this should not happen because subscriptions has a default
-            or array_length($2, 1) is null -- array length of an empty array is null
-            or bool_and(
-                coalesce(
-                    realtime.check_equality_op(
-                        op:=f.op,
-                        type_:=coalesce(
-                            col.type_oid::regtype, -- null when wal2json version <= 2.4
-                            col.type_name::regtype
-                        ),
-                        -- cast jsonb to text
-                        val_1:=col.value #>> '{}',
-                        val_2:=f.value
-                    ),
-                    false -- if null, filter does not match
-                )
-            )
-        from
-            unnest(filters) f
-            join unnest(columns) col
-                on f.column_name = col.name;
-    $_$;
-
-
-ALTER FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) OWNER TO supabase_admin;
-
---
--- Name: list_changes(name, name, integer, integer); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) RETURNS SETOF realtime.wal_rls
-    LANGUAGE sql
-    SET log_min_messages TO 'fatal'
-    AS $$
-      with pub as (
-        select
-          concat_ws(
-            ',',
-            case when bool_or(pubinsert) then 'insert' else null end,
-            case when bool_or(pubupdate) then 'update' else null end,
-            case when bool_or(pubdelete) then 'delete' else null end
-          ) as w2j_actions,
-          coalesce(
-            string_agg(
-              realtime.quote_wal2json(format('%I.%I', schemaname, tablename)::regclass),
-              ','
-            ) filter (where ppt.tablename is not null and ppt.tablename not like '% %'),
-            ''
-          ) w2j_add_tables
-        from
-          pg_publication pp
-          left join pg_publication_tables ppt
-            on pp.pubname = ppt.pubname
-        where
-          pp.pubname = publication
-        group by
-          pp.pubname
-        limit 1
-      ),
-      w2j as (
-        select
-          x.*, pub.w2j_add_tables
-        from
-          pub,
-          pg_logical_slot_get_changes(
-            slot_name, null, max_changes,
-            'include-pk', 'true',
-            'include-transaction', 'false',
-            'include-timestamp', 'true',
-            'include-type-oids', 'true',
-            'format-version', '2',
-            'actions', pub.w2j_actions,
-            'add-tables', pub.w2j_add_tables
-          ) x
-      )
-      select
-        xyz.wal,
-        xyz.is_rls_enabled,
-        xyz.subscription_ids,
-        xyz.errors
-      from
-        w2j,
-        realtime.apply_rls(
-          wal := w2j.data::jsonb,
-          max_record_bytes := max_record_bytes
-        ) xyz(wal, is_rls_enabled, subscription_ids, errors)
-      where
-        w2j.w2j_add_tables <> ''
-        and xyz.subscription_ids[1] is not null
-    $$;
-
-
-ALTER FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) OWNER TO supabase_admin;
-
---
--- Name: quote_wal2json(regclass); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.quote_wal2json(entity regclass) RETURNS text
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $$
-      select
-        (
-          select string_agg('' || ch,'')
-          from unnest(string_to_array(nsp.nspname::text, null)) with ordinality x(ch, idx)
-          where
-            not (x.idx = 1 and x.ch = '"')
-            and not (
-              x.idx = array_length(string_to_array(nsp.nspname::text, null), 1)
-              and x.ch = '"'
-            )
-        )
-        || '.'
-        || (
-          select string_agg('' || ch,'')
-          from unnest(string_to_array(pc.relname::text, null)) with ordinality x(ch, idx)
-          where
-            not (x.idx = 1 and x.ch = '"')
-            and not (
-              x.idx = array_length(string_to_array(nsp.nspname::text, null), 1)
-              and x.ch = '"'
-            )
-          )
-      from
-        pg_class pc
-        join pg_namespace nsp
-          on pc.relnamespace = nsp.oid
-      where
-        pc.oid = entity
-    $$;
-
-
-ALTER FUNCTION realtime.quote_wal2json(entity regclass) OWNER TO supabase_admin;
-
---
--- Name: send(jsonb, text, text, boolean); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean DEFAULT true) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-  BEGIN
-    -- Set the topic configuration
-    EXECUTE format('SET LOCAL realtime.topic TO %L', topic);
-
-    -- Attempt to insert the message
-    INSERT INTO realtime.messages (payload, event, topic, private, extension)
-    VALUES (payload, event, topic, private, 'broadcast');
-  EXCEPTION
-    WHEN OTHERS THEN
-      -- Capture and notify the error
-      RAISE WARNING 'ErrorSendingBroadcastMessage: %', SQLERRM;
-  END;
-END;
-$$;
-
-
-ALTER FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean) OWNER TO supabase_admin;
-
---
--- Name: subscription_check_filters(); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.subscription_check_filters() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-    /*
-    Validates that the user defined filters for a subscription:
-    - refer to valid columns that the claimed role may access
-    - values are coercable to the correct column type
-    */
-    declare
-        col_names text[] = coalesce(
-                array_agg(c.column_name order by c.ordinal_position),
-                '{}'::text[]
-            )
-            from
-                information_schema.columns c
-            where
-                format('%I.%I', c.table_schema, c.table_name)::regclass = new.entity
-                and pg_catalog.has_column_privilege(
-                    (new.claims ->> 'role'),
-                    format('%I.%I', c.table_schema, c.table_name)::regclass,
-                    c.column_name,
-                    'SELECT'
-                );
-        filter realtime.user_defined_filter;
-        col_type regtype;
-
-        in_val jsonb;
-    begin
-        for filter in select * from unnest(new.filters) loop
-            -- Filtered column is valid
-            if not filter.column_name = any(col_names) then
-                raise exception 'invalid column for filter %', filter.column_name;
-            end if;
-
-            -- Type is sanitized and safe for string interpolation
-            col_type = (
-                select atttypid::regtype
-                from pg_catalog.pg_attribute
-                where attrelid = new.entity
-                      and attname = filter.column_name
-            );
-            if col_type is null then
-                raise exception 'failed to lookup type for column %', filter.column_name;
-            end if;
-
-            -- Set maximum number of entries for in filter
-            if filter.op = 'in'::realtime.equality_op then
-                in_val = realtime.cast(filter.value, (col_type::text || '[]')::regtype);
-                if coalesce(jsonb_array_length(in_val), 0) > 100 then
-                    raise exception 'too many values for `in` filter. Maximum 100';
-                end if;
-            else
-                -- raises an exception if value is not coercable to type
-                perform realtime.cast(filter.value, col_type);
-            end if;
-
-        end loop;
-
-        -- Apply consistent order to filters so the unique constraint on
-        -- (subscription_id, entity, filters) can't be tricked by a different filter order
-        new.filters = coalesce(
-            array_agg(f order by f.column_name, f.op, f.value),
-            '{}'
-        ) from unnest(new.filters) f;
-
-        return new;
-    end;
-    $$;
-
-
-ALTER FUNCTION realtime.subscription_check_filters() OWNER TO supabase_admin;
-
---
--- Name: to_regrole(text); Type: FUNCTION; Schema: realtime; Owner: supabase_admin
---
-
-CREATE FUNCTION realtime.to_regrole(role_name text) RETURNS regrole
-    LANGUAGE sql IMMUTABLE
-    AS $$ select role_name::regrole $$;
-
-
-ALTER FUNCTION realtime.to_regrole(role_name text) OWNER TO supabase_admin;
-
---
--- Name: topic(); Type: FUNCTION; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: -
 --
 
-CREATE FUNCTION realtime.topic() RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-select nullif(current_setting('realtime.topic', true), '')::text;
-$$;
 
 
-ALTER FUNCTION realtime.topic() OWNER TO supabase_realtime_admin;
-
---
--- Name: can_insert_object(text, text, uuid, jsonb); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.can_insert_object(bucketid text, name text, owner uuid, metadata jsonb) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-  INSERT INTO "storage"."objects" ("bucket_id", "name", "owner", "metadata") VALUES (bucketid, name, owner, metadata);
-  -- hack to rollback the successful insert
-  RAISE sqlstate 'PT200' using
-  message = 'ROLLBACK',
-  detail = 'rollback successful insert';
-END
-$$;
-
-
-ALTER FUNCTION storage.can_insert_object(bucketid text, name text, owner uuid, metadata jsonb) OWNER TO supabase_storage_admin;
-
---
--- Name: extension(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.extension(name text) RETURNS text
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-_parts text[];
-_filename text;
-BEGIN
-	select string_to_array(name, '/') into _parts;
-	select _parts[array_length(_parts,1)] into _filename;
-	-- @todo return the last part instead of 2
-	return reverse(split_part(reverse(_filename), '.', 1));
-END
-$$;
-
-
-ALTER FUNCTION storage.extension(name text) OWNER TO supabase_storage_admin;
-
---
--- Name: filename(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.filename(name text) RETURNS text
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-_parts text[];
-BEGIN
-	select string_to_array(name, '/') into _parts;
-	return _parts[array_length(_parts,1)];
-END
-$$;
-
-
-ALTER FUNCTION storage.filename(name text) OWNER TO supabase_storage_admin;
-
---
--- Name: foldername(text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.foldername(name text) RETURNS text[]
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-_parts text[];
-BEGIN
-	select string_to_array(name, '/') into _parts;
-	return _parts[1:array_length(_parts,1)-1];
-END
-$$;
-
-
-ALTER FUNCTION storage.foldername(name text) OWNER TO supabase_storage_admin;
-
---
--- Name: get_size_by_bucket(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.get_size_by_bucket() RETURNS TABLE(size bigint, bucket_id text)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    return query
-        select sum((metadata->>'size')::int) as size, obj.bucket_id
-        from "storage".objects as obj
-        group by obj.bucket_id;
-END
-$$;
-
-
-ALTER FUNCTION storage.get_size_by_bucket() OWNER TO supabase_storage_admin;
-
---
--- Name: list_multipart_uploads_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.list_multipart_uploads_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer DEFAULT 100, next_key_token text DEFAULT ''::text, next_upload_token text DEFAULT ''::text) RETURNS TABLE(key text, id text, created_at timestamp with time zone)
-    LANGUAGE plpgsql
-    AS $_$
-BEGIN
-    RETURN QUERY EXECUTE
-        'SELECT DISTINCT ON(key COLLATE "C") * from (
-            SELECT
-                CASE
-                    WHEN position($2 IN substring(key from length($1) + 1)) > 0 THEN
-                        substring(key from 1 for length($1) + position($2 IN substring(key from length($1) + 1)))
-                    ELSE
-                        key
-                END AS key, id, created_at
-            FROM
-                storage.s3_multipart_uploads
-            WHERE
-                bucket_id = $5 AND
-                key ILIKE $1 || ''%'' AND
-                CASE
-                    WHEN $4 != '''' AND $6 = '''' THEN
-                        CASE
-                            WHEN position($2 IN substring(key from length($1) + 1)) > 0 THEN
-                                substring(key from 1 for length($1) + position($2 IN substring(key from length($1) + 1))) COLLATE "C" > $4
-                            ELSE
-                                key COLLATE "C" > $4
-                            END
-                    ELSE
-                        true
-                END AND
-                CASE
-                    WHEN $6 != '''' THEN
-                        id COLLATE "C" > $6
-                    ELSE
-                        true
-                    END
-            ORDER BY
-                key COLLATE "C" ASC, created_at ASC) as e order by key COLLATE "C" LIMIT $3'
-        USING prefix_param, delimiter_param, max_keys, next_key_token, bucket_id, next_upload_token;
-END;
-$_$;
-
-
-ALTER FUNCTION storage.list_multipart_uploads_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, next_key_token text, next_upload_token text) OWNER TO supabase_storage_admin;
-
---
--- Name: list_objects_with_delimiter(text, text, text, integer, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.list_objects_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer DEFAULT 100, start_after text DEFAULT ''::text, next_token text DEFAULT ''::text) RETURNS TABLE(name text, id uuid, metadata jsonb, updated_at timestamp with time zone)
-    LANGUAGE plpgsql
-    AS $_$
-BEGIN
-    RETURN QUERY EXECUTE
-        'SELECT DISTINCT ON(name COLLATE "C") * from (
-            SELECT
-                CASE
-                    WHEN position($2 IN substring(name from length($1) + 1)) > 0 THEN
-                        substring(name from 1 for length($1) + position($2 IN substring(name from length($1) + 1)))
-                    ELSE
-                        name
-                END AS name, id, metadata, updated_at
-            FROM
-                storage.objects
-            WHERE
-                bucket_id = $5 AND
-                name ILIKE $1 || ''%'' AND
-                CASE
-                    WHEN $6 != '''' THEN
-                    name COLLATE "C" > $6
-                ELSE true END
-                AND CASE
-                    WHEN $4 != '''' THEN
-                        CASE
-                            WHEN position($2 IN substring(name from length($1) + 1)) > 0 THEN
-                                substring(name from 1 for length($1) + position($2 IN substring(name from length($1) + 1))) COLLATE "C" > $4
-                            ELSE
-                                name COLLATE "C" > $4
-                            END
-                    ELSE
-                        true
-                END
-            ORDER BY
-                name COLLATE "C" ASC) as e order by name COLLATE "C" LIMIT $3'
-        USING prefix_param, delimiter_param, max_keys, next_token, bucket_id, start_after;
-END;
-$_$;
-
-
-ALTER FUNCTION storage.list_objects_with_delimiter(bucket_id text, prefix_param text, delimiter_param text, max_keys integer, start_after text, next_token text) OWNER TO supabase_storage_admin;
-
---
--- Name: operation(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
---
-
-CREATE FUNCTION storage.operation() RETURNS text
-    LANGUAGE plpgsql STABLE
-    AS $$
-BEGIN
-    RETURN current_setting('storage.operation', true);
-END;
-$$;
-
-
-ALTER FUNCTION storage.operation() OWNER TO supabase_storage_admin;
-
 --
--- Name: search(text, text, integer, integer, integer, text, text, text); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
 --
-
-CREATE FUNCTION storage.search(prefix text, bucketname text, limits integer DEFAULT 100, levels integer DEFAULT 1, offsets integer DEFAULT 0, search text DEFAULT ''::text, sortcolumn text DEFAULT 'name'::text, sortorder text DEFAULT 'asc'::text) RETURNS TABLE(name text, id uuid, updated_at timestamp with time zone, created_at timestamp with time zone, last_accessed_at timestamp with time zone, metadata jsonb)
-    LANGUAGE plpgsql STABLE
-    AS $_$
-declare
-  v_order_by text;
-  v_sort_order text;
-begin
-  case
-    when sortcolumn = 'name' then
-      v_order_by = 'name';
-    when sortcolumn = 'updated_at' then
-      v_order_by = 'updated_at';
-    when sortcolumn = 'created_at' then
-      v_order_by = 'created_at';
-    when sortcolumn = 'last_accessed_at' then
-      v_order_by = 'last_accessed_at';
-    else
-      v_order_by = 'name';
-  end case;
 
-  case
-    when sortorder = 'asc' then
-      v_sort_order = 'asc';
-    when sortorder = 'desc' then
-      v_sort_order = 'desc';
-    else
-      v_sort_order = 'asc';
-  end case;
 
-  v_order_by = v_order_by || ' ' || v_sort_order;
 
-  return query execute
-    'with folders as (
-       select path_tokens[$1] as folder
-       from storage.objects
-         where objects.name ilike $2 || $3 || ''%''
-           and bucket_id = $4
-           and array_length(objects.path_tokens, 1) <> $1
-       group by folder
-       order by folder ' || v_sort_order || '
-     )
-     (select folder as "name",
-            null as id,
-            null as updated_at,
-            null as created_at,
-            null as last_accessed_at,
-            null as metadata from folders)
-     union all
-     (select path_tokens[$1] as "name",
-            id,
-            updated_at,
-            created_at,
-            last_accessed_at,
-            metadata
-     from storage.objects
-     where objects.name ilike $2 || $3 || ''%''
-       and bucket_id = $4
-       and array_length(objects.path_tokens, 1) = $1
-     order by ' || v_order_by || ')
-     limit $5
-     offset $6' using levels, prefix, search, bucketname, limits, offsets;
-end;
-$_$;
-
-
-ALTER FUNCTION storage.search(prefix text, bucketname text, limits integer, levels integer, offsets integer, search text, sortcolumn text, sortorder text) OWNER TO supabase_storage_admin;
-
 --
--- Name: update_updated_at_column(); Type: FUNCTION; Schema: storage; Owner: supabase_storage_admin
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
 --
-
-CREATE FUNCTION storage.update_updated_at_column() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW; 
-END;
-$$;
 
 
-ALTER FUNCTION storage.update_updated_at_column() OWNER TO supabase_storage_admin;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: audit_log_entries; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_acciones; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.audit_log_entries (
-    instance_id uuid,
-    id uuid NOT NULL,
-    payload json,
-    created_at timestamp with time zone,
-    ip_address character varying(64) DEFAULT ''::character varying NOT NULL
+CREATE TABLE public.dic_acciones (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text NOT NULL,
+    id_etapa_pertenencia integer
 );
 
 
-ALTER TABLE auth.audit_log_entries OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE audit_log_entries; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_acciones.id_etapa_pertenencia; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.audit_log_entries IS 'Auth: Audit trail for user actions.';
+COMMENT ON COLUMN public.dic_acciones.id_etapa_pertenencia IS 'si es NULL significa que esta acción puede ocurrir en cualquier etapa';
 
 
 --
--- Name: flow_state; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_areas_ocde; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.flow_state (
-    id uuid NOT NULL,
-    user_id uuid,
-    auth_code text NOT NULL,
-    code_challenge_method auth.code_challenge_method NOT NULL,
-    code_challenge text NOT NULL,
-    provider_type text NOT NULL,
-    provider_access_token text,
-    provider_refresh_token text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    authentication_method text NOT NULL,
-    auth_code_issued_at timestamp with time zone
+CREATE TABLE public.dic_areas_ocde (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    estado_area smallint NOT NULL
 );
 
 
-ALTER TABLE auth.flow_state OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE flow_state; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_areas_ocde.estado_area; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.flow_state IS 'stores metadata for pkce logins';
+COMMENT ON COLUMN public.dic_areas_ocde.estado_area IS '0 = inactivo
+1 = activo';
 
 
 --
--- Name: identities; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_carreras; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.identities (
-    provider_id text NOT NULL,
-    user_id uuid NOT NULL,
-    identity_data jsonb NOT NULL,
-    provider text NOT NULL,
-    last_sign_in_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    email text GENERATED ALWAYS AS (lower((identity_data ->> 'email'::text))) STORED,
-    id uuid DEFAULT gen_random_uuid() NOT NULL
+CREATE TABLE public.dic_carreras (
+    id integer NOT NULL,
+    id_facultad integer NOT NULL,
+    nombre text NOT NULL,
+    estado_carrera smallint NOT NULL
 );
 
 
-ALTER TABLE auth.identities OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE identities; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_carreras.estado_carrera; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.identities IS 'Auth: Stores identities associated to a user.';
-
-
---
--- Name: COLUMN identities.email; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON COLUMN auth.identities.email IS 'Auth: Email is a generated column that references the optional email property in the identity_data';
+COMMENT ON COLUMN public.dic_carreras.estado_carrera IS '0 = inactivo
+1 = activo';
 
 
 --
--- Name: instances; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_categoria; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.instances (
-    id uuid NOT NULL,
-    uuid uuid,
-    raw_base_config text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+CREATE TABLE public.dic_categoria (
+    id integer NOT NULL,
+    tipo character varying(10) NOT NULL,
+    nombre text NOT NULL,
+    abreviatura character varying,
+    estado_categoria smallint DEFAULT 1
 );
 
 
-ALTER TABLE auth.instances OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE instances; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_categoria_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.instances IS 'Auth: Manages users across multiple sites.';
-
-
---
--- Name: mfa_amr_claims; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.mfa_amr_claims (
-    session_id uuid NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    authentication_method text NOT NULL,
-    id uuid NOT NULL
-);
-
-
-ALTER TABLE auth.mfa_amr_claims OWNER TO supabase_auth_admin;
-
---
--- Name: TABLE mfa_amr_claims; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON TABLE auth.mfa_amr_claims IS 'auth: stores authenticator method reference claims for multi factor authentication';
-
-
---
--- Name: mfa_challenges; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.mfa_challenges (
-    id uuid NOT NULL,
-    factor_id uuid NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    verified_at timestamp with time zone,
-    ip_address inet NOT NULL,
-    otp_code text,
-    web_authn_session_data jsonb
-);
-
-
-ALTER TABLE auth.mfa_challenges OWNER TO supabase_auth_admin;
-
---
--- Name: TABLE mfa_challenges; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON TABLE auth.mfa_challenges IS 'auth: stores metadata about challenge requests made';
-
-
---
--- Name: mfa_factors; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.mfa_factors (
-    id uuid NOT NULL,
-    user_id uuid NOT NULL,
-    friendly_name text,
-    factor_type auth.factor_type NOT NULL,
-    status auth.factor_status NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    secret text,
-    phone text,
-    last_challenged_at timestamp with time zone,
-    web_authn_credential jsonb,
-    web_authn_aaguid uuid
-);
-
-
-ALTER TABLE auth.mfa_factors OWNER TO supabase_auth_admin;
-
---
--- Name: TABLE mfa_factors; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON TABLE auth.mfa_factors IS 'auth: stores metadata about factors';
-
-
---
--- Name: oauth_clients; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.oauth_clients (
-    id uuid NOT NULL,
-    client_id text NOT NULL,
-    client_secret_hash text NOT NULL,
-    registration_type auth.oauth_registration_type NOT NULL,
-    redirect_uris text NOT NULL,
-    grant_types text NOT NULL,
-    client_name text,
-    client_uri text,
-    logo_uri text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    deleted_at timestamp with time zone,
-    CONSTRAINT oauth_clients_client_name_length CHECK ((char_length(client_name) <= 1024)),
-    CONSTRAINT oauth_clients_client_uri_length CHECK ((char_length(client_uri) <= 2048)),
-    CONSTRAINT oauth_clients_logo_uri_length CHECK ((char_length(logo_uri) <= 2048))
-);
-
-
-ALTER TABLE auth.oauth_clients OWNER TO supabase_auth_admin;
-
---
--- Name: one_time_tokens; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.one_time_tokens (
-    id uuid NOT NULL,
-    user_id uuid NOT NULL,
-    token_type auth.one_time_token_type NOT NULL,
-    token_hash text NOT NULL,
-    relates_to text NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT one_time_tokens_token_hash_check CHECK ((char_length(token_hash) > 0))
-);
-
-
-ALTER TABLE auth.one_time_tokens OWNER TO supabase_auth_admin;
-
---
--- Name: refresh_tokens; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.refresh_tokens (
-    instance_id uuid,
-    id bigint NOT NULL,
-    token character varying(255),
-    user_id character varying(255),
-    revoked boolean,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    parent character varying(255),
-    session_id uuid
-);
-
-
-ALTER TABLE auth.refresh_tokens OWNER TO supabase_auth_admin;
-
---
--- Name: TABLE refresh_tokens; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON TABLE auth.refresh_tokens IS 'Auth: Store of tokens used to refresh JWT tokens once they expire.';
-
-
---
--- Name: refresh_tokens_id_seq; Type: SEQUENCE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE SEQUENCE auth.refresh_tokens_id_seq
+CREATE SEQUENCE public.dic_categoria_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1995,2613 +129,4130 @@ CREATE SEQUENCE auth.refresh_tokens_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE auth.refresh_tokens_id_seq OWNER TO supabase_auth_admin;
-
 --
--- Name: refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_categoria_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE auth.refresh_tokens_id_seq OWNED BY auth.refresh_tokens.id;
+ALTER SEQUENCE public.dic_categoria_id_seq OWNED BY public.dic_categoria.id;
 
 
 --
--- Name: saml_providers; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_denominaciones; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.saml_providers (
-    id uuid NOT NULL,
-    sso_provider_id uuid NOT NULL,
-    entity_id text NOT NULL,
-    metadata_xml text NOT NULL,
-    metadata_url text,
-    attribute_mapping jsonb,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    name_id_format text,
-    CONSTRAINT "entity_id not empty" CHECK ((char_length(entity_id) > 0)),
-    CONSTRAINT "metadata_url not empty" CHECK (((metadata_url = NULL::text) OR (char_length(metadata_url) > 0))),
-    CONSTRAINT "metadata_xml not empty" CHECK ((char_length(metadata_xml) > 0))
+CREATE TABLE public.dic_denominaciones (
+    id integer NOT NULL,
+    id_carrera integer NOT NULL,
+    id_especialidad integer NOT NULL,
+    nombre text NOT NULL,
+    denominacion_actual smallint NOT NULL
 );
 
 
-ALTER TABLE auth.saml_providers OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE saml_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_denominaciones.denominacion_actual; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.saml_providers IS 'Auth: Manages SAML Identity Provider connections.';
+COMMENT ON COLUMN public.dic_denominaciones.denominacion_actual IS '1 = activo
+2 = inactivo';
 
 
 --
--- Name: saml_relay_states; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_disciplinas; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.saml_relay_states (
-    id uuid NOT NULL,
-    sso_provider_id uuid NOT NULL,
-    request_id text NOT NULL,
-    for_email text,
-    redirect_to text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    flow_state_id uuid,
-    CONSTRAINT "request_id not empty" CHECK ((char_length(request_id) > 0))
+CREATE TABLE public.dic_disciplinas (
+    id integer NOT NULL,
+    id_subarea integer NOT NULL,
+    nombre text NOT NULL,
+    estado_disciplina smallint NOT NULL
 );
 
 
-ALTER TABLE auth.saml_relay_states OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE saml_relay_states; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_disciplinas.estado_disciplina; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.saml_relay_states IS 'Auth: Contains SAML Relay State information for each Service Provider initiated login.';
+COMMENT ON COLUMN public.dic_disciplinas.estado_disciplina IS '0 = inactivo
+1 = activo';
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_especialidades; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.schema_migrations (
-    version character varying(255) NOT NULL
+CREATE TABLE public.dic_especialidades (
+    id integer NOT NULL,
+    id_carrera integer,
+    nombre text NOT NULL,
+    estado_especialidad smallint NOT NULL
 );
 
 
-ALTER TABLE auth.schema_migrations OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE schema_migrations; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_especialidades.estado_especialidad; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.schema_migrations IS 'Auth: Manages updates to the auth system.';
+COMMENT ON COLUMN public.dic_especialidades.estado_especialidad IS '0 = inactivo
+1 = activo';
 
 
 --
--- Name: sessions; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_etapas; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.sessions (
-    id uuid NOT NULL,
-    user_id uuid NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    factor_id uuid,
-    aal auth.aal_level,
-    not_after timestamp with time zone,
-    refreshed_at timestamp without time zone,
-    user_agent text,
-    ip inet,
-    tag text
+CREATE TABLE public.dic_etapas (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text NOT NULL
 );
 
 
-ALTER TABLE auth.sessions OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE sessions; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_facultades; Type: TABLE; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.sessions IS 'Auth: Stores session data associated to a user.';
-
-
---
--- Name: COLUMN sessions.not_after; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON COLUMN auth.sessions.not_after IS 'Auth: Not after is a nullable column that contains a timestamp after which the session should be regarded as expired.';
-
-
---
--- Name: sso_domains; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.sso_domains (
-    id uuid NOT NULL,
-    sso_provider_id uuid NOT NULL,
-    domain text NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    CONSTRAINT "domain not empty" CHECK ((char_length(domain) > 0))
+CREATE TABLE public.dic_facultades (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    abreviatura character varying(10) NOT NULL,
+    id_area integer NOT NULL,
+    estado_facultad smallint NOT NULL
 );
 
 
-ALTER TABLE auth.sso_domains OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE sso_domains; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_facultades.id_area; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.sso_domains IS 'Auth: Manages SSO email address domain mapping to an SSO Identity Provider.';
+COMMENT ON COLUMN public.dic_facultades.id_area IS 'Es el area de OCDE';
 
 
 --
--- Name: sso_providers; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
+-- Name: COLUMN dic_facultades.estado_facultad; Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE TABLE auth.sso_providers (
-    id uuid NOT NULL,
-    resource_id text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    disabled boolean,
-    CONSTRAINT "resource_id not empty" CHECK (((resource_id = NULL::text) OR (char_length(resource_id) > 0)))
+COMMENT ON COLUMN public.dic_facultades.estado_facultad IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: dic_grados_academicos; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_grados_academicos (
+    id integer NOT NULL,
+    nombre character varying(255) NOT NULL,
+    abreviatura character varying(20),
+    estado_dic_grados_academicos smallint DEFAULT 1 NOT NULL
 );
 
 
-ALTER TABLE auth.sso_providers OWNER TO supabase_auth_admin;
-
 --
--- Name: TABLE sso_providers; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_grados_academicos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE auth.sso_providers IS 'Auth: Manages SSO identity provider information; see saml_providers for SAML.';
-
-
---
--- Name: COLUMN sso_providers.resource_id; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON COLUMN auth.sso_providers.resource_id IS 'Auth: Uniquely identifies a SSO provider according to a user-chosen resource ID (case insensitive), useful in infrastructure as code.';
-
-
---
--- Name: users; Type: TABLE; Schema: auth; Owner: supabase_auth_admin
---
-
-CREATE TABLE auth.users (
-    instance_id uuid,
-    id uuid NOT NULL,
-    aud character varying(255),
-    role character varying(255),
-    email character varying(255),
-    encrypted_password character varying(255),
-    email_confirmed_at timestamp with time zone,
-    invited_at timestamp with time zone,
-    confirmation_token character varying(255),
-    confirmation_sent_at timestamp with time zone,
-    recovery_token character varying(255),
-    recovery_sent_at timestamp with time zone,
-    email_change_token_new character varying(255),
-    email_change character varying(255),
-    email_change_sent_at timestamp with time zone,
-    last_sign_in_at timestamp with time zone,
-    raw_app_meta_data jsonb,
-    raw_user_meta_data jsonb,
-    is_super_admin boolean,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    phone text DEFAULT NULL::character varying,
-    phone_confirmed_at timestamp with time zone,
-    phone_change text DEFAULT ''::character varying,
-    phone_change_token character varying(255) DEFAULT ''::character varying,
-    phone_change_sent_at timestamp with time zone,
-    confirmed_at timestamp with time zone GENERATED ALWAYS AS (LEAST(email_confirmed_at, phone_confirmed_at)) STORED,
-    email_change_token_current character varying(255) DEFAULT ''::character varying,
-    email_change_confirm_status smallint DEFAULT 0,
-    banned_until timestamp with time zone,
-    reauthentication_token character varying(255) DEFAULT ''::character varying,
-    reauthentication_sent_at timestamp with time zone,
-    is_sso_user boolean DEFAULT false NOT NULL,
-    deleted_at timestamp with time zone,
-    is_anonymous boolean DEFAULT false NOT NULL,
-    CONSTRAINT users_email_change_confirm_status_check CHECK (((email_change_confirm_status >= 0) AND (email_change_confirm_status <= 2)))
-);
-
-
-ALTER TABLE auth.users OWNER TO supabase_auth_admin;
-
---
--- Name: TABLE users; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON TABLE auth.users IS 'Auth: Stores user login data within a secure schema.';
-
-
---
--- Name: COLUMN users.is_sso_user; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
---
-
-COMMENT ON COLUMN auth.users.is_sso_user IS 'Auth: Set this column to true when the account comes from SSO. These accounts can have duplicate emails.';
-
-
---
--- Name: messages; Type: TABLE; Schema: realtime; Owner: supabase_realtime_admin
---
-
-CREATE TABLE realtime.messages (
-    topic text NOT NULL,
-    extension text NOT NULL,
-    payload jsonb,
-    event text,
-    private boolean DEFAULT false,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    inserted_at timestamp without time zone DEFAULT now() NOT NULL,
-    id uuid DEFAULT gen_random_uuid() NOT NULL
-)
-PARTITION BY RANGE (inserted_at);
-
-
-ALTER TABLE realtime.messages OWNER TO supabase_realtime_admin;
-
---
--- Name: schema_migrations; Type: TABLE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TABLE realtime.schema_migrations (
-    version bigint NOT NULL,
-    inserted_at timestamp(0) without time zone
-);
-
-
-ALTER TABLE realtime.schema_migrations OWNER TO supabase_admin;
-
---
--- Name: subscription; Type: TABLE; Schema: realtime; Owner: supabase_admin
---
-
-CREATE TABLE realtime.subscription (
-    id bigint NOT NULL,
-    subscription_id uuid NOT NULL,
-    entity regclass NOT NULL,
-    filters realtime.user_defined_filter[] DEFAULT '{}'::realtime.user_defined_filter[] NOT NULL,
-    claims jsonb NOT NULL,
-    claims_role regrole GENERATED ALWAYS AS (realtime.to_regrole((claims ->> 'role'::text))) STORED NOT NULL,
-    created_at timestamp without time zone DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-
-ALTER TABLE realtime.subscription OWNER TO supabase_admin;
-
---
--- Name: subscription_id_seq; Type: SEQUENCE; Schema: realtime; Owner: supabase_admin
---
-
-ALTER TABLE realtime.subscription ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME realtime.subscription_id_seq
+CREATE SEQUENCE public.dic_grados_academicos_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1
-);
+    CACHE 1;
 
 
 --
--- Name: buckets; Type: TABLE; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_grados_academicos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-CREATE TABLE storage.buckets (
-    id text NOT NULL,
-    name text NOT NULL,
-    owner uuid,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone DEFAULT now(),
-    public boolean DEFAULT false,
-    avif_autodetection boolean DEFAULT false,
-    file_size_limit bigint,
-    allowed_mime_types text[],
-    owner_id text
-);
-
-
-ALTER TABLE storage.buckets OWNER TO supabase_storage_admin;
-
---
--- Name: COLUMN buckets.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
---
-
-COMMENT ON COLUMN storage.buckets.owner IS 'Field is deprecated, use owner_id instead';
+ALTER SEQUENCE public.dic_grados_academicos_id_seq OWNED BY public.dic_grados_academicos.id;
 
 
 --
--- Name: migrations; Type: TABLE; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_lineas_universidad; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE storage.migrations (
+CREATE TABLE public.dic_lineas_universidad (
     id integer NOT NULL,
-    name character varying(100) NOT NULL,
-    hash character varying(40) NOT NULL,
-    executed_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    nombre text NOT NULL,
+    estado_linea_universidad smallint NOT NULL
 );
 
 
-ALTER TABLE storage.migrations OWNER TO supabase_storage_admin;
-
 --
--- Name: objects; Type: TABLE; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_modalidades; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE storage.objects (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    bucket_id text,
-    name text,
-    owner uuid,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone DEFAULT now(),
-    last_accessed_at timestamp with time zone DEFAULT now(),
-    metadata jsonb,
-    path_tokens text[] GENERATED ALWAYS AS (string_to_array(name, '/'::text)) STORED,
-    version text,
-    owner_id text,
-    user_metadata jsonb
+CREATE TABLE public.dic_modalidades (
+    id integer NOT NULL,
+    descripcion text NOT NULL,
+    ruta text NOT NULL,
+    estado_modalidad smallint NOT NULL
 );
 
 
-ALTER TABLE storage.objects OWNER TO supabase_storage_admin;
-
 --
--- Name: COLUMN objects.owner; Type: COMMENT; Schema: storage; Owner: supabase_storage_admin
+-- Name: COLUMN dic_modalidades.estado_modalidad; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN storage.objects.owner IS 'Field is deprecated, use owner_id instead';
+COMMENT ON COLUMN public.dic_modalidades.estado_modalidad IS '0 = inactivo
+1 = activo';
 
 
 --
--- Name: s3_multipart_uploads; Type: TABLE; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_modalidades_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE storage.s3_multipart_uploads (
-    id text NOT NULL,
-    in_progress_size bigint DEFAULT 0 NOT NULL,
-    upload_signature text NOT NULL,
-    bucket_id text NOT NULL,
-    key text NOT NULL COLLATE pg_catalog."C",
-    version text NOT NULL,
-    owner_id text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    user_metadata jsonb
+CREATE SEQUENCE public.dic_modalidades_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_modalidades_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_modalidades_id_seq OWNED BY public.dic_modalidades.id;
+
+
+--
+-- Name: dic_nivel_admins; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_nivel_admins (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text NOT NULL
 );
 
 
-ALTER TABLE storage.s3_multipart_uploads OWNER TO supabase_storage_admin;
-
 --
--- Name: s3_multipart_uploads_parts; Type: TABLE; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_nivel_admins_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE storage.s3_multipart_uploads_parts (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    upload_id text NOT NULL,
-    size bigint DEFAULT 0 NOT NULL,
-    part_number integer NOT NULL,
-    bucket_id text NOT NULL,
-    key text NOT NULL COLLATE pg_catalog."C",
-    etag text NOT NULL,
-    owner_id text,
-    version text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+CREATE SEQUENCE public.dic_nivel_admins_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_nivel_admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_nivel_admins_id_seq OWNED BY public.dic_nivel_admins.id;
+
+
+--
+-- Name: dic_nivel_coordinador; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_nivel_coordinador (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text,
+    estado smallint
 );
 
 
-ALTER TABLE storage.s3_multipart_uploads_parts OWNER TO supabase_storage_admin;
+--
+-- Name: dic_nivel_coordinador_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_nivel_coordinador_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_nivel_coordinador_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_nivel_coordinador_id_seq OWNED BY public.dic_nivel_coordinador.id;
+
+
+--
+-- Name: dic_obtencion_studios; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_obtencion_studios (
+    id integer NOT NULL,
+    nombre character varying(100) NOT NULL,
+    descripcion text
+);
+
+
+--
+-- Name: dic_obtencion_studios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_obtencion_studios_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_obtencion_studios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_obtencion_studios_id_seq OWNED BY public.dic_obtencion_studios.id;
+
+
+--
+-- Name: dic_orden_jurado; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_orden_jurado (
+    id integer NOT NULL,
+    nombre character varying(100) NOT NULL,
+    abreviatura character varying(20),
+    estado smallint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: dic_orden_jurado_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_orden_jurado_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_orden_jurado_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_orden_jurado_id_seq OWNED BY public.dic_orden_jurado.id;
+
+
+--
+-- Name: dic_sedes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_sedes (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    estado_sede smallint DEFAULT 1
+);
+
+
+--
+-- Name: dic_sedes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_sedes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_sedes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_sedes_id_seq OWNED BY public.dic_sedes.id;
+
+
+--
+-- Name: dic_servicios; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_servicios (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text
+);
+
+
+--
+-- Name: dic_servicios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_servicios_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_servicios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_servicios_id_seq OWNED BY public.dic_servicios.id;
+
+
+--
+-- Name: dic_subareas_ocde; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_subareas_ocde (
+    id integer NOT NULL,
+    id_area integer NOT NULL,
+    nombre text NOT NULL,
+    estado_subarea smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN dic_subareas_ocde.estado_subarea; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.dic_subareas_ocde.estado_subarea IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: dic_tipo_archivo; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_tipo_archivo (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text
+);
+
+
+--
+-- Name: dic_tipo_evento; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_tipo_evento (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    descripcion text,
+    estado smallint DEFAULT 1
+);
+
+
+--
+-- Name: dic_tipo_evento_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_tipo_evento_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_tipo_evento_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_tipo_evento_id_seq OWNED BY public.dic_tipo_evento.id;
+
+
+--
+-- Name: dic_tipo_trabajos; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_tipo_trabajos (
+    id integer NOT NULL,
+    nombre text NOT NULL,
+    detalle text NOT NULL,
+    estado_tipo_trabajo smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN dic_tipo_trabajos.estado_tipo_trabajo; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.dic_tipo_trabajos.estado_tipo_trabajo IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: dic_tipo_trabajos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dic_tipo_trabajos_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dic_tipo_trabajos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dic_tipo_trabajos_id_seq OWNED BY public.dic_tipo_trabajos.id;
+
+
+--
+-- Name: dic_universidades; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_universidades (
+    id integer NOT NULL,
+    nombre text,
+    abreviatura character varying(50),
+    estado_dic_universidades smallint,
+    pais character varying(100),
+    tipo_institucion character(1),
+    tipo_gestion character(1)
+);
+
+
+--
+-- Name: dic_visto_bueno; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dic_visto_bueno (
+    id integer NOT NULL,
+    descripcion text NOT NULL,
+    id_etapa integer NOT NULL
+);
+
+
+--
+-- Name: log_acciones; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log_acciones (
+    id bigint NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_accion integer NOT NULL,
+    id_etapa integer,
+    id_usuario integer NOT NULL,
+    fecha timestamp without time zone NOT NULL,
+    mensaje text NOT NULL,
+    id_usuario_servicio integer
+);
+
+
+--
+-- Name: log_acciones_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_acciones_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_acciones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_acciones_id_seq OWNED BY public.log_acciones.id;
+
+
+--
+-- Name: tabla_metadatos_dictamen_borrador; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tabla_metadatos_dictamen_borrador (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    etapa integer NOT NULL,
+    id_tipo_archivo integer NOT NULL,
+    fecha_documento date,
+    hora_reunion time without time zone,
+    lugar_reunion text,
+    fecha_registro timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    estado smallint
+);
+
+
+--
+-- Name: tabla_metadatos_dictamen_borrador_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tabla_metadatos_dictamen_borrador_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tabla_metadatos_dictamen_borrador_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tabla_metadatos_dictamen_borrador_id_seq OWNED BY public.tabla_metadatos_dictamen_borrador.id;
+
+
+--
+-- Name: tbl_admins; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_admins (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    nivel_admin integer NOT NULL,
+    cargo text NOT NULL,
+    estado_admin smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_admins.nivel_admin; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_admins.nivel_admin IS 'nivel de autoridad y permisos en admin';
+
+
+--
+-- Name: tbl_admins_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_admins_historial (
+    id bigint NOT NULL,
+    id_admin integer NOT NULL,
+    nivel_admin integer NOT NULL,
+    cargo text NOT NULL,
+    estado_admin smallint DEFAULT 1 NOT NULL,
+    detalle text,
+    fecha_cambio timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: tbl_admins_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_admins_historial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_admins_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_admins_historial_id_seq OWNED BY public.tbl_admins_historial.id;
+
+
+--
+-- Name: tbl_admins_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_admins_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_admins_id_seq OWNED BY public.tbl_admins.id;
+
+
+--
+-- Name: tbl_archivos_tramites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_archivos_tramites (
+    id integer NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_tramites_metadatos integer NOT NULL,
+    id_tipo_archivo integer NOT NULL,
+    nombre_archivo text NOT NULL,
+    storage text NOT NULL,
+    bucket text NOT NULL,
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_archivo smallint DEFAULT 1 NOT NULL,
+    max_size numeric DEFAULT 4
+);
+
+
+--
+-- Name: tbl_archivos_tramites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_archivos_tramites_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_archivos_tramites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_archivos_tramites_id_seq OWNED BY public.tbl_archivos_tramites.id;
+
+
+--
+-- Name: tbl_asignacion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_asignacion (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_docente integer NOT NULL,
+    orden smallint,
+    id_etapa integer NOT NULL,
+    id_usuario_asignador integer NOT NULL,
+    fecha_asignacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    iteracion integer,
+    tipo_evento integer NOT NULL,
+    estado_asignacion smallint DEFAULT 1,
+    imagen_sorteo text
+);
+
+
+--
+-- Name: tbl_asignacion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_asignacion_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_asignacion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_asignacion_id_seq OWNED BY public.tbl_asignacion.id;
+
+
+--
+-- Name: tbl_coasesor_tramites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coasesor_tramites (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_coasesor integer NOT NULL,
+    estado_coasesor integer DEFAULT 1 NOT NULL,
+    fecha_asignacion timestamp with time zone DEFAULT now(),
+    CONSTRAINT ck_tbl_coasesor_tramites_estado_coasesor CHECK ((estado_coasesor = ANY (ARRAY[0, 1])))
+);
+
+
+--
+-- Name: tbl_coasesor_tramites_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coasesor_tramites_historial (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_coasesor integer NOT NULL,
+    id_usuario_responsable integer NOT NULL,
+    fecha timestamp with time zone DEFAULT now(),
+    estado_coasesor integer NOT NULL,
+    comentario text,
+    CONSTRAINT ck_tbl_coasesor_tramites_historial_estado_coasesor CHECK ((estado_coasesor = ANY (ARRAY[0, 1])))
+);
+
+
+--
+-- Name: tbl_coasesor_tramites_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coasesor_tramites_historial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coasesor_tramites_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coasesor_tramites_historial_id_seq OWNED BY public.tbl_coasesor_tramites_historial.id;
+
+
+--
+-- Name: tbl_coasesor_tramites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coasesor_tramites_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coasesor_tramites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coasesor_tramites_id_seq OWNED BY public.tbl_coasesor_tramites.id;
+
+
+--
+-- Name: tbl_coasesores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coasesores (
+    id integer NOT NULL,
+    id_investigador integer NOT NULL,
+    estado_coasesor bigint NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_coasesores.estado_coasesor; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_coasesores.estado_coasesor IS '1 = activo
+0 = inactivo';
+
+
+--
+-- Name: tbl_coasesores_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coasesores_historial (
+    id bigint NOT NULL,
+    id_coasesor integer NOT NULL,
+    fecha_cambio timestamp without time zone NOT NULL,
+    id_usuario_verificador integer NOT NULL,
+    detalle text,
+    estado_coasesor smallint NOT NULL,
+    id_accion integer
+);
+
+
+--
+-- Name: tbl_coasesores_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coasesores_historial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coasesores_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coasesores_historial_id_seq OWNED BY public.tbl_coasesores_historial.id;
+
+
+--
+-- Name: tbl_coasesores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coasesores_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coasesores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coasesores_id_seq OWNED BY public.tbl_coasesores.id;
+
+
+--
+-- Name: tbl_conformacion_jurados; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_conformacion_jurados (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_docente integer NOT NULL,
+    orden smallint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_usuario_asignador integer NOT NULL,
+    id_asignacion integer,
+    fecha_asignacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_cj smallint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: tbl_conformacion_jurados_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_conformacion_jurados_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_conformacion_jurados_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_conformacion_jurados_id_seq OWNED BY public.tbl_conformacion_jurados.id;
+
+
+--
+-- Name: tbl_coordinador_carrera; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coordinador_carrera (
+    id integer NOT NULL,
+    id_coordinador integer NOT NULL,
+    nivel_coordinador integer,
+    id_facultad integer,
+    id_carrera integer,
+    fecha date,
+    estado smallint
+);
+
+
+--
+-- Name: tbl_coordinador_carrera_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coordinador_carrera_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coordinador_carrera_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coordinador_carrera_id_seq OWNED BY public.tbl_coordinador_carrera.id;
+
+
+--
+-- Name: tbl_coordinadores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coordinadores (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    id_facultad integer NOT NULL,
+    nivel_coordinador bigint NOT NULL,
+    correo_oficina character varying(320),
+    direccion_oficina text,
+    horario text,
+    telefono character varying(20),
+    estado_coordinador smallint DEFAULT 1
+);
+
+
+--
+-- Name: COLUMN tbl_coordinadores.nivel_coordinador; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_coordinadores.nivel_coordinador IS '1 = básico
+2 = intermedio
+3 = avanzado';
+
+
+--
+-- Name: COLUMN tbl_coordinadores.estado_coordinador; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_coordinadores.estado_coordinador IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: tbl_coordinadores_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_coordinadores_historial (
+    id bigint NOT NULL,
+    id_coordinador integer NOT NULL,
+    estado_coordinador_historial smallint DEFAULT 1 NOT NULL,
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    numero_resolucion text,
+    comentario text,
+    id_accion integer,
+    id_facultad integer,
+    id_carrera integer,
+    id_nivel_coordinador integer
+);
+
+
+--
+-- Name: COLUMN tbl_coordinadores_historial.estado_coordinador_historial; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_coordinadores_historial.estado_coordinador_historial IS 'si estuvo activo (1) o no activo (2) en ese momento';
+
+
+--
+-- Name: tbl_coordinadores_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coordinadores_historial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coordinadores_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coordinadores_historial_id_seq OWNED BY public.tbl_coordinadores_historial.id;
+
+
+--
+-- Name: tbl_coordinadores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_coordinadores_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_coordinadores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_coordinadores_id_seq OWNED BY public.tbl_coordinadores.id;
+
+
+--
+-- Name: tbl_correcciones_jurados; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_correcciones_jurados (
+    id bigint NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_docente integer NOT NULL,
+    mensaje_correccion text,
+    fecha_correccion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    estado_correccion smallint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: tbl_correcciones_jurados_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_correcciones_jurados_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_correcciones_jurados_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_correcciones_jurados_id_seq OWNED BY public.tbl_correcciones_jurados.id;
+
+
+--
+-- Name: tbl_dictamenes_info; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_dictamenes_info (
+    id bigint NOT NULL,
+    id_tramite bigint NOT NULL,
+    codigo_proyecto character varying(20),
+    tipo_aprobacion integer NOT NULL,
+    titulo text,
+    denominacion text,
+    tesista1 text,
+    tesista2 text,
+    escuela_profesional text,
+    presidente text,
+    primer_miembro text,
+    segundo_miembro text,
+    asesor text,
+    coasesor text,
+    fecha_dictamen timestamp without time zone,
+    token text,
+    estado smallint,
+    tipo_acta smallint,
+    folio integer,
+    fecha_sustentacion timestamp without time zone,
+    lugar_sustentacion text
+);
+
+
+--
+-- Name: COLUMN tbl_dictamenes_info.tipo_acta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_dictamenes_info.tipo_acta IS '1 = Dictamen, 2 = Sustentación';
+
+
+--
+-- Name: tbl_dictamenes_info_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_dictamenes_info_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_dictamenes_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_dictamenes_info_id_seq OWNED BY public.tbl_dictamenes_info.id;
+
+
+--
+-- Name: tbl_docente_categoria_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_docente_categoria_historial (
+    id integer NOT NULL,
+    id_docente integer,
+    id_categoria integer NOT NULL,
+    fecha_resolucion date,
+    resolucion character varying(255),
+    estado smallint
+);
+
+
+--
+-- Name: tbl_docente_categoria_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_docente_categoria_historial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_docente_categoria_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_docente_categoria_historial_id_seq OWNED BY public.tbl_docente_categoria_historial.id;
+
+
+--
+-- Name: tbl_docentes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_docentes (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    id_categoria integer NOT NULL,
+    codigo_airhs character varying(10) NOT NULL,
+    id_carrera integer NOT NULL,
+    id_especialidad integer NOT NULL,
+    estado_docente smallint DEFAULT 1 NOT NULL,
+    id_antiguo bigint
+);
+
+
+--
+-- Name: COLUMN tbl_docentes.estado_docente; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_docentes.estado_docente IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: tbl_docentes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_docentes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_docentes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_docentes_id_seq OWNED BY public.tbl_docentes.id;
+
+
+--
+-- Name: tbl_docentes_lineas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_docentes_lineas (
+    id bigint NOT NULL,
+    id_docente integer NOT NULL,
+    id_sublinea_vri integer NOT NULL,
+    tipo smallint NOT NULL,
+    id_estado_linea smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_docentes_lineas.tipo; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_docentes_lineas.tipo IS '1 = Principal
+2 = Secundario';
+
+
+--
+-- Name: COLUMN tbl_docentes_lineas.id_estado_linea; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_docentes_lineas.id_estado_linea IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: tbl_docentes_lineas_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_docentes_lineas_historial (
+    id bigint NOT NULL,
+    id_docente integer NOT NULL,
+    id_sublinea_vri integer NOT NULL,
+    id_estado_historial integer NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL,
+    numero_resolucion text NOT NULL,
+    comentario text,
+    estado smallint
+);
+
+
+--
+-- Name: COLUMN tbl_docentes_lineas_historial.id_estado_historial; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_docentes_lineas_historial.id_estado_historial IS '-1 = Renuncia
+0 = Rechazado
+1 = Disponible
+2 = Aprobado';
+
+
+--
+-- Name: tbl_docentes_lineas_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_docentes_lineas_historial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_docentes_lineas_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_docentes_lineas_historial_id_seq OWNED BY public.tbl_docentes_lineas_historial.id;
+
+
+--
+-- Name: tbl_docentes_lineas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_docentes_lineas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_docentes_lineas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_docentes_lineas_id_seq OWNED BY public.tbl_docentes_lineas.id;
+
+
+--
+-- Name: tbl_estructura_academica; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_estructura_academica (
+    id integer NOT NULL,
+    nombre text,
+    id_carrera integer NOT NULL,
+    id_facultad integer NOT NULL,
+    id_especialidad integer NOT NULL,
+    id_sede integer NOT NULL,
+    estado_ea smallint DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: tbl_estudios; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_estudios (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    id_universidad integer NOT NULL,
+    id_grado_academico integer NOT NULL,
+    titulo_profesional text,
+    especialidad character varying(255),
+    fecha_emision date,
+    resolucion character varying(100),
+    fecha_resolucion date,
+    flag_resolucion_nulidad character varying(10),
+    nro_resolucion_nulidad character varying(100),
+    fecha_resolucion_nulidad date,
+    id_tipo_obtencion integer
+);
+
+
+--
+-- Name: TABLE tbl_estudios; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tbl_estudios IS 'Almacena los grados y títulos obtenidos por los usuarios, basado en la información consultada de fuentes como SUNEDU.';
+
+
+--
+-- Name: COLUMN tbl_estudios.id_tipo_obtencion; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_estudios.id_tipo_obtencion IS 'Indica el método por el cual se obtuvo el registro del estudio (Manual, API SUNEDU, etc.). Referencia a dic_obtencion_studios.';
+
+
+--
+-- Name: tbl_estudios_id_seq1; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_estudios_id_seq1
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_estudios_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_estudios_id_seq1 OWNED BY public.tbl_estudios.id;
+
+
+--
+-- Name: tbl_grado_docente; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_grado_docente (
+    id integer NOT NULL,
+    id_docente integer NOT NULL,
+    grado_academico text,
+    categoria_descripcion text,
+    antiguedad_categoria date,
+    estado_grado_docente smallint DEFAULT 1
+);
+
+
+--
+-- Name: tbl_grado_docente_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_grado_docente_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_grado_docente_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_grado_docente_id_seq OWNED BY public.tbl_grado_docente.id;
+
+
+--
+-- Name: tbl_integrantes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_integrantes (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    id_tesista integer NOT NULL,
+    tipo_integrante smallint NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL,
+    estado_integrante smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_integrantes.tipo_integrante; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_integrantes.tipo_integrante IS '1 = principal
+2 = secundario';
+
+
+--
+-- Name: COLUMN tbl_integrantes.estado_integrante; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_integrantes.estado_integrante IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: tbl_integrantes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_integrantes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_integrantes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_integrantes_id_seq OWNED BY public.tbl_integrantes.id;
+
+
+--
+-- Name: tbl_observaciones; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_observaciones (
+    id integer NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_usuario integer NOT NULL,
+    id_rol integer NOT NULL,
+    visto_bueno smallint NOT NULL,
+    observacion text,
+    fecha timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_observaciones.visto_bueno; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_observaciones.visto_bueno IS '1 = aceptado
+0 = rechazado (para corregir)
+-1 = rechazo definitivo';
+
+
+--
+-- Name: tbl_observaciones_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_observaciones_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_observaciones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_observaciones_id_seq OWNED BY public.tbl_observaciones.id;
+
+
+--
+-- Name: tbl_perfil_investigador; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_perfil_investigador (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    institucion text,
+    afiliacion text,
+    orcid text,
+    ctivitae text,
+    codigo_renacyt text,
+    nivel_renacyt text,
+    scopus_id text,
+    wos_id text,
+    alternativo_scopus_id text,
+    estado_investigador bigint NOT NULL
+);
+
+
+--
+-- Name: tbl_perfil_investigador_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_perfil_investigador_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_perfil_investigador_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_perfil_investigador_id_seq OWNED BY public.tbl_perfil_investigador.id;
+
+
+--
+-- Name: tbl_programacion_sustentacion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_programacion_sustentacion (
+    id integer NOT NULL,
+    id_tramite integer NOT NULL,
+    fecha_sustentacion date,
+    hora_sustentacion time without time zone,
+    lugar_sustentacion text,
+    fecha_registro timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    estado smallint
+);
+
+
+--
+-- Name: tbl_programacion_sustentacion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_programacion_sustentacion_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_programacion_sustentacion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_programacion_sustentacion_id_seq OWNED BY public.tbl_programacion_sustentacion.id;
+
+
+--
+-- Name: tbl_sublineas_vri; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_sublineas_vri (
+    id integer NOT NULL,
+    id_linea_universidad integer NOT NULL,
+    nombre text NOT NULL,
+    id_disciplina integer NOT NULL,
+    id_carrera integer NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL,
+    fecha_modificacion timestamp without time zone NOT NULL,
+    estado_sublinea_vri smallint NOT NULL,
+    id_area integer NOT NULL,
+    id_subarea integer NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_sublineas_vri.estado_sublinea_vri; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_sublineas_vri.estado_sublinea_vri IS '0 = inactivo
+1 = activo';
+
+
+--
+-- Name: tbl_tesistas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tesistas (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    codigo_estudiante character varying(6) NOT NULL,
+    id_estructura_academica integer NOT NULL,
+    estado smallint NOT NULL,
+    id_antiguo bigint
+);
+
+
+--
+-- Name: tbl_tesistas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tesistas_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tesistas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tesistas_id_seq OWNED BY public.tbl_tesistas.id;
+
+
+--
+-- Name: tbl_tramites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tramites (
+    id bigint NOT NULL,
+    id_antiguo integer,
+    codigo_proyecto character varying(10) NOT NULL,
+    id_etapa integer NOT NULL,
+    id_sublinea_vri integer NOT NULL,
+    id_modalidad integer NOT NULL,
+    id_tipo_trabajo integer NOT NULL,
+    id_denominacion integer NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL,
+    estado_tramite smallint NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_tramites.id_modalidad; Type: COMMENT; Schema: public; Owner: -
+--
 
+COMMENT ON COLUMN public.tbl_tramites.id_modalidad IS 'ruta de las etapas que debe seguir el tramite segun el dic_etapas';
+
+
+--
+-- Name: COLUMN tbl_tramites.id_tipo_trabajo; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_tramites.id_tipo_trabajo IS 'tesis, articulos, examen de suficiencia, etc';
+
+
+--
+-- Name: COLUMN tbl_tramites.id_denominacion; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_tramites.id_denominacion IS 'Denominacion del grado actual';
+
+
+--
+-- Name: COLUMN tbl_tramites.estado_tramite; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_tramites.estado_tramite IS '0 = invalido
+1 = valido';
+
+
+--
+-- Name: tbl_tramites_historial; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tramites_historial (
+    id bigint NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    estado_tramite_historial smallint DEFAULT 1 NOT NULL,
+    fecha_cambio timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    comentario text NOT NULL
+);
+
+
+--
+-- Name: COLUMN tbl_tramites_historial.estado_tramite_historial; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_tramites_historial.estado_tramite_historial IS 'que estado tuvo en ese momento 0 si estaba inactivo en esta etapa o 1 si estaba activo
+';
+
+
+--
+-- Name: tbl_tramites_historial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tramites_historial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tramites_historial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tramites_historial_id_seq OWNED BY public.tbl_tramites_historial.id;
+
+
+--
+-- Name: tbl_tramites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tramites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tramites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tramites_id_seq OWNED BY public.tbl_tramites.id;
+
+
+--
+-- Name: tbl_tramites_metadatos; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tramites_metadatos (
+    id integer NOT NULL,
+    id_tramite bigint NOT NULL,
+    titulo text NOT NULL,
+    abstract text NOT NULL,
+    keywords text NOT NULL,
+    conclusiones text NOT NULL,
+    presupuesto numeric NOT NULL,
+    id_etapa integer NOT NULL,
+    fecha timestamp without time zone NOT NULL,
+    estado_tm smallint NOT NULL
+);
+
+
+--
+-- Name: tbl_tramites_metadatos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tramites_metadatos_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tramites_metadatos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tramites_metadatos_id_seq OWNED BY public.tbl_tramites_metadatos.id;
+
+
+--
+-- Name: tbl_tramitesdet; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tramitesdet (
+    id bigint NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_docente integer NOT NULL,
+    id_etapa integer NOT NULL,
+    id_visto_bueno integer NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL,
+    detalle text,
+    id_orden integer,
+    estado smallint
+);
+
+
+--
+-- Name: tbl_tramitesdet_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tramitesdet_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tramitesdet_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tramitesdet_id_seq OWNED BY public.tbl_tramitesdet.id;
+
+
+--
+-- Name: tbl_tramitesdoc; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_tramitesdoc (
+    id integer NOT NULL,
+    id_tramite bigint NOT NULL,
+    id_etapa integer NOT NULL,
+    id_tramites_metadatos integer NOT NULL,
+    fecha_registro timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tbl_tramitesdoc_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_tramitesdoc_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_tramitesdoc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_tramitesdoc_id_seq OWNED BY public.tbl_tramitesdoc.id;
+
+
+--
+-- Name: tbl_usuarios; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_usuarios (
+    id integer NOT NULL,
+    nombres character varying(90),
+    apellidos character varying(90),
+    tipo_doc_identidad character varying(30),
+    num_doc_identidad character varying(12) NOT NULL,
+    correo character varying(320) NOT NULL,
+    correo_google character varying(320),
+    telefono character varying(20),
+    pais character varying(3),
+    direccion text,
+    sexo character varying(10),
+    fecha_nacimiento date,
+    contrasenia character varying(255),
+    ruta_foto character varying(500),
+    estado smallint,
+    uuid uuid
+);
+
+
+--
+-- Name: COLUMN tbl_usuarios.tipo_doc_identidad; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tbl_usuarios.tipo_doc_identidad IS '(''DNI'', ''CARNET DE EXTRANJERIA'', ''PASAPORTE'')';
+
+
+--
+-- Name: tbl_usuarios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_usuarios_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_usuarios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_usuarios_id_seq OWNED BY public.tbl_usuarios.id;
+
+
+--
+-- Name: tbl_usuarios_servicios; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tbl_usuarios_servicios (
+    id integer NOT NULL,
+    id_usuario integer NOT NULL,
+    id_servicio integer NOT NULL,
+    fecha_asignacion timestamp without time zone NOT NULL,
+    estado smallint NOT NULL
+);
+
+
+--
+-- Name: tbl_usuarios_servicios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tbl_usuarios_servicios_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tbl_usuarios_servicios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tbl_usuarios_servicios_id_seq OWNED BY public.tbl_usuarios_servicios.id;
+
+
+--
+-- Name: dic_categoria id; Type: DEFAULT; Schema: public; Owner: -
 --
--- Name: refresh_tokens id; Type: DEFAULT; Schema: auth; Owner: supabase_auth_admin
+
+ALTER TABLE ONLY public.dic_categoria ALTER COLUMN id SET DEFAULT nextval('public.dic_categoria_id_seq'::regclass);
+
+
+--
+-- Name: dic_grados_academicos id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_grados_academicos ALTER COLUMN id SET DEFAULT nextval('public.dic_grados_academicos_id_seq'::regclass);
+
+
+--
+-- Name: dic_modalidades id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_modalidades ALTER COLUMN id SET DEFAULT nextval('public.dic_modalidades_id_seq'::regclass);
+
+
+--
+-- Name: dic_nivel_admins id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_nivel_admins ALTER COLUMN id SET DEFAULT nextval('public.dic_nivel_admins_id_seq'::regclass);
+
+
+--
+-- Name: dic_nivel_coordinador id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_nivel_coordinador ALTER COLUMN id SET DEFAULT nextval('public.dic_nivel_coordinador_id_seq'::regclass);
+
+
+--
+-- Name: dic_obtencion_studios id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_obtencion_studios ALTER COLUMN id SET DEFAULT nextval('public.dic_obtencion_studios_id_seq'::regclass);
+
+
+--
+-- Name: dic_orden_jurado id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_orden_jurado ALTER COLUMN id SET DEFAULT nextval('public.dic_orden_jurado_id_seq'::regclass);
+
+
+--
+-- Name: dic_sedes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_sedes ALTER COLUMN id SET DEFAULT nextval('public.dic_sedes_id_seq'::regclass);
+
+
+--
+-- Name: dic_servicios id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_servicios ALTER COLUMN id SET DEFAULT nextval('public.dic_servicios_id_seq'::regclass);
+
+
+--
+-- Name: dic_tipo_evento id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_tipo_evento ALTER COLUMN id SET DEFAULT nextval('public.dic_tipo_evento_id_seq'::regclass);
+
+
+--
+-- Name: dic_tipo_trabajos id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dic_tipo_trabajos ALTER COLUMN id SET DEFAULT nextval('public.dic_tipo_trabajos_id_seq'::regclass);
+
+
+--
+-- Name: log_acciones id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_acciones ALTER COLUMN id SET DEFAULT nextval('public.log_acciones_id_seq'::regclass);
+
+
+--
+-- Name: tabla_metadatos_dictamen_borrador id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tabla_metadatos_dictamen_borrador ALTER COLUMN id SET DEFAULT nextval('public.tabla_metadatos_dictamen_borrador_id_seq'::regclass);
+
+
+--
+-- Name: tbl_admins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.refresh_tokens ALTER COLUMN id SET DEFAULT nextval('auth.refresh_tokens_id_seq'::regclass);
+ALTER TABLE ONLY public.tbl_admins ALTER COLUMN id SET DEFAULT nextval('public.tbl_admins_id_seq'::regclass);
 
 
 --
--- Name: mfa_amr_claims amr_id_pk; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_amr_claims
-    ADD CONSTRAINT amr_id_pk PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_admins_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_admins_historial_id_seq'::regclass);
 
 
 --
--- Name: audit_log_entries audit_log_entries_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.audit_log_entries
-    ADD CONSTRAINT audit_log_entries_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_archivos_tramites ALTER COLUMN id SET DEFAULT nextval('public.tbl_archivos_tramites_id_seq'::regclass);
 
 
 --
--- Name: flow_state flow_state_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_asignacion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.flow_state
-    ADD CONSTRAINT flow_state_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_asignacion ALTER COLUMN id SET DEFAULT nextval('public.tbl_asignacion_id_seq'::regclass);
 
 
 --
--- Name: identities identities_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesor_tramites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.identities
-    ADD CONSTRAINT identities_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_coasesor_tramites ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesor_tramites_id_seq'::regclass);
 
 
 --
--- Name: identities identities_provider_id_provider_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesor_tramites_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.identities
-    ADD CONSTRAINT identities_provider_id_provider_unique UNIQUE (provider_id, provider);
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesor_tramites_historial_id_seq'::regclass);
 
 
 --
--- Name: instances instances_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.instances
-    ADD CONSTRAINT instances_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_coasesores ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesores_id_seq'::regclass);
 
 
 --
--- Name: mfa_amr_claims mfa_amr_claims_session_id_authentication_method_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_amr_claims
-    ADD CONSTRAINT mfa_amr_claims_session_id_authentication_method_pkey UNIQUE (session_id, authentication_method);
+ALTER TABLE ONLY public.tbl_coasesores_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_coasesores_historial_id_seq'::regclass);
 
 
 --
--- Name: mfa_challenges mfa_challenges_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_conformacion_jurados id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_challenges
-    ADD CONSTRAINT mfa_challenges_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_conformacion_jurados ALTER COLUMN id SET DEFAULT nextval('public.tbl_conformacion_jurados_id_seq'::regclass);
 
 
 --
--- Name: mfa_factors mfa_factors_last_challenged_at_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinador_carrera id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_factors
-    ADD CONSTRAINT mfa_factors_last_challenged_at_key UNIQUE (last_challenged_at);
+ALTER TABLE ONLY public.tbl_coordinador_carrera ALTER COLUMN id SET DEFAULT nextval('public.tbl_coordinador_carrera_id_seq'::regclass);
 
 
 --
--- Name: mfa_factors mfa_factors_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_factors
-    ADD CONSTRAINT mfa_factors_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_coordinadores ALTER COLUMN id SET DEFAULT nextval('public.tbl_coordinadores_id_seq'::regclass);
 
 
 --
--- Name: oauth_clients oauth_clients_client_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.oauth_clients
-    ADD CONSTRAINT oauth_clients_client_id_key UNIQUE (client_id);
+ALTER TABLE ONLY public.tbl_coordinadores_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_coordinadores_historial_id_seq'::regclass);
 
 
 --
--- Name: oauth_clients oauth_clients_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_correcciones_jurados id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.oauth_clients
-    ADD CONSTRAINT oauth_clients_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_correcciones_jurados ALTER COLUMN id SET DEFAULT nextval('public.tbl_correcciones_jurados_id_seq'::regclass);
 
 
 --
--- Name: one_time_tokens one_time_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_dictamenes_info id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.one_time_tokens
-    ADD CONSTRAINT one_time_tokens_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_dictamenes_info ALTER COLUMN id SET DEFAULT nextval('public.tbl_dictamenes_info_id_seq'::regclass);
 
 
 --
--- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docente_categoria_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.refresh_tokens
-    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_docente_categoria_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_docente_categoria_historial_id_seq'::regclass);
 
 
 --
--- Name: refresh_tokens refresh_tokens_token_unique; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.refresh_tokens
-    ADD CONSTRAINT refresh_tokens_token_unique UNIQUE (token);
+ALTER TABLE ONLY public.tbl_docentes ALTER COLUMN id SET DEFAULT nextval('public.tbl_docentes_id_seq'::regclass);
 
 
 --
--- Name: saml_providers saml_providers_entity_id_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes_lineas id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_providers
-    ADD CONSTRAINT saml_providers_entity_id_key UNIQUE (entity_id);
+ALTER TABLE ONLY public.tbl_docentes_lineas ALTER COLUMN id SET DEFAULT nextval('public.tbl_docentes_lineas_id_seq'::regclass);
 
 
 --
--- Name: saml_providers saml_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes_lineas_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_providers
-    ADD CONSTRAINT saml_providers_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_docentes_lineas_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_docentes_lineas_historial_id_seq'::regclass);
 
 
 --
--- Name: saml_relay_states saml_relay_states_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_estudios id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_relay_states
-    ADD CONSTRAINT saml_relay_states_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_estudios ALTER COLUMN id SET DEFAULT nextval('public.tbl_estudios_id_seq1'::regclass);
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_grado_docente id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.schema_migrations
-    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+ALTER TABLE ONLY public.tbl_grado_docente ALTER COLUMN id SET DEFAULT nextval('public.tbl_grado_docente_id_seq'::regclass);
 
 
 --
--- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_integrantes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.sessions
-    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_integrantes ALTER COLUMN id SET DEFAULT nextval('public.tbl_integrantes_id_seq'::regclass);
 
 
 --
--- Name: sso_domains sso_domains_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_observaciones id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.sso_domains
-    ADD CONSTRAINT sso_domains_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_observaciones ALTER COLUMN id SET DEFAULT nextval('public.tbl_observaciones_id_seq'::regclass);
 
 
 --
--- Name: sso_providers sso_providers_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_perfil_investigador id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.sso_providers
-    ADD CONSTRAINT sso_providers_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_perfil_investigador ALTER COLUMN id SET DEFAULT nextval('public.tbl_perfil_investigador_id_seq'::regclass);
 
 
 --
--- Name: users users_phone_key; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_programacion_sustentacion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.users
-    ADD CONSTRAINT users_phone_key UNIQUE (phone);
+ALTER TABLE ONLY public.tbl_programacion_sustentacion ALTER COLUMN id SET DEFAULT nextval('public.tbl_programacion_sustentacion_id_seq'::regclass);
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tesistas id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_tesistas ALTER COLUMN id SET DEFAULT nextval('public.tbl_tesistas_id_seq'::regclass);
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: tbl_tramites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY realtime.messages
-    ADD CONSTRAINT messages_pkey PRIMARY KEY (id, inserted_at);
+ALTER TABLE ONLY public.tbl_tramites ALTER COLUMN id SET DEFAULT nextval('public.tbl_tramites_id_seq'::regclass);
 
 
 --
--- Name: subscription pk_subscription; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramites_historial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY realtime.subscription
-    ADD CONSTRAINT pk_subscription PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_tramites_historial ALTER COLUMN id SET DEFAULT nextval('public.tbl_tramites_historial_id_seq'::regclass);
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramites_metadatos id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY realtime.schema_migrations
-    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+ALTER TABLE ONLY public.tbl_tramites_metadatos ALTER COLUMN id SET DEFAULT nextval('public.tbl_tramites_metadatos_id_seq'::regclass);
 
 
 --
--- Name: buckets buckets_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_tramitesdet id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.buckets
-    ADD CONSTRAINT buckets_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_tramitesdet ALTER COLUMN id SET DEFAULT nextval('public.tbl_tramitesdet_id_seq'::regclass);
 
 
 --
--- Name: migrations migrations_name_key; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_tramitesdoc id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.migrations
-    ADD CONSTRAINT migrations_name_key UNIQUE (name);
+ALTER TABLE ONLY public.tbl_tramitesdoc ALTER COLUMN id SET DEFAULT nextval('public.tbl_tramitesdoc_id_seq'::regclass);
 
 
 --
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_usuarios id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.migrations
-    ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_usuarios ALTER COLUMN id SET DEFAULT nextval('public.tbl_usuarios_id_seq'::regclass);
 
 
 --
--- Name: objects objects_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_usuarios_servicios id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.objects
-    ADD CONSTRAINT objects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tbl_usuarios_servicios ALTER COLUMN id SET DEFAULT nextval('public.tbl_usuarios_servicios_id_seq'::regclass);
 
 
 --
--- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_acciones dic_acciones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.s3_multipart_uploads_parts
-    ADD CONSTRAINT s3_multipart_uploads_parts_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.dic_acciones
+    ADD CONSTRAINT dic_acciones_pkey PRIMARY KEY (id);
 
 
 --
--- Name: s3_multipart_uploads s3_multipart_uploads_pkey; Type: CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_areas_ocde dic_areas_ocde_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.s3_multipart_uploads
-    ADD CONSTRAINT s3_multipart_uploads_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.dic_areas_ocde
+    ADD CONSTRAINT dic_areas_ocde_pkey PRIMARY KEY (id);
 
 
 --
--- Name: audit_logs_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_carreras dic_carreras_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (instance_id);
+ALTER TABLE ONLY public.dic_carreras
+    ADD CONSTRAINT dic_carreras_pkey PRIMARY KEY (id);
 
 
 --
--- Name: confirmation_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_categoria dic_categoria_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX confirmation_token_idx ON auth.users USING btree (confirmation_token) WHERE ((confirmation_token)::text !~ '^[0-9 ]*$'::text);
+ALTER TABLE ONLY public.dic_categoria
+    ADD CONSTRAINT dic_categoria_pkey PRIMARY KEY (id);
 
 
 --
--- Name: email_change_token_current_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_denominaciones dic_denominaciones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX email_change_token_current_idx ON auth.users USING btree (email_change_token_current) WHERE ((email_change_token_current)::text !~ '^[0-9 ]*$'::text);
+ALTER TABLE ONLY public.dic_denominaciones
+    ADD CONSTRAINT dic_denominaciones_pkey PRIMARY KEY (id);
 
 
 --
--- Name: email_change_token_new_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_disciplinas dic_disciplinas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX email_change_token_new_idx ON auth.users USING btree (email_change_token_new) WHERE ((email_change_token_new)::text !~ '^[0-9 ]*$'::text);
+ALTER TABLE ONLY public.dic_disciplinas
+    ADD CONSTRAINT dic_disciplinas_pkey PRIMARY KEY (id);
 
 
 --
--- Name: factor_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_especialidades dic_especialidades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX factor_id_created_at_idx ON auth.mfa_factors USING btree (user_id, created_at);
+ALTER TABLE ONLY public.dic_especialidades
+    ADD CONSTRAINT dic_especialidades_pkey PRIMARY KEY (id);
 
 
 --
--- Name: flow_state_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_etapas dic_etapas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX flow_state_created_at_idx ON auth.flow_state USING btree (created_at DESC);
+ALTER TABLE ONLY public.dic_etapas
+    ADD CONSTRAINT dic_etapas_pkey PRIMARY KEY (id);
 
 
 --
--- Name: identities_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_facultades dic_facultades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX identities_email_idx ON auth.identities USING btree (email text_pattern_ops);
+ALTER TABLE ONLY public.dic_facultades
+    ADD CONSTRAINT dic_facultades_pkey PRIMARY KEY (id);
 
 
 --
--- Name: INDEX identities_email_idx; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_grados_academicos dic_grados_academicos_abreviatura_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-COMMENT ON INDEX auth.identities_email_idx IS 'Auth: Ensures indexed queries on the email column';
+ALTER TABLE ONLY public.dic_grados_academicos
+    ADD CONSTRAINT dic_grados_academicos_abreviatura_key UNIQUE (abreviatura);
 
 
 --
--- Name: identities_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_grados_academicos dic_grados_academicos_nombre_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX identities_user_id_idx ON auth.identities USING btree (user_id);
+ALTER TABLE ONLY public.dic_grados_academicos
+    ADD CONSTRAINT dic_grados_academicos_nombre_key UNIQUE (nombre);
 
 
 --
--- Name: idx_auth_code; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_grados_academicos dic_grados_academicos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_auth_code ON auth.flow_state USING btree (auth_code);
+ALTER TABLE ONLY public.dic_grados_academicos
+    ADD CONSTRAINT dic_grados_academicos_pkey PRIMARY KEY (id);
 
 
 --
--- Name: idx_user_id_auth_method; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_lineas_universidad dic_lineas_universidad_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_user_id_auth_method ON auth.flow_state USING btree (user_id, authentication_method);
+ALTER TABLE ONLY public.dic_lineas_universidad
+    ADD CONSTRAINT dic_lineas_universidad_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_challenge_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_modalidades dic_modalidades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX mfa_challenge_created_at_idx ON auth.mfa_challenges USING btree (created_at DESC);
+ALTER TABLE ONLY public.dic_modalidades
+    ADD CONSTRAINT dic_modalidades_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_factors_user_friendly_name_unique; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_nivel_admins dic_nivel_admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX mfa_factors_user_friendly_name_unique ON auth.mfa_factors USING btree (friendly_name, user_id) WHERE (TRIM(BOTH FROM friendly_name) <> ''::text);
+ALTER TABLE ONLY public.dic_nivel_admins
+    ADD CONSTRAINT dic_nivel_admins_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_factors_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_nivel_coordinador dic_nivel_coordinador_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id);
+ALTER TABLE ONLY public.dic_nivel_coordinador
+    ADD CONSTRAINT dic_nivel_coordinador_pkey PRIMARY KEY (id);
 
 
 --
--- Name: oauth_clients_client_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_obtencion_studios dic_obtencion_studios_nombre_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX oauth_clients_client_id_idx ON auth.oauth_clients USING btree (client_id);
+ALTER TABLE ONLY public.dic_obtencion_studios
+    ADD CONSTRAINT dic_obtencion_studios_nombre_key UNIQUE (nombre);
 
 
 --
--- Name: oauth_clients_deleted_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_obtencion_studios dic_obtencion_studios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX oauth_clients_deleted_at_idx ON auth.oauth_clients USING btree (deleted_at);
+ALTER TABLE ONLY public.dic_obtencion_studios
+    ADD CONSTRAINT dic_obtencion_studios_pkey PRIMARY KEY (id);
 
 
 --
--- Name: one_time_tokens_relates_to_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_orden_jurado dic_orden_jurado_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX one_time_tokens_relates_to_hash_idx ON auth.one_time_tokens USING hash (relates_to);
+ALTER TABLE ONLY public.dic_orden_jurado
+    ADD CONSTRAINT dic_orden_jurado_pkey PRIMARY KEY (id);
 
 
 --
--- Name: one_time_tokens_token_hash_hash_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_sedes dic_sedes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX one_time_tokens_token_hash_hash_idx ON auth.one_time_tokens USING hash (token_hash);
+ALTER TABLE ONLY public.dic_sedes
+    ADD CONSTRAINT dic_sedes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: one_time_tokens_user_id_token_type_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_servicios dic_servicios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX one_time_tokens_user_id_token_type_key ON auth.one_time_tokens USING btree (user_id, token_type);
+ALTER TABLE ONLY public.dic_servicios
+    ADD CONSTRAINT dic_servicios_pkey PRIMARY KEY (id);
 
 
 --
--- Name: reauthentication_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_subareas_ocde dic_subareas_ocde_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX reauthentication_token_idx ON auth.users USING btree (reauthentication_token) WHERE ((reauthentication_token)::text !~ '^[0-9 ]*$'::text);
+ALTER TABLE ONLY public.dic_subareas_ocde
+    ADD CONSTRAINT dic_subareas_ocde_pkey PRIMARY KEY (id);
 
 
 --
--- Name: recovery_token_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_tipo_archivo dic_tipo_archivo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX recovery_token_idx ON auth.users USING btree (recovery_token) WHERE ((recovery_token)::text !~ '^[0-9 ]*$'::text);
+ALTER TABLE ONLY public.dic_tipo_archivo
+    ADD CONSTRAINT dic_tipo_archivo_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_tipo_evento dic_tipo_evento_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (instance_id);
+ALTER TABLE ONLY public.dic_tipo_evento
+    ADD CONSTRAINT dic_tipo_evento_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens_instance_id_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_tipo_trabajos dic_tipo_trabajos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING btree (instance_id, user_id);
+ALTER TABLE ONLY public.dic_tipo_trabajos
+    ADD CONSTRAINT dic_tipo_trabajos_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens_parent_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_visto_bueno dic_visto_bueno_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX refresh_tokens_parent_idx ON auth.refresh_tokens USING btree (parent);
+ALTER TABLE ONLY public.dic_visto_bueno
+    ADD CONSTRAINT dic_visto_bueno_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens_session_id_revoked_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: log_acciones log_acciones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX refresh_tokens_session_id_revoked_idx ON auth.refresh_tokens USING btree (session_id, revoked);
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT log_acciones_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens_updated_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tabla_metadatos_dictamen_borrador tabla_metadatos_dictamen_borrador_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX refresh_tokens_updated_at_idx ON auth.refresh_tokens USING btree (updated_at DESC);
+ALTER TABLE ONLY public.tabla_metadatos_dictamen_borrador
+    ADD CONSTRAINT tabla_metadatos_dictamen_borrador_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_providers_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_historial tbl_admins_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX saml_providers_sso_provider_id_idx ON auth.saml_providers USING btree (sso_provider_id);
+ALTER TABLE ONLY public.tbl_admins_historial
+    ADD CONSTRAINT tbl_admins_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_relay_states_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins tbl_admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX saml_relay_states_created_at_idx ON auth.saml_relay_states USING btree (created_at DESC);
+ALTER TABLE ONLY public.tbl_admins
+    ADD CONSTRAINT tbl_admins_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_relay_states_for_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites tbl_archivos_tramites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btree (for_email);
+ALTER TABLE ONLY public.tbl_archivos_tramites
+    ADD CONSTRAINT tbl_archivos_tramites_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_relay_states_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesor_tramites_historial tbl_coasesor_tramites_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USING btree (sso_provider_id);
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial
+    ADD CONSTRAINT tbl_coasesor_tramites_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: sessions_not_after_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesor_tramites tbl_coasesor_tramites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX sessions_not_after_idx ON auth.sessions USING btree (not_after DESC);
+ALTER TABLE ONLY public.tbl_coasesor_tramites
+    ADD CONSTRAINT tbl_coasesor_tramites_pkey PRIMARY KEY (id);
 
 
 --
--- Name: sessions_user_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores_historial tbl_coasesores_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX sessions_user_id_idx ON auth.sessions USING btree (user_id);
+ALTER TABLE ONLY public.tbl_coasesores_historial
+    ADD CONSTRAINT tbl_coasesores_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: sso_domains_domain_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores tbl_coasesores_id_investigador_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX sso_domains_domain_idx ON auth.sso_domains USING btree (lower(domain));
+ALTER TABLE ONLY public.tbl_coasesores
+    ADD CONSTRAINT tbl_coasesores_id_investigador_key UNIQUE (id_investigador);
 
 
 --
--- Name: sso_domains_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores tbl_coasesores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX sso_domains_sso_provider_id_idx ON auth.sso_domains USING btree (sso_provider_id);
+ALTER TABLE ONLY public.tbl_coasesores
+    ADD CONSTRAINT tbl_coasesores_pkey PRIMARY KEY (id);
 
 
 --
--- Name: sso_providers_resource_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_conformacion_jurados tbl_conformacion_jurados_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX sso_providers_resource_id_idx ON auth.sso_providers USING btree (lower(resource_id));
+ALTER TABLE ONLY public.tbl_conformacion_jurados
+    ADD CONSTRAINT tbl_conformacion_jurados_pkey PRIMARY KEY (id);
 
 
 --
--- Name: sso_providers_resource_id_pattern_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinador_carrera tbl_coordinador_carrera_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX sso_providers_resource_id_pattern_idx ON auth.sso_providers USING btree (resource_id text_pattern_ops);
+ALTER TABLE ONLY public.tbl_coordinador_carrera
+    ADD CONSTRAINT tbl_coordinador_carrera_pkey PRIMARY KEY (id);
 
 
 --
--- Name: unique_phone_factor_per_user; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores_historial tbl_coordinadores_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_phone_factor_per_user ON auth.mfa_factors USING btree (user_id, phone);
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT tbl_coordinadores_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: user_id_created_at_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores tbl_coordinadores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX user_id_created_at_idx ON auth.sessions USING btree (user_id, created_at);
+ALTER TABLE ONLY public.tbl_coordinadores
+    ADD CONSTRAINT tbl_coordinadores_pkey PRIMARY KEY (id);
 
 
 --
--- Name: users_email_partial_key; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_correcciones_jurados tbl_correcciones_jurados_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX users_email_partial_key ON auth.users USING btree (email) WHERE (is_sso_user = false);
+ALTER TABLE ONLY public.tbl_correcciones_jurados
+    ADD CONSTRAINT tbl_correcciones_jurados_pkey PRIMARY KEY (id);
 
 
 --
--- Name: INDEX users_email_partial_key; Type: COMMENT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_dictamenes_info tbl_dictamenes_info_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-COMMENT ON INDEX auth.users_email_partial_key IS 'Auth: A partial unique index that applies only when is_sso_user is false';
+ALTER TABLE ONLY public.tbl_dictamenes_info
+    ADD CONSTRAINT tbl_dictamenes_info_pkey PRIMARY KEY (id);
 
 
 --
--- Name: users_instance_id_email_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docente_categoria_historial tbl_docente_categoria_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX users_instance_id_email_idx ON auth.users USING btree (instance_id, lower((email)::text));
+ALTER TABLE ONLY public.tbl_docente_categoria_historial
+    ADD CONSTRAINT tbl_docente_categoria_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: users_instance_id_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes_lineas_historial tbl_docentes_lineas_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX users_instance_id_idx ON auth.users USING btree (instance_id);
+ALTER TABLE ONLY public.tbl_docentes_lineas_historial
+    ADD CONSTRAINT tbl_docentes_lineas_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: users_is_anonymous_idx; Type: INDEX; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes_lineas tbl_docentes_lineas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX users_is_anonymous_idx ON auth.users USING btree (is_anonymous);
+ALTER TABLE ONLY public.tbl_docentes_lineas
+    ADD CONSTRAINT tbl_docentes_lineas_pkey PRIMARY KEY (id);
 
 
 --
--- Name: ix_realtime_subscription_entity; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_docentes tbl_docentes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX ix_realtime_subscription_entity ON realtime.subscription USING btree (entity);
+ALTER TABLE ONLY public.tbl_docentes
+    ADD CONSTRAINT tbl_docentes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: subscription_subscription_id_entity_filters_key; Type: INDEX; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_estructura_academica tbl_estructura_academica_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX subscription_subscription_id_entity_filters_key ON realtime.subscription USING btree (subscription_id, entity, filters);
+ALTER TABLE ONLY public.tbl_estructura_academica
+    ADD CONSTRAINT tbl_estructura_academica_pkey PRIMARY KEY (id);
 
 
 --
--- Name: bname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_estudios tbl_estudios_pkey1; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX bname ON storage.buckets USING btree (name);
+ALTER TABLE ONLY public.tbl_estudios
+    ADD CONSTRAINT tbl_estudios_pkey1 PRIMARY KEY (id);
 
 
 --
--- Name: bucketid_objname; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_grado_docente tbl_grado_docente_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX bucketid_objname ON storage.objects USING btree (bucket_id, name);
+ALTER TABLE ONLY public.tbl_grado_docente
+    ADD CONSTRAINT tbl_grado_docente_pkey PRIMARY KEY (id);
 
 
 --
--- Name: idx_multipart_uploads_list; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_integrantes tbl_integrantes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_multipart_uploads_list ON storage.s3_multipart_uploads USING btree (bucket_id, key, created_at);
+ALTER TABLE ONLY public.tbl_integrantes
+    ADD CONSTRAINT tbl_integrantes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: idx_objects_bucket_id_name; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_observaciones tbl_observaciones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_objects_bucket_id_name ON storage.objects USING btree (bucket_id, name COLLATE "C");
+ALTER TABLE ONLY public.tbl_observaciones
+    ADD CONSTRAINT tbl_observaciones_pkey PRIMARY KEY (id);
 
 
 --
--- Name: name_prefix_search; Type: INDEX; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_perfil_investigador tbl_perfil_investigador_id_usuario_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX name_prefix_search ON storage.objects USING btree (name text_pattern_ops);
+ALTER TABLE ONLY public.tbl_perfil_investigador
+    ADD CONSTRAINT tbl_perfil_investigador_id_usuario_key UNIQUE (id_usuario);
 
 
 --
--- Name: subscription tr_check_filters; Type: TRIGGER; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_perfil_investigador tbl_perfil_investigador_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE TRIGGER tr_check_filters BEFORE INSERT OR UPDATE ON realtime.subscription FOR EACH ROW EXECUTE FUNCTION realtime.subscription_check_filters();
+ALTER TABLE ONLY public.tbl_perfil_investigador
+    ADD CONSTRAINT tbl_perfil_investigador_pkey PRIMARY KEY (id);
 
 
 --
--- Name: objects update_objects_updated_at; Type: TRIGGER; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_programacion_sustentacion tbl_programacion_sustentacion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE TRIGGER update_objects_updated_at BEFORE UPDATE ON storage.objects FOR EACH ROW EXECUTE FUNCTION storage.update_updated_at_column();
+ALTER TABLE ONLY public.tbl_programacion_sustentacion
+    ADD CONSTRAINT tbl_programacion_sustentacion_pkey PRIMARY KEY (id);
 
 
 --
--- Name: identities identities_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_sublineas_vri tbl_sublineas_vri_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.identities
-    ADD CONSTRAINT identities_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT tbl_sublineas_vri_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_amr_claims mfa_amr_claims_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tesistas tbl_tesistas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_amr_claims
-    ADD CONSTRAINT mfa_amr_claims_session_id_fkey FOREIGN KEY (session_id) REFERENCES auth.sessions(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tesistas
+    ADD CONSTRAINT tbl_tesistas_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_challenges mfa_challenges_auth_factor_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tramites_historial tbl_tramites_historial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_challenges
-    ADD CONSTRAINT mfa_challenges_auth_factor_id_fkey FOREIGN KEY (factor_id) REFERENCES auth.mfa_factors(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tramites_historial
+    ADD CONSTRAINT tbl_tramites_historial_pkey PRIMARY KEY (id);
 
 
 --
--- Name: mfa_factors mfa_factors_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tramites_metadatos tbl_tramites_metadatos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.mfa_factors
-    ADD CONSTRAINT mfa_factors_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tramites_metadatos
+    ADD CONSTRAINT tbl_tramites_metadatos_pkey PRIMARY KEY (id);
 
 
 --
--- Name: one_time_tokens one_time_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tramites tbl_tramites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.one_time_tokens
-    ADD CONSTRAINT one_time_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT tbl_tramites_pkey PRIMARY KEY (id);
 
 
 --
--- Name: refresh_tokens refresh_tokens_session_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tramitesdet tbl_tramitesdet_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.refresh_tokens
-    ADD CONSTRAINT refresh_tokens_session_id_fkey FOREIGN KEY (session_id) REFERENCES auth.sessions(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT tbl_tramitesdet_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_providers saml_providers_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_tramitesdoc tbl_tramitesdoc_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_providers
-    ADD CONSTRAINT saml_providers_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_tramitesdoc
+    ADD CONSTRAINT tbl_tramitesdoc_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_relay_states saml_relay_states_flow_state_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: dic_universidades tbl_universidades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_relay_states
-    ADD CONSTRAINT saml_relay_states_flow_state_id_fkey FOREIGN KEY (flow_state_id) REFERENCES auth.flow_state(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.dic_universidades
+    ADD CONSTRAINT tbl_universidades_pkey PRIMARY KEY (id);
 
 
 --
--- Name: saml_relay_states saml_relay_states_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_usuarios tbl_usuarios_correo_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.saml_relay_states
-    ADD CONSTRAINT saml_relay_states_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_usuarios
+    ADD CONSTRAINT tbl_usuarios_correo_key UNIQUE (correo);
 
 
 --
--- Name: sessions sessions_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_usuarios tbl_usuarios_num_doc_identidad_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.sessions
-    ADD CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_usuarios
+    ADD CONSTRAINT tbl_usuarios_num_doc_identidad_key UNIQUE (num_doc_identidad);
 
 
 --
--- Name: sso_domains sso_domains_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_usuarios tbl_usuarios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY auth.sso_domains
-    ADD CONSTRAINT sso_domains_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tbl_usuarios
+    ADD CONSTRAINT tbl_usuarios_pkey PRIMARY KEY (id);
 
 
 --
--- Name: objects objects_bucketId_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_usuarios_servicios tbl_usuarios_servicios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.objects
-    ADD CONSTRAINT "objects_bucketId_fkey" FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id);
+ALTER TABLE ONLY public.tbl_usuarios_servicios
+    ADD CONSTRAINT tbl_usuarios_servicios_pkey PRIMARY KEY (id);
 
 
 --
--- Name: s3_multipart_uploads s3_multipart_uploads_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_usuarios_servicios unique_usuario_servicio; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.s3_multipart_uploads
-    ADD CONSTRAINT s3_multipart_uploads_bucket_id_fkey FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id);
+ALTER TABLE ONLY public.tbl_usuarios_servicios
+    ADD CONSTRAINT unique_usuario_servicio UNIQUE (id_usuario, id_servicio);
 
 
 --
--- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_bucket_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_carreras_id_facultad; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.s3_multipart_uploads_parts
-    ADD CONSTRAINT s3_multipart_uploads_parts_bucket_id_fkey FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id);
+CREATE INDEX dic_carreras_id_facultad ON public.dic_carreras USING btree (id_facultad);
 
 
 --
--- Name: s3_multipart_uploads_parts s3_multipart_uploads_parts_upload_id_fkey; Type: FK CONSTRAINT; Schema: storage; Owner: supabase_storage_admin
+-- Name: dic_denominaciones_id_especialidad; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY storage.s3_multipart_uploads_parts
-    ADD CONSTRAINT s3_multipart_uploads_parts_upload_id_fkey FOREIGN KEY (upload_id) REFERENCES storage.s3_multipart_uploads(id) ON DELETE CASCADE;
+CREATE INDEX dic_denominaciones_id_especialidad ON public.dic_denominaciones USING btree (id_especialidad);
 
 
 --
--- Name: audit_log_entries; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: log_acciones_id_accion; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.audit_log_entries ENABLE ROW LEVEL SECURITY;
+CREATE INDEX log_acciones_id_accion ON public.log_acciones USING btree (id_accion);
 
+
+--
+-- Name: log_acciones_id_etapa; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX log_acciones_id_etapa ON public.log_acciones USING btree (id_etapa);
+
+
+--
+-- Name: log_acciones_id_tramite; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX log_acciones_id_tramite ON public.log_acciones USING btree (id_tramite);
+
+
+--
+-- Name: log_acciones_id_usuario; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX log_acciones_id_usuario ON public.log_acciones USING btree (id_usuario);
+
+
 --
--- Name: flow_state; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_estado_admin; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.flow_state ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_admins_estado_admin ON public.tbl_admins USING btree (estado_admin);
 
+
 --
--- Name: identities; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_historial_estado_admin; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_admins_historial_estado_admin ON public.tbl_admins_historial USING btree (estado_admin);
 
-ALTER TABLE auth.identities ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: instances; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_historial_id_admin; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.instances ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_admins_historial_id_admin ON public.tbl_admins_historial USING btree (id_admin);
 
+
 --
--- Name: mfa_amr_claims; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_admins_id_usuario ON public.tbl_admins USING btree (id_usuario);
 
-ALTER TABLE auth.mfa_amr_claims ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: mfa_challenges; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_nivel_admin; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.mfa_challenges ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_admins_nivel_admin ON public.tbl_admins USING btree (nivel_admin);
 
+
 --
--- Name: mfa_factors; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_bucket; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_archivos_tramites_bucket ON public.tbl_archivos_tramites USING btree (bucket);
 
-ALTER TABLE auth.mfa_factors ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: one_time_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_fecha; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.one_time_tokens ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_archivos_tramites_fecha ON public.tbl_archivos_tramites USING btree (fecha);
 
+
 --
--- Name: refresh_tokens; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_id_tipo_archivo; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_archivos_tramites_id_tipo_archivo ON public.tbl_archivos_tramites USING btree (id_tipo_archivo);
 
-ALTER TABLE auth.refresh_tokens ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: saml_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.saml_providers ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_archivos_tramites_id_tramite ON public.tbl_archivos_tramites USING btree (id_tramite);
 
+
 --
--- Name: saml_relay_states; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_id_tramite_metadato; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_archivos_tramites_id_tramite_metadato ON public.tbl_archivos_tramites USING btree (id_tramites_metadatos);
 
-ALTER TABLE auth.saml_relay_states ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: schema_migrations; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_storage; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.schema_migrations ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_archivos_tramites_storage ON public.tbl_archivos_tramites USING btree (storage);
 
+
 --
--- Name: sessions; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_tramite_estado; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_archivos_tramites_tramite_estado ON public.tbl_archivos_tramites USING btree (id_tramite, estado_archivo);
 
-ALTER TABLE auth.sessions ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: sso_domains; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_tramite_etapa; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.sso_domains ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_archivos_tramites_tramite_etapa ON public.tbl_archivos_tramites USING btree (id_tramite, id_etapa);
 
+
 --
--- Name: sso_providers; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites_tramite_metadato; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_archivos_tramites_tramite_metadato ON public.tbl_archivos_tramites USING btree (id_tramite, id_tramites_metadatos);
 
-ALTER TABLE auth.sso_providers ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: users; Type: ROW SECURITY; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores_estado_coasesor; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_coasesores_estado_coasesor ON public.tbl_coasesores USING btree (estado_coasesor);
 
+
 --
--- Name: messages; Type: ROW SECURITY; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: tbl_coasesores_historial_estado_coasesor; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_coasesores_historial_estado_coasesor ON public.tbl_coasesores_historial USING btree (estado_coasesor);
 
-ALTER TABLE realtime.messages ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: buckets; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_coasesores_historial_id_coasesor; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_coasesores_historial_id_coasesor ON public.tbl_coasesores_historial USING btree (id_coasesor);
 
+
 --
--- Name: migrations; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_coasesores_id_investigador; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_coasesores_id_investigador ON public.tbl_coasesores USING btree (id_investigador);
 
-ALTER TABLE storage.migrations ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: objects; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_coordinadores_historial_id_coordinador; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_coordinadores_historial_id_coordinador ON public.tbl_coordinadores_historial USING btree (id_coordinador);
 
+
 --
--- Name: s3_multipart_uploads; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_coordinadores_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_coordinadores_id_usuario ON public.tbl_coordinadores USING btree (id_usuario);
 
-ALTER TABLE storage.s3_multipart_uploads ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: s3_multipart_uploads_parts; Type: ROW SECURITY; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_docentes_codigo_airhs; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE storage.s3_multipart_uploads_parts ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tbl_docentes_codigo_airhs ON public.tbl_docentes USING btree (codigo_airhs);
 
+
 --
--- Name: supabase_realtime; Type: PUBLICATION; Schema: -; Owner: postgres
+-- Name: tbl_docentes_id_especialidad; Type: INDEX; Schema: public; Owner: -
 --
+
+CREATE INDEX tbl_docentes_id_especialidad ON public.tbl_docentes USING btree (id_especialidad);
 
-CREATE PUBLICATION supabase_realtime WITH (publish = 'insert, update, delete, truncate');
+
+--
+-- Name: tbl_docentes_id_usuario; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE INDEX tbl_docentes_id_usuario ON public.tbl_docentes USING btree (id_usuario);
 
-ALTER PUBLICATION supabase_realtime OWNER TO postgres;
 
 --
--- Name: SCHEMA auth; Type: ACL; Schema: -; Owner: supabase_admin
+-- Name: tbl_docentes_index_5; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA auth TO anon;
-GRANT USAGE ON SCHEMA auth TO authenticated;
-GRANT USAGE ON SCHEMA auth TO service_role;
-GRANT ALL ON SCHEMA auth TO supabase_auth_admin;
-GRANT ALL ON SCHEMA auth TO dashboard_user;
-GRANT USAGE ON SCHEMA auth TO postgres;
+CREATE INDEX tbl_docentes_index_5 ON public.tbl_docentes USING btree (id_categoria);
 
 
 --
--- Name: SCHEMA extensions; Type: ACL; Schema: -; Owner: postgres
+-- Name: tbl_docentes_lineas_historial_id_docente; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA extensions TO anon;
-GRANT USAGE ON SCHEMA extensions TO authenticated;
-GRANT USAGE ON SCHEMA extensions TO service_role;
-GRANT ALL ON SCHEMA extensions TO dashboard_user;
+CREATE INDEX tbl_docentes_lineas_historial_id_docente ON public.tbl_docentes_lineas_historial USING btree (id_docente);
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
+-- Name: tbl_docentes_lineas_historial_id_sublinea_vri; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA public TO postgres;
-GRANT USAGE ON SCHEMA public TO anon;
-GRANT USAGE ON SCHEMA public TO authenticated;
-GRANT USAGE ON SCHEMA public TO service_role;
+CREATE INDEX tbl_docentes_lineas_historial_id_sublinea_vri ON public.tbl_docentes_lineas_historial USING btree (id_sublinea_vri);
 
 
 --
--- Name: SCHEMA realtime; Type: ACL; Schema: -; Owner: supabase_admin
+-- Name: tbl_docentes_lineas_id_docente; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA realtime TO postgres;
-GRANT USAGE ON SCHEMA realtime TO anon;
-GRANT USAGE ON SCHEMA realtime TO authenticated;
-GRANT USAGE ON SCHEMA realtime TO service_role;
-GRANT ALL ON SCHEMA realtime TO supabase_realtime_admin;
+CREATE INDEX tbl_docentes_lineas_id_docente ON public.tbl_docentes_lineas USING btree (id_docente);
 
 
 --
--- Name: SCHEMA storage; Type: ACL; Schema: -; Owner: supabase_admin
+-- Name: tbl_docentes_lineas_id_estado_linea; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA storage TO postgres WITH GRANT OPTION;
-GRANT USAGE ON SCHEMA storage TO anon;
-GRANT USAGE ON SCHEMA storage TO authenticated;
-GRANT USAGE ON SCHEMA storage TO service_role;
-GRANT ALL ON SCHEMA storage TO supabase_storage_admin;
-GRANT ALL ON SCHEMA storage TO dashboard_user;
+CREATE INDEX tbl_docentes_lineas_id_estado_linea ON public.tbl_docentes_lineas USING btree (id_estado_linea);
 
 
 --
--- Name: SCHEMA vault; Type: ACL; Schema: -; Owner: supabase_admin
+-- Name: tbl_docentes_lineas_id_sublinea_vri; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT USAGE ON SCHEMA vault TO postgres WITH GRANT OPTION;
-GRANT USAGE ON SCHEMA vault TO service_role;
+CREATE INDEX tbl_docentes_lineas_id_sublinea_vri ON public.tbl_docentes_lineas USING btree (id_sublinea_vri);
 
 
 --
--- Name: FUNCTION email(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_integrantes_id_tesista; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION auth.email() TO dashboard_user;
+CREATE INDEX tbl_integrantes_id_tesista ON public.tbl_integrantes USING btree (id_tesista);
 
 
 --
--- Name: FUNCTION jwt(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_integrantes_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION auth.jwt() TO postgres;
-GRANT ALL ON FUNCTION auth.jwt() TO dashboard_user;
+CREATE INDEX tbl_integrantes_id_tramite ON public.tbl_integrantes USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION role(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_integrantes_tipo_integrante; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION auth.role() TO dashboard_user;
+CREATE INDEX tbl_integrantes_tipo_integrante ON public.tbl_integrantes USING btree (tipo_integrante);
 
 
 --
--- Name: FUNCTION uid(); Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_observaciones_fecha; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION auth.uid() TO dashboard_user;
+CREATE INDEX tbl_observaciones_fecha ON public.tbl_observaciones USING btree (fecha);
 
 
 --
--- Name: FUNCTION armor(bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_observaciones_id_etapa; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.armor(bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.armor(bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.armor(bytea) TO dashboard_user;
+CREATE INDEX tbl_observaciones_id_etapa ON public.tbl_observaciones USING btree (id_etapa);
 
 
 --
--- Name: FUNCTION armor(bytea, text[], text[]); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_observaciones_id_rol; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.armor(bytea, text[], text[]) FROM postgres;
-GRANT ALL ON FUNCTION extensions.armor(bytea, text[], text[]) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.armor(bytea, text[], text[]) TO dashboard_user;
+CREATE INDEX tbl_observaciones_id_rol ON public.tbl_observaciones USING btree (id_rol);
 
 
 --
--- Name: FUNCTION crypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_observaciones_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.crypt(text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.crypt(text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.crypt(text, text) TO dashboard_user;
+CREATE INDEX tbl_observaciones_id_tramite ON public.tbl_observaciones USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION dearmor(text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_observaciones_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.dearmor(text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.dearmor(text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.dearmor(text) TO dashboard_user;
+CREATE INDEX tbl_observaciones_id_usuario ON public.tbl_observaciones USING btree (id_usuario);
 
 
 --
--- Name: FUNCTION decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_observaciones_tramite_vb; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.decrypt(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.decrypt(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.decrypt(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_observaciones_tramite_vb ON public.tbl_observaciones USING btree (id_tramite, visto_bueno);
 
 
 --
--- Name: FUNCTION decrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_perfil_investigador_estado_investigador; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.decrypt_iv(bytea, bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.decrypt_iv(bytea, bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.decrypt_iv(bytea, bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_perfil_investigador_estado_investigador ON public.tbl_perfil_investigador USING btree (estado_investigador);
 
 
 --
--- Name: FUNCTION digest(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_perfil_investigador_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.digest(bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.digest(bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.digest(bytea, text) TO dashboard_user;
+CREATE INDEX tbl_perfil_investigador_id_usuario ON public.tbl_perfil_investigador USING btree (id_usuario);
 
 
 --
--- Name: FUNCTION digest(text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_sublineas_vri_id_carrera; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.digest(text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.digest(text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.digest(text, text) TO dashboard_user;
+CREATE INDEX tbl_sublineas_vri_id_carrera ON public.tbl_sublineas_vri USING btree (id_carrera);
 
 
 --
--- Name: FUNCTION encrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_sublineas_vri_id_disciplina; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.encrypt(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.encrypt(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.encrypt(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_sublineas_vri_id_disciplina ON public.tbl_sublineas_vri USING btree (id_disciplina);
 
 
 --
--- Name: FUNCTION encrypt_iv(bytea, bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_sublineas_vri_id_linea_universidad; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.encrypt_iv(bytea, bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.encrypt_iv(bytea, bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.encrypt_iv(bytea, bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_sublineas_vri_id_linea_universidad ON public.tbl_sublineas_vri USING btree (id_linea_universidad);
 
 
 --
--- Name: FUNCTION gen_random_bytes(integer); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tesistas_codigo_estudiante; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.gen_random_bytes(integer) FROM postgres;
-GRANT ALL ON FUNCTION extensions.gen_random_bytes(integer) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.gen_random_bytes(integer) TO dashboard_user;
+CREATE INDEX tbl_tesistas_codigo_estudiante ON public.tbl_tesistas USING btree (codigo_estudiante);
 
 
 --
--- Name: FUNCTION gen_random_uuid(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tesistas_id_est_ac; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.gen_random_uuid() FROM postgres;
-GRANT ALL ON FUNCTION extensions.gen_random_uuid() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.gen_random_uuid() TO dashboard_user;
+CREATE INDEX tbl_tesistas_id_est_ac ON public.tbl_tesistas USING btree (id_estructura_academica);
 
 
 --
--- Name: FUNCTION gen_salt(text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tesistas_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.gen_salt(text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.gen_salt(text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.gen_salt(text) TO dashboard_user;
+CREATE INDEX tbl_tesistas_id_usuario ON public.tbl_tesistas USING btree (id_usuario);
 
 
 --
--- Name: FUNCTION gen_salt(text, integer); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_codigo_proyecto; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.gen_salt(text, integer) FROM postgres;
-GRANT ALL ON FUNCTION extensions.gen_salt(text, integer) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.gen_salt(text, integer) TO dashboard_user;
+CREATE INDEX tbl_tramites_codigo_proyecto ON public.tbl_tramites USING btree (codigo_proyecto);
 
 
 --
--- Name: FUNCTION grant_pg_cron_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_tramites_fecha_registro; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.grant_pg_cron_access() FROM supabase_admin;
-GRANT ALL ON FUNCTION extensions.grant_pg_cron_access() TO supabase_admin WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.grant_pg_cron_access() TO dashboard_user;
+CREATE INDEX tbl_tramites_fecha_registro ON public.tbl_tramites USING btree (fecha_registro);
 
 
 --
--- Name: FUNCTION grant_pg_graphql_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_tramites_historial_id_etapa; Type: INDEX; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION extensions.grant_pg_graphql_access() TO postgres WITH GRANT OPTION;
+CREATE INDEX tbl_tramites_historial_id_etapa ON public.tbl_tramites_historial USING btree (id_etapa);
 
 
 --
--- Name: FUNCTION grant_pg_net_access(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_tramites_historial_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.grant_pg_net_access() FROM supabase_admin;
-GRANT ALL ON FUNCTION extensions.grant_pg_net_access() TO supabase_admin WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.grant_pg_net_access() TO dashboard_user;
+CREATE INDEX tbl_tramites_historial_id_tramite ON public.tbl_tramites_historial USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION hmac(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_id_denominacion; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.hmac(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.hmac(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.hmac(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_tramites_id_denominacion ON public.tbl_tramites USING btree (id_denominacion);
 
 
 --
--- Name: FUNCTION hmac(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_id_etapa; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.hmac(text, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.hmac(text, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.hmac(text, text, text) TO dashboard_user;
+CREATE INDEX tbl_tramites_id_etapa ON public.tbl_tramites USING btree (id_etapa);
 
 
 --
--- Name: FUNCTION pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_id_integrantes; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements(showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone) TO dashboard_user;
+CREATE INDEX tbl_tramites_id_integrantes ON public.tbl_tramites USING btree (id_antiguo);
 
 
 --
--- Name: FUNCTION pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_id_sublinea_vri; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements_info(OUT dealloc bigint, OUT stats_reset timestamp with time zone) TO dashboard_user;
+CREATE INDEX tbl_tramites_id_sublinea_vri ON public.tbl_tramites USING btree (id_sublinea_vri);
 
 
 --
--- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_id_tipo_trabajo; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint, minmax_only boolean) TO dashboard_user;
+CREATE INDEX tbl_tramites_id_tipo_trabajo ON public.tbl_tramites USING btree (id_tipo_trabajo);
 
 
 --
--- Name: FUNCTION pgp_armor_headers(text, OUT key text, OUT value text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_metadatos_fecha; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_armor_headers(text, OUT key text, OUT value text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_armor_headers(text, OUT key text, OUT value text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_armor_headers(text, OUT key text, OUT value text) TO dashboard_user;
+CREATE INDEX tbl_tramites_metadatos_fecha ON public.tbl_tramites_metadatos USING btree (fecha);
 
 
 --
--- Name: FUNCTION pgp_key_id(bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_metadatos_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_key_id(bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_key_id(bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_key_id(bytea) TO dashboard_user;
+CREATE INDEX tbl_tramites_metadatos_id_tramite ON public.tbl_tramites_metadatos USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_metadatos_tramite_estado; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea) TO dashboard_user;
+CREATE INDEX tbl_tramites_metadatos_tramite_estado ON public.tbl_tramites_metadatos USING btree (id_tramite, estado_tm);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_metadatos_tramite_etapa; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_tramites_metadatos_tramite_etapa ON public.tbl_tramites_metadatos USING btree (id_tramite, id_etapa);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramites_metadatos_tramite_fecha; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt(bytea, bytea, text, text) TO dashboard_user;
+CREATE INDEX tbl_tramites_metadatos_tramite_fecha ON public.tbl_tramites_metadatos USING btree (id_tramite, fecha);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramitesdet_id_docente; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea) TO dashboard_user;
+CREATE INDEX tbl_tramitesdet_id_docente ON public.tbl_tramitesdet USING btree (id_docente);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramitesdet_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_tramitesdet_id_tramite ON public.tbl_tramitesdet USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramitesdet_id_visto_bueno; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_decrypt_bytea(bytea, bytea, text, text) TO dashboard_user;
+CREATE INDEX tbl_tramitesdet_id_visto_bueno ON public.tbl_tramitesdet USING btree (id_visto_bueno);
 
 
 --
--- Name: FUNCTION pgp_pub_encrypt(text, bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramitesdoc_id_tramite; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea) TO dashboard_user;
+CREATE INDEX tbl_tramitesdoc_id_tramite ON public.tbl_tramitesdoc USING btree (id_tramite);
 
 
 --
--- Name: FUNCTION pgp_pub_encrypt(text, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_tramitesdoc_tramite_metadato; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt(text, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_tramitesdoc_tramite_metadato ON public.tbl_tramitesdoc USING btree (id_tramite, id_tramites_metadatos);
 
 
 --
--- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_usuarios_num_doc_identidad; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea) TO dashboard_user;
+CREATE INDEX tbl_usuarios_num_doc_identidad ON public.tbl_usuarios USING btree (num_doc_identidad);
 
 
 --
--- Name: FUNCTION pgp_pub_encrypt_bytea(bytea, bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_usuarios_servicios_id_servicio; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_pub_encrypt_bytea(bytea, bytea, text) TO dashboard_user;
+CREATE INDEX tbl_usuarios_servicios_id_servicio ON public.tbl_usuarios_servicios USING btree (id_servicio);
 
 
 --
--- Name: FUNCTION pgp_sym_decrypt(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_usuarios_servicios_id_usuario; Type: INDEX; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text) TO dashboard_user;
+CREATE INDEX tbl_usuarios_servicios_id_usuario ON public.tbl_usuarios_servicios USING btree (id_usuario);
 
 
 --
--- Name: FUNCTION pgp_sym_decrypt(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_admins fk_admins_nivel_admin; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt(bytea, text, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_admins
+    ADD CONSTRAINT fk_admins_nivel_admin FOREIGN KEY (nivel_admin) REFERENCES public.dic_nivel_admins(id);
 
 
 --
--- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_asignacion fk_asignacion_docente; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_asignacion
+    ADD CONSTRAINT fk_asignacion_docente FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
 
 --
--- Name: FUNCTION pgp_sym_decrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_asignacion fk_asignacion_etapa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_decrypt_bytea(bytea, text, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_asignacion
+    ADD CONSTRAINT fk_asignacion_etapa FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION pgp_sym_encrypt(text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_asignacion fk_asignacion_tipo_evento; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_asignacion
+    ADD CONSTRAINT fk_asignacion_tipo_evento FOREIGN KEY (tipo_evento) REFERENCES public.dic_tipo_evento(id);
 
 
 --
--- Name: FUNCTION pgp_sym_encrypt(text, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_asignacion fk_asignacion_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt(text, text, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_asignacion
+    ADD CONSTRAINT fk_asignacion_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_asignacion fk_asignacion_usuario; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_asignacion
+    ADD CONSTRAINT fk_asignacion_usuario FOREIGN KEY (id_usuario_asignador) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: FUNCTION pgp_sym_encrypt_bytea(bytea, text, text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_coordinador_carrera fk_carrera; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text, text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text, text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.pgp_sym_encrypt_bytea(bytea, text, text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinador_carrera
+    ADD CONSTRAINT fk_carrera FOREIGN KEY (id_carrera) REFERENCES public.dic_carreras(id);
 
 
 --
--- Name: FUNCTION pgrst_ddl_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_docente_categoria_historial fk_categoria; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION extensions.pgrst_ddl_watch() TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_docente_categoria_historial
+    ADD CONSTRAINT fk_categoria FOREIGN KEY (id_categoria) REFERENCES public.dic_categoria(id);
 
 
 --
--- Name: FUNCTION pgrst_drop_watch(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_coasesor_tramites fk_coasesor; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION extensions.pgrst_drop_watch() TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_coasesor_tramites
+    ADD CONSTRAINT fk_coasesor FOREIGN KEY (id_coasesor) REFERENCES public.tbl_coasesores(id);
 
 
 --
--- Name: FUNCTION set_graphql_placeholder(); Type: ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_coasesor_tramites_historial fk_coasesor; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION extensions.set_graphql_placeholder() TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial
+    ADD CONSTRAINT fk_coasesor FOREIGN KEY (id_coasesor) REFERENCES public.tbl_coasesores(id);
 
 
 --
--- Name: FUNCTION uuid_generate_v1(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_coasesores_historial fk_coasesores_historial_id_accion; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_generate_v1() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v1() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v1() TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coasesores_historial
+    ADD CONSTRAINT fk_coasesores_historial_id_accion FOREIGN KEY (id_accion) REFERENCES public.dic_acciones(id);
 
 
 --
--- Name: FUNCTION uuid_generate_v1mc(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_conformacion_jurados fk_conf_docente; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_generate_v1mc() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v1mc() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v1mc() TO dashboard_user;
+ALTER TABLE ONLY public.tbl_conformacion_jurados
+    ADD CONSTRAINT fk_conf_docente FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
 
 --
--- Name: FUNCTION uuid_generate_v3(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_conformacion_jurados fk_conf_etapa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_generate_v3(namespace uuid, name text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v3(namespace uuid, name text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v3(namespace uuid, name text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_conformacion_jurados
+    ADD CONSTRAINT fk_conf_etapa FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION uuid_generate_v4(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_conformacion_jurados fk_conf_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_generate_v4() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v4() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v4() TO dashboard_user;
+ALTER TABLE ONLY public.tbl_conformacion_jurados
+    ADD CONSTRAINT fk_conf_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: FUNCTION uuid_generate_v5(namespace uuid, name text); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_conformacion_jurados fk_conf_usuario; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_generate_v5(namespace uuid, name text) FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v5(namespace uuid, name text) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_generate_v5(namespace uuid, name text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_conformacion_jurados
+    ADD CONSTRAINT fk_conf_usuario FOREIGN KEY (id_usuario_asignador) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: FUNCTION uuid_nil(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_coordinador_carrera fk_coordinador; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_nil() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_nil() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_nil() TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinador_carrera
+    ADD CONSTRAINT fk_coordinador FOREIGN KEY (id_coordinador) REFERENCES public.tbl_coordinadores(id);
 
 
 --
--- Name: FUNCTION uuid_ns_dns(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: dic_acciones fk_dic_acciones_id_etapa_pertenencia_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_ns_dns() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_ns_dns() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_ns_dns() TO dashboard_user;
+ALTER TABLE ONLY public.dic_acciones
+    ADD CONSTRAINT fk_dic_acciones_id_etapa_pertenencia_dic_etapas_id FOREIGN KEY (id_etapa_pertenencia) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION uuid_ns_oid(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: dic_carreras fk_dic_carreras_id_facultad_dic_facultades_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_ns_oid() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_ns_oid() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_ns_oid() TO dashboard_user;
+ALTER TABLE ONLY public.dic_carreras
+    ADD CONSTRAINT fk_dic_carreras_id_facultad_dic_facultades_id FOREIGN KEY (id_facultad) REFERENCES public.dic_facultades(id);
 
 
 --
--- Name: FUNCTION uuid_ns_url(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: dic_denominaciones fk_dic_denominaciones_id_especialidad_dic_especialidades_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_ns_url() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_ns_url() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_ns_url() TO dashboard_user;
+ALTER TABLE ONLY public.dic_denominaciones
+    ADD CONSTRAINT fk_dic_denominaciones_id_especialidad_dic_especialidades_id FOREIGN KEY (id_especialidad) REFERENCES public.dic_especialidades(id);
 
 
 --
--- Name: FUNCTION uuid_ns_x500(); Type: ACL; Schema: extensions; Owner: postgres
+-- Name: dic_disciplinas fk_dic_disciplinas_id_subarea_dic_subareas_ocde_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION extensions.uuid_ns_x500() FROM postgres;
-GRANT ALL ON FUNCTION extensions.uuid_ns_x500() TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION extensions.uuid_ns_x500() TO dashboard_user;
+ALTER TABLE ONLY public.dic_disciplinas
+    ADD CONSTRAINT fk_dic_disciplinas_id_subarea_dic_subareas_ocde_id FOREIGN KEY (id_subarea) REFERENCES public.dic_subareas_ocde(id);
 
 
 --
--- Name: FUNCTION graphql("operationName" text, query text, variables jsonb, extensions jsonb); Type: ACL; Schema: graphql_public; Owner: supabase_admin
+-- Name: dic_especialidades fk_dic_especialidades_id_carrera_dic_carreras_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, variables jsonb, extensions jsonb) TO postgres;
-GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, variables jsonb, extensions jsonb) TO anon;
-GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, variables jsonb, extensions jsonb) TO authenticated;
-GRANT ALL ON FUNCTION graphql_public.graphql("operationName" text, query text, variables jsonb, extensions jsonb) TO service_role;
+ALTER TABLE ONLY public.dic_especialidades
+    ADD CONSTRAINT fk_dic_especialidades_id_carrera_dic_carreras_id FOREIGN KEY (id_carrera) REFERENCES public.dic_carreras(id);
 
 
 --
--- Name: FUNCTION get_auth(p_usename text); Type: ACL; Schema: pgbouncer; Owner: supabase_admin
+-- Name: tbl_correcciones_jurados fk_dic_etapas; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION pgbouncer.get_auth(p_usename text) FROM PUBLIC;
-GRANT ALL ON FUNCTION pgbouncer.get_auth(p_usename text) TO pgbouncer;
-GRANT ALL ON FUNCTION pgbouncer.get_auth(p_usename text) TO postgres;
+ALTER TABLE ONLY public.tbl_correcciones_jurados
+    ADD CONSTRAINT fk_dic_etapas FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION apply_rls(wal jsonb, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: dic_facultades fk_dic_facultades_id_area_dic_areas_ocde_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO postgres;
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO anon;
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO authenticated;
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO service_role;
-GRANT ALL ON FUNCTION realtime.apply_rls(wal jsonb, max_record_bytes integer) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.dic_facultades
+    ADD CONSTRAINT fk_dic_facultades_id_area_dic_areas_ocde_id FOREIGN KEY (id_area) REFERENCES public.dic_areas_ocde(id);
 
 
 --
--- Name: FUNCTION broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramitesdet fk_dic_orden_jurado; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text) TO postgres;
-GRANT ALL ON FUNCTION realtime.broadcast_changes(topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT fk_dic_orden_jurado FOREIGN KEY (id_orden) REFERENCES public.dic_orden_jurado(id);
 
 
 --
--- Name: FUNCTION build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: dic_subareas_ocde fk_dic_subareas_ocde_id_area_dic_areas_ocde_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO postgres;
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO anon;
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO authenticated;
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO service_role;
-GRANT ALL ON FUNCTION realtime.build_prepared_statement_sql(prepared_statement_name text, entity regclass, columns realtime.wal_column[]) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.dic_subareas_ocde
+    ADD CONSTRAINT fk_dic_subareas_ocde_id_area_dic_areas_ocde_id FOREIGN KEY (id_area) REFERENCES public.dic_areas_ocde(id);
 
 
 --
--- Name: FUNCTION "cast"(val text, type_ regtype); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: dic_visto_bueno fk_dic_visto_bueno_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO postgres;
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO anon;
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO authenticated;
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO service_role;
-GRANT ALL ON FUNCTION realtime."cast"(val text, type_ regtype) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.dic_visto_bueno
+    ADD CONSTRAINT fk_dic_visto_bueno_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_coordinador_carrera fk_facultad; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO postgres;
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO anon;
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO authenticated;
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO service_role;
-GRANT ALL ON FUNCTION realtime.check_equality_op(op realtime.equality_op, type_ regtype, val_1 text, val_2 text) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_coordinador_carrera
+    ADD CONSTRAINT fk_facultad FOREIGN KEY (id_facultad) REFERENCES public.dic_facultades(id);
 
 
 --
--- Name: FUNCTION is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_coordinadores_historial fk_historial_to_acciones; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO postgres;
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO anon;
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO authenticated;
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO service_role;
-GRANT ALL ON FUNCTION realtime.is_visible_through_filters(columns realtime.wal_column[], filters realtime.user_defined_filter[]) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_acciones FOREIGN KEY (id_accion) REFERENCES public.dic_acciones(id);
 
 
 --
--- Name: FUNCTION list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_coordinadores_historial fk_historial_to_carreras; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO postgres;
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO anon;
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO authenticated;
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO service_role;
-GRANT ALL ON FUNCTION realtime.list_changes(publication name, slot_name name, max_changes integer, max_record_bytes integer) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_carreras FOREIGN KEY (id_carrera) REFERENCES public.dic_carreras(id);
 
 
 --
--- Name: FUNCTION quote_wal2json(entity regclass); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_coordinadores_historial fk_historial_to_facultades; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO postgres;
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO anon;
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO authenticated;
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO service_role;
-GRANT ALL ON FUNCTION realtime.quote_wal2json(entity regclass) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_facultades FOREIGN KEY (id_facultad) REFERENCES public.dic_facultades(id);
 
 
 --
--- Name: FUNCTION send(payload jsonb, event text, topic text, private boolean); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_coordinadores_historial fk_historial_to_nivel_coordinador; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean) TO postgres;
-GRANT ALL ON FUNCTION realtime.send(payload jsonb, event text, topic text, private boolean) TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_historial_to_nivel_coordinador FOREIGN KEY (id_nivel_coordinador) REFERENCES public.dic_nivel_coordinador(id);
 
 
 --
--- Name: FUNCTION subscription_check_filters(); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: log_acciones fk_log_acciones_id_accion_dic_acciones_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO postgres;
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO anon;
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO authenticated;
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO service_role;
-GRANT ALL ON FUNCTION realtime.subscription_check_filters() TO supabase_realtime_admin;
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT fk_log_acciones_id_accion_dic_acciones_id FOREIGN KEY (id_accion) REFERENCES public.dic_acciones(id);
 
 
 --
--- Name: FUNCTION to_regrole(role_name text); Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: log_acciones fk_log_acciones_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO postgres;
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO dashboard_user;
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO anon;
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO authenticated;
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO service_role;
-GRANT ALL ON FUNCTION realtime.to_regrole(role_name text) TO supabase_realtime_admin;
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT fk_log_acciones_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: FUNCTION topic(); Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: log_acciones fk_log_acciones_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION realtime.topic() TO postgres;
-GRANT ALL ON FUNCTION realtime.topic() TO dashboard_user;
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT fk_log_acciones_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: FUNCTION _crypto_aead_det_decrypt(message bytea, additional bytea, key_id bigint, context bytea, nonce bytea); Type: ACL; Schema: vault; Owner: supabase_admin
+-- Name: log_acciones fk_log_acciones_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION vault._crypto_aead_det_decrypt(message bytea, additional bytea, key_id bigint, context bytea, nonce bytea) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION vault._crypto_aead_det_decrypt(message bytea, additional bytea, key_id bigint, context bytea, nonce bytea) TO service_role;
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT fk_log_acciones_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: FUNCTION create_secret(new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
+-- Name: log_acciones fk_log_acciones_usuario_servicio; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION vault.create_secret(new_secret text, new_name text, new_description text, new_key_id uuid) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION vault.create_secret(new_secret text, new_name text, new_description text, new_key_id uuid) TO service_role;
+ALTER TABLE ONLY public.log_acciones
+    ADD CONSTRAINT fk_log_acciones_usuario_servicio FOREIGN KEY (id_usuario_servicio) REFERENCES public.tbl_usuarios_servicios(id);
 
 
 --
--- Name: FUNCTION update_secret(secret_id uuid, new_secret text, new_name text, new_description text, new_key_id uuid); Type: ACL; Schema: vault; Owner: supabase_admin
+-- Name: tabla_metadatos_dictamen_borrador fk_metadatos_tipo_archivo; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION vault.update_secret(secret_id uuid, new_secret text, new_name text, new_description text, new_key_id uuid) TO postgres WITH GRANT OPTION;
-GRANT ALL ON FUNCTION vault.update_secret(secret_id uuid, new_secret text, new_name text, new_description text, new_key_id uuid) TO service_role;
+ALTER TABLE ONLY public.tabla_metadatos_dictamen_borrador
+    ADD CONSTRAINT fk_metadatos_tipo_archivo FOREIGN KEY (id_tipo_archivo) REFERENCES public.dic_tipo_archivo(id);
 
 
 --
--- Name: TABLE audit_log_entries; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tabla_metadatos_dictamen_borrador fk_metadatos_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE auth.audit_log_entries TO dashboard_user;
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.audit_log_entries TO postgres;
-GRANT SELECT ON TABLE auth.audit_log_entries TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tabla_metadatos_dictamen_borrador
+    ADD CONSTRAINT fk_metadatos_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: TABLE flow_state; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinador_carrera fk_nivel_coordinador; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.flow_state TO postgres;
-GRANT SELECT ON TABLE auth.flow_state TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.flow_state TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinador_carrera
+    ADD CONSTRAINT fk_nivel_coordinador FOREIGN KEY (nivel_coordinador) REFERENCES public.dic_nivel_coordinador(id);
 
 
 --
--- Name: TABLE identities; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_sublineas_vri fk_sublineas_vri_id_area; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.identities TO postgres;
-GRANT SELECT ON TABLE auth.identities TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.identities TO dashboard_user;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT fk_sublineas_vri_id_area FOREIGN KEY (id_area) REFERENCES public.dic_areas_ocde(id);
 
 
 --
--- Name: TABLE instances; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_sublineas_vri fk_sublineas_vri_id_subarea; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE auth.instances TO dashboard_user;
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.instances TO postgres;
-GRANT SELECT ON TABLE auth.instances TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT fk_sublineas_vri_id_subarea FOREIGN KEY (id_subarea) REFERENCES public.dic_subareas_ocde(id);
 
 
 --
--- Name: TABLE mfa_amr_claims; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins_historial fk_tbl_admins_historial_id_admin_tbl_admins_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.mfa_amr_claims TO postgres;
-GRANT SELECT ON TABLE auth.mfa_amr_claims TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.mfa_amr_claims TO dashboard_user;
+ALTER TABLE ONLY public.tbl_admins_historial
+    ADD CONSTRAINT fk_tbl_admins_historial_id_admin_tbl_admins_id FOREIGN KEY (id_admin) REFERENCES public.tbl_admins(id);
 
 
 --
--- Name: TABLE mfa_challenges; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_admins fk_tbl_admins_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.mfa_challenges TO postgres;
-GRANT SELECT ON TABLE auth.mfa_challenges TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.mfa_challenges TO dashboard_user;
+ALTER TABLE ONLY public.tbl_admins
+    ADD CONSTRAINT fk_tbl_admins_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: TABLE mfa_factors; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites fk_tbl_archivos_tramites_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.mfa_factors TO postgres;
-GRANT SELECT ON TABLE auth.mfa_factors TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.mfa_factors TO dashboard_user;
+ALTER TABLE ONLY public.tbl_archivos_tramites
+    ADD CONSTRAINT fk_tbl_archivos_tramites_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: TABLE oauth_clients; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites fk_tbl_archivos_tramites_id_tipo_archivo_dic_tipo_archivo_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE auth.oauth_clients TO postgres;
-GRANT ALL ON TABLE auth.oauth_clients TO dashboard_user;
+ALTER TABLE ONLY public.tbl_archivos_tramites
+    ADD CONSTRAINT fk_tbl_archivos_tramites_id_tipo_archivo_dic_tipo_archivo_id FOREIGN KEY (id_tipo_archivo) REFERENCES public.dic_tipo_archivo(id);
 
 
 --
--- Name: TABLE one_time_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites fk_tbl_archivos_tramites_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.one_time_tokens TO postgres;
-GRANT SELECT ON TABLE auth.one_time_tokens TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.one_time_tokens TO dashboard_user;
+ALTER TABLE ONLY public.tbl_archivos_tramites
+    ADD CONSTRAINT fk_tbl_archivos_tramites_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: TABLE refresh_tokens; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_archivos_tramites fk_tbl_archivos_tramites_id_tramites_metadatos_tbl_tramites_; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE auth.refresh_tokens TO dashboard_user;
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.refresh_tokens TO postgres;
-GRANT SELECT ON TABLE auth.refresh_tokens TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_archivos_tramites
+    ADD CONSTRAINT fk_tbl_archivos_tramites_id_tramites_metadatos_tbl_tramites_ FOREIGN KEY (id_tramites_metadatos) REFERENCES public.tbl_tramites_metadatos(id);
 
 
 --
--- Name: SEQUENCE refresh_tokens_id_seq; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores_historial fk_tbl_coasesores_historial_id_coasesor_tbl_coasesores_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON SEQUENCE auth.refresh_tokens_id_seq TO dashboard_user;
-GRANT ALL ON SEQUENCE auth.refresh_tokens_id_seq TO postgres;
+ALTER TABLE ONLY public.tbl_coasesores_historial
+    ADD CONSTRAINT fk_tbl_coasesores_historial_id_coasesor_tbl_coasesores_id FOREIGN KEY (id_coasesor) REFERENCES public.tbl_coasesores(id);
 
 
 --
--- Name: TABLE saml_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores_historial fk_tbl_coasesores_historial_id_usuario_verificador_tbl_usuar; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.saml_providers TO postgres;
-GRANT SELECT ON TABLE auth.saml_providers TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.saml_providers TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coasesores_historial
+    ADD CONSTRAINT fk_tbl_coasesores_historial_id_usuario_verificador_tbl_usuar FOREIGN KEY (id_usuario_verificador) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: TABLE saml_relay_states; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coasesores fk_tbl_coasesores_id_investigador_tbl_perfil_investigador_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.saml_relay_states TO postgres;
-GRANT SELECT ON TABLE auth.saml_relay_states TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.saml_relay_states TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coasesores
+    ADD CONSTRAINT fk_tbl_coasesores_id_investigador_tbl_perfil_investigador_id FOREIGN KEY (id_investigador) REFERENCES public.tbl_perfil_investigador(id);
 
 
 --
--- Name: TABLE sessions; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores_historial fk_tbl_coordinadores_historial_id_coordinador_tbl_coordinado; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.sessions TO postgres;
-GRANT SELECT ON TABLE auth.sessions TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.sessions TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinadores_historial
+    ADD CONSTRAINT fk_tbl_coordinadores_historial_id_coordinador_tbl_coordinado FOREIGN KEY (id_coordinador) REFERENCES public.tbl_coordinadores(id);
 
 
 --
--- Name: TABLE sso_domains; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_coordinadores fk_tbl_coordinadores_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.sso_domains TO postgres;
-GRANT SELECT ON TABLE auth.sso_domains TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.sso_domains TO dashboard_user;
+ALTER TABLE ONLY public.tbl_coordinadores
+    ADD CONSTRAINT fk_tbl_coordinadores_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: TABLE sso_providers; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes fk_tbl_docentes_id_categoria_dic_categoria_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.sso_providers TO postgres;
-GRANT SELECT ON TABLE auth.sso_providers TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE auth.sso_providers TO dashboard_user;
+ALTER TABLE ONLY public.tbl_docentes
+    ADD CONSTRAINT fk_tbl_docentes_id_categoria_dic_categoria_id FOREIGN KEY (id_categoria) REFERENCES public.dic_categoria(id);
 
 
 --
--- Name: TABLE users; Type: ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_docentes fk_tbl_docentes_id_especialidad_dic_especialidades_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE auth.users TO dashboard_user;
-GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE auth.users TO postgres;
-GRANT SELECT ON TABLE auth.users TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_docentes
+    ADD CONSTRAINT fk_tbl_docentes_id_especialidad_dic_especialidades_id FOREIGN KEY (id_especialidad) REFERENCES public.dic_especialidades(id);
 
 
 --
--- Name: TABLE pg_stat_statements; Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_docentes fk_tbl_docentes_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON TABLE extensions.pg_stat_statements FROM postgres;
-GRANT ALL ON TABLE extensions.pg_stat_statements TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE extensions.pg_stat_statements TO dashboard_user;
+ALTER TABLE ONLY public.tbl_docentes
+    ADD CONSTRAINT fk_tbl_docentes_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: TABLE pg_stat_statements_info; Type: ACL; Schema: extensions; Owner: postgres
+-- Name: tbl_docentes_lineas_historial fk_tbl_docentes_lineas_historial_id_docente_tbl_docentes_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-REVOKE ALL ON TABLE extensions.pg_stat_statements_info FROM postgres;
-GRANT ALL ON TABLE extensions.pg_stat_statements_info TO postgres WITH GRANT OPTION;
-GRANT ALL ON TABLE extensions.pg_stat_statements_info TO dashboard_user;
+ALTER TABLE ONLY public.tbl_docentes_lineas_historial
+    ADD CONSTRAINT fk_tbl_docentes_lineas_historial_id_docente_tbl_docentes_id FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
 
 --
--- Name: TABLE messages; Type: ACL; Schema: realtime; Owner: supabase_realtime_admin
+-- Name: tbl_docentes_lineas_historial fk_tbl_docentes_lineas_historial_id_sublinea_vri_tbl_subline; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE realtime.messages TO postgres;
-GRANT ALL ON TABLE realtime.messages TO dashboard_user;
-GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO anon;
-GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO authenticated;
-GRANT SELECT,INSERT,UPDATE ON TABLE realtime.messages TO service_role;
+ALTER TABLE ONLY public.tbl_docentes_lineas_historial
+    ADD CONSTRAINT fk_tbl_docentes_lineas_historial_id_sublinea_vri_tbl_subline FOREIGN KEY (id_sublinea_vri) REFERENCES public.tbl_sublineas_vri(id);
 
 
 --
--- Name: TABLE schema_migrations; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_docentes_lineas fk_tbl_docentes_lineas_id_docente_tbl_docentes_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE realtime.schema_migrations TO postgres;
-GRANT ALL ON TABLE realtime.schema_migrations TO dashboard_user;
-GRANT SELECT ON TABLE realtime.schema_migrations TO anon;
-GRANT SELECT ON TABLE realtime.schema_migrations TO authenticated;
-GRANT SELECT ON TABLE realtime.schema_migrations TO service_role;
-GRANT ALL ON TABLE realtime.schema_migrations TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_docentes_lineas
+    ADD CONSTRAINT fk_tbl_docentes_lineas_id_docente_tbl_docentes_id FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
 
 --
--- Name: TABLE subscription; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_docentes_lineas fk_tbl_docentes_lineas_id_sublinea_vri_tbl_sublineas_vri_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE realtime.subscription TO postgres;
-GRANT ALL ON TABLE realtime.subscription TO dashboard_user;
-GRANT SELECT ON TABLE realtime.subscription TO anon;
-GRANT SELECT ON TABLE realtime.subscription TO authenticated;
-GRANT SELECT ON TABLE realtime.subscription TO service_role;
-GRANT ALL ON TABLE realtime.subscription TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_docentes_lineas
+    ADD CONSTRAINT fk_tbl_docentes_lineas_id_sublinea_vri_tbl_sublineas_vri_id FOREIGN KEY (id_sublinea_vri) REFERENCES public.tbl_sublineas_vri(id);
 
 
 --
--- Name: SEQUENCE subscription_id_seq; Type: ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_estructura_academica fk_tbl_estructura_academica_id_especialidad_dic_especialidad; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON SEQUENCE realtime.subscription_id_seq TO postgres;
-GRANT ALL ON SEQUENCE realtime.subscription_id_seq TO dashboard_user;
-GRANT USAGE ON SEQUENCE realtime.subscription_id_seq TO anon;
-GRANT USAGE ON SEQUENCE realtime.subscription_id_seq TO authenticated;
-GRANT USAGE ON SEQUENCE realtime.subscription_id_seq TO service_role;
-GRANT ALL ON SEQUENCE realtime.subscription_id_seq TO supabase_realtime_admin;
+ALTER TABLE ONLY public.tbl_estructura_academica
+    ADD CONSTRAINT fk_tbl_estructura_academica_id_especialidad_dic_especialidad FOREIGN KEY (id_especialidad) REFERENCES public.dic_especialidades(id);
 
 
 --
--- Name: TABLE buckets; Type: ACL; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_estructura_academica fk_tbl_estructura_academica_id_sede_dic_sedes_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE storage.buckets TO anon;
-GRANT ALL ON TABLE storage.buckets TO authenticated;
-GRANT ALL ON TABLE storage.buckets TO service_role;
-GRANT ALL ON TABLE storage.buckets TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_estructura_academica
+    ADD CONSTRAINT fk_tbl_estructura_academica_id_sede_dic_sedes_id FOREIGN KEY (id_sede) REFERENCES public.dic_sedes(id);
 
 
 --
--- Name: TABLE objects; Type: ACL; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_integrantes fk_tbl_integrantes_id_tesista_tbl_tesistas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE storage.objects TO anon;
-GRANT ALL ON TABLE storage.objects TO authenticated;
-GRANT ALL ON TABLE storage.objects TO service_role;
-GRANT ALL ON TABLE storage.objects TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_integrantes
+    ADD CONSTRAINT fk_tbl_integrantes_id_tesista_tbl_tesistas_id FOREIGN KEY (id_tesista) REFERENCES public.tbl_tesistas(id);
 
 
 --
--- Name: TABLE s3_multipart_uploads; Type: ACL; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_integrantes fk_tbl_integrantes_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE storage.s3_multipart_uploads TO service_role;
-GRANT SELECT ON TABLE storage.s3_multipart_uploads TO authenticated;
-GRANT SELECT ON TABLE storage.s3_multipart_uploads TO anon;
+ALTER TABLE ONLY public.tbl_integrantes
+    ADD CONSTRAINT fk_tbl_integrantes_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: TABLE s3_multipart_uploads_parts; Type: ACL; Schema: storage; Owner: supabase_storage_admin
+-- Name: tbl_observaciones fk_tbl_observaciones_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE storage.s3_multipart_uploads_parts TO service_role;
-GRANT SELECT ON TABLE storage.s3_multipart_uploads_parts TO authenticated;
-GRANT SELECT ON TABLE storage.s3_multipart_uploads_parts TO anon;
+ALTER TABLE ONLY public.tbl_observaciones
+    ADD CONSTRAINT fk_tbl_observaciones_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: TABLE secrets; Type: ACL; Schema: vault; Owner: supabase_admin
+-- Name: tbl_observaciones fk_tbl_observaciones_id_rol_tbl_usuarios_servicios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT SELECT,REFERENCES,DELETE,TRUNCATE ON TABLE vault.secrets TO postgres WITH GRANT OPTION;
-GRANT SELECT,DELETE ON TABLE vault.secrets TO service_role;
+ALTER TABLE ONLY public.tbl_observaciones
+    ADD CONSTRAINT fk_tbl_observaciones_id_rol_tbl_usuarios_servicios_id FOREIGN KEY (id_rol) REFERENCES public.tbl_usuarios_servicios(id);
 
 
 --
--- Name: TABLE decrypted_secrets; Type: ACL; Schema: vault; Owner: supabase_admin
+-- Name: tbl_observaciones fk_tbl_observaciones_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-GRANT SELECT,REFERENCES,DELETE,TRUNCATE ON TABLE vault.decrypted_secrets TO postgres WITH GRANT OPTION;
-GRANT SELECT,DELETE ON TABLE vault.decrypted_secrets TO service_role;
+ALTER TABLE ONLY public.tbl_observaciones
+    ADD CONSTRAINT fk_tbl_observaciones_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_observaciones fk_tbl_observaciones_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON SEQUENCES TO dashboard_user;
+ALTER TABLE ONLY public.tbl_observaciones
+    ADD CONSTRAINT fk_tbl_observaciones_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_perfil_investigador fk_tbl_perfil_investigador_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON FUNCTIONS TO dashboard_user;
+ALTER TABLE ONLY public.tbl_perfil_investigador
+    ADD CONSTRAINT fk_tbl_perfil_investigador_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: auth; Owner: supabase_auth_admin
+-- Name: tbl_sublineas_vri fk_tbl_sublineas_vri_id_carrera_dic_carreras_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_auth_admin IN SCHEMA auth GRANT ALL ON TABLES TO dashboard_user;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT fk_tbl_sublineas_vri_id_carrera_dic_carreras_id FOREIGN KEY (id_carrera) REFERENCES public.dic_carreras(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_sublineas_vri fk_tbl_sublineas_vri_id_disciplina_dic_disciplinas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL ON SEQUENCES TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT fk_tbl_sublineas_vri_id_disciplina_dic_disciplinas_id FOREIGN KEY (id_disciplina) REFERENCES public.dic_disciplinas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_sublineas_vri fk_tbl_sublineas_vri_id_linea_universidad_dic_lineas_univers; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL ON FUNCTIONS TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_sublineas_vri
+    ADD CONSTRAINT fk_tbl_sublineas_vri_id_linea_universidad_dic_lineas_univers FOREIGN KEY (id_linea_universidad) REFERENCES public.dic_lineas_universidad(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: extensions; Owner: supabase_admin
+-- Name: tbl_tesistas fk_tbl_tesistas_id_estructura_academica_tbl_estructura_acade; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA extensions GRANT ALL ON TABLES TO postgres WITH GRANT OPTION;
+ALTER TABLE ONLY public.tbl_tesistas
+    ADD CONSTRAINT fk_tbl_tesistas_id_estructura_academica_tbl_estructura_acade FOREIGN KEY (id_estructura_academica) REFERENCES public.tbl_estructura_academica(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
+-- Name: tbl_tesistas fk_tbl_tesistas_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON SEQUENCES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON SEQUENCES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON SEQUENCES TO service_role;
+ALTER TABLE ONLY public.tbl_tesistas
+    ADD CONSTRAINT fk_tbl_tesistas_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
+-- Name: tbl_tramites_historial fk_tbl_tramites_historial_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON FUNCTIONS TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON FUNCTIONS TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON FUNCTIONS TO service_role;
+ALTER TABLE ONLY public.tbl_tramites_historial
+    ADD CONSTRAINT fk_tbl_tramites_historial_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql; Owner: supabase_admin
+-- Name: tbl_tramites_historial fk_tbl_tramites_historial_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON TABLES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql GRANT ALL ON TABLES TO service_role;
+ALTER TABLE ONLY public.tbl_tramites_historial
+    ADD CONSTRAINT fk_tbl_tramites_historial_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
+-- Name: tbl_tramites fk_tbl_tramites_id_denominacion_dic_denominaciones_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON SEQUENCES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON SEQUENCES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON SEQUENCES TO service_role;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT fk_tbl_tramites_id_denominacion_dic_denominaciones_id FOREIGN KEY (id_denominacion) REFERENCES public.dic_denominaciones(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
+-- Name: tbl_tramites fk_tbl_tramites_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON FUNCTIONS TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON FUNCTIONS TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON FUNCTIONS TO service_role;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT fk_tbl_tramites_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: graphql_public; Owner: supabase_admin
+-- Name: tbl_tramites fk_tbl_tramites_id_modalidad_dic_modalidades_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON TABLES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA graphql_public GRANT ALL ON TABLES TO service_role;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT fk_tbl_tramites_id_modalidad_dic_modalidades_id FOREIGN KEY (id_modalidad) REFERENCES public.dic_modalidades(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: postgres
+-- Name: tbl_tramites fk_tbl_tramites_id_sublinea_vri_tbl_sublineas_vri_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES TO service_role;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT fk_tbl_tramites_id_sublinea_vri_tbl_sublineas_vri_id FOREIGN KEY (id_sublinea_vri) REFERENCES public.tbl_sublineas_vri(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
+-- Name: tbl_tramites fk_tbl_tramites_id_tipo_trabajo_dic_tipo_trabajos_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON SEQUENCES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON SEQUENCES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON SEQUENCES TO service_role;
+ALTER TABLE ONLY public.tbl_tramites
+    ADD CONSTRAINT fk_tbl_tramites_id_tipo_trabajo_dic_tipo_trabajos_id FOREIGN KEY (id_tipo_trabajo) REFERENCES public.dic_tipo_trabajos(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: postgres
+-- Name: tbl_tramites_metadatos fk_tbl_tramites_metadatos_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO service_role;
+ALTER TABLE ONLY public.tbl_tramites_metadatos
+    ADD CONSTRAINT fk_tbl_tramites_metadatos_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
+-- Name: tbl_tramites_metadatos fk_tbl_tramites_metadatos_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON FUNCTIONS TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON FUNCTIONS TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON FUNCTIONS TO service_role;
+ALTER TABLE ONLY public.tbl_tramites_metadatos
+    ADD CONSTRAINT fk_tbl_tramites_metadatos_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: postgres
+-- Name: tbl_tramitesdet fk_tbl_tramitesdet_id_docente_tbl_docentes_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES TO service_role;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT fk_tbl_tramitesdet_id_docente_tbl_docentes_id FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: supabase_admin
+-- Name: tbl_tramitesdet fk_tbl_tramitesdet_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON TABLES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public GRANT ALL ON TABLES TO service_role;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT fk_tbl_tramitesdet_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramitesdet fk_tbl_tramitesdet_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON SEQUENCES TO dashboard_user;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT fk_tbl_tramitesdet_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramitesdet fk_tbl_tramitesdet_id_visto_bueno_dic_visto_bueno_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON FUNCTIONS TO dashboard_user;
+ALTER TABLE ONLY public.tbl_tramitesdet
+    ADD CONSTRAINT fk_tbl_tramitesdet_id_visto_bueno_dic_visto_bueno_id FOREIGN KEY (id_visto_bueno) REFERENCES public.dic_visto_bueno(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: realtime; Owner: supabase_admin
+-- Name: tbl_tramitesdoc fk_tbl_tramitesdoc_id_etapa_dic_etapas_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA realtime GRANT ALL ON TABLES TO dashboard_user;
+ALTER TABLE ONLY public.tbl_tramitesdoc
+    ADD CONSTRAINT fk_tbl_tramitesdoc_id_etapa_dic_etapas_id FOREIGN KEY (id_etapa) REFERENCES public.dic_etapas(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
+-- Name: tbl_tramitesdoc fk_tbl_tramitesdoc_id_tramite_tbl_tramites_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUENCES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUENCES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUENCES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON SEQUENCES TO service_role;
+ALTER TABLE ONLY public.tbl_tramitesdoc
+    ADD CONSTRAINT fk_tbl_tramitesdoc_id_tramite_tbl_tramites_id FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: storage; Owner: postgres
+-- Name: tbl_tramitesdoc fk_tbl_tramitesdoc_id_tramites_metadatos_tbl_tramites_metada; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTIONS TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTIONS TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTIONS TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON FUNCTIONS TO service_role;
+ALTER TABLE ONLY public.tbl_tramitesdoc
+    ADD CONSTRAINT fk_tbl_tramitesdoc_id_tramites_metadatos_tbl_tramites_metada FOREIGN KEY (id_tramites_metadatos) REFERENCES public.tbl_tramites_metadatos(id);
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: storage; Owner: postgres
+-- Name: tbl_usuarios_servicios fk_tbl_usuarios_servicios_id_servicio_dic_servicios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES TO anon;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA storage GRANT ALL ON TABLES TO service_role;
+ALTER TABLE ONLY public.tbl_usuarios_servicios
+    ADD CONSTRAINT fk_tbl_usuarios_servicios_id_servicio_dic_servicios_id FOREIGN KEY (id_servicio) REFERENCES public.dic_servicios(id);
 
 
 --
--- Name: issue_graphql_placeholder; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_usuarios_servicios fk_tbl_usuarios_servicios_id_usuario_tbl_usuarios_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_usuarios_servicios
+    ADD CONSTRAINT fk_tbl_usuarios_servicios_id_usuario_tbl_usuarios_id FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
-CREATE EVENT TRIGGER issue_graphql_placeholder ON sql_drop
-         WHEN TAG IN ('DROP EXTENSION')
-   EXECUTE FUNCTION extensions.set_graphql_placeholder();
+
+--
+-- Name: tbl_dictamenes_info fk_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_dictamenes_info
+    ADD CONSTRAINT fk_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
-ALTER EVENT TRIGGER issue_graphql_placeholder OWNER TO supabase_admin;
 
 --
--- Name: issue_pg_cron_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_coasesor_tramites fk_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_coasesor_tramites
+    ADD CONSTRAINT fk_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
-CREATE EVENT TRIGGER issue_pg_cron_access ON ddl_command_end
-         WHEN TAG IN ('CREATE EXTENSION')
-   EXECUTE FUNCTION extensions.grant_pg_cron_access();
+
+--
+-- Name: tbl_coasesor_tramites_historial fk_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial
+    ADD CONSTRAINT fk_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
-ALTER EVENT TRIGGER issue_pg_cron_access OWNER TO supabase_admin;
 
 --
--- Name: issue_pg_graphql_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_programacion_sustentacion fk_tramite; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_programacion_sustentacion
+    ADD CONSTRAINT fk_tramite FOREIGN KEY (id_tramite) REFERENCES public.tbl_tramites(id);
 
-CREATE EVENT TRIGGER issue_pg_graphql_access ON ddl_command_end
-         WHEN TAG IN ('CREATE FUNCTION')
-   EXECUTE FUNCTION extensions.grant_pg_graphql_access();
+
+--
+-- Name: tbl_coasesor_tramites_historial fk_usuario_responsable; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_coasesor_tramites_historial
+    ADD CONSTRAINT fk_usuario_responsable FOREIGN KEY (id_usuario_responsable) REFERENCES public.tbl_usuarios(id);
 
-ALTER EVENT TRIGGER issue_pg_graphql_access OWNER TO supabase_admin;
 
 --
--- Name: issue_pg_net_access; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_docente_categoria_historial tbl_docente_categoria_historial_id_docente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_docente_categoria_historial
+    ADD CONSTRAINT tbl_docente_categoria_historial_id_docente_fkey FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
-CREATE EVENT TRIGGER issue_pg_net_access ON ddl_command_end
-         WHEN TAG IN ('CREATE EXTENSION')
-   EXECUTE FUNCTION extensions.grant_pg_net_access();
+
+--
+-- Name: tbl_estudios tbl_estudios_id_grado_academico_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_estudios
+    ADD CONSTRAINT tbl_estudios_id_grado_academico_fkey FOREIGN KEY (id_grado_academico) REFERENCES public.dic_grados_academicos(id);
 
-ALTER EVENT TRIGGER issue_pg_net_access OWNER TO supabase_admin;
 
 --
--- Name: pgrst_ddl_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_estudios tbl_estudios_id_tipo_obtencion_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_estudios
+    ADD CONSTRAINT tbl_estudios_id_tipo_obtencion_fkey FOREIGN KEY (id_tipo_obtencion) REFERENCES public.dic_obtencion_studios(id);
 
-CREATE EVENT TRIGGER pgrst_ddl_watch ON ddl_command_end
-   EXECUTE FUNCTION extensions.pgrst_ddl_watch();
+
+--
+-- Name: tbl_estudios tbl_estudios_id_universidad_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_estudios
+    ADD CONSTRAINT tbl_estudios_id_universidad_fkey FOREIGN KEY (id_universidad) REFERENCES public.dic_universidades(id);
 
-ALTER EVENT TRIGGER pgrst_ddl_watch OWNER TO supabase_admin;
 
 --
--- Name: pgrst_drop_watch; Type: EVENT TRIGGER; Schema: -; Owner: supabase_admin
+-- Name: tbl_estudios tbl_estudios_id_usuario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.tbl_estudios
+    ADD CONSTRAINT tbl_estudios_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES public.tbl_usuarios(id);
 
-CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
-   EXECUTE FUNCTION extensions.pgrst_drop_watch();
+
+--
+-- Name: tbl_grado_docente tbl_grado_docente_id_docente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.tbl_grado_docente
+    ADD CONSTRAINT tbl_grado_docente_id_docente_fkey FOREIGN KEY (id_docente) REFERENCES public.tbl_docentes(id);
 
-ALTER EVENT TRIGGER pgrst_drop_watch OWNER TO supabase_admin;
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict rynNyeweF47t5oDaqYYm24PUGI90Sc16yduNtADkDCOrczxqyz0RFYOJr3V5b0Z
+\unrestrict AYoCfz1mg2l75hrhnFN9cN057eilyte5wVofof9JbALOdua6UpNJoYsEWEbFyPs
 

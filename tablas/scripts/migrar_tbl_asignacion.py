@@ -50,18 +50,35 @@ def migrate_tbl_asignacion_fast():
         
         print(f"  Mapeo completado: {len(docente_map)} docentes, {len(tramites_map)} trámites.")
 
-        # 2. Leer datos de origen, ordenados para la lógica de iteración
+        # 2. Leer datos de origen
         print("  Paso 2: Extrayendo datos de tesJuCambios desde MySQL...")
         mysql_cur.execute("SELECT * FROM tesJuCambios ORDER BY IdTramite, Fecha ASC")
         source_data = mysql_cur.fetchall()
         print(f"  Se extrajeron {len(source_data)} registros de cambios de jurado.")
 
-        # 3. Procesar y preparar datos en memoria
-        print("  Paso 3: Procesando y transformando datos...")
+        # 3. Identificar la asignación más reciente para cada (tramite, orden)
+        print("  Paso 3: Identificando la asignación más reciente por trámite y orden...")
+        latest_assignments = {}
+        jurado_fields = ['IdJurado1', 'IdJurado2', 'IdJurado3', 'IdJurado4']
+        for row in source_data:
+            id_tramite_antiguo = row['IdTramite']
+            fecha = row.get('Fecha')
+            if not fecha:
+                continue
+            
+            for i, field in enumerate(jurado_fields):
+                orden = i + 1
+                if row[field] and row[field] > 0:
+                    key = (id_tramite_antiguo, orden)
+                    if key not in latest_assignments or fecha > latest_assignments[key]['Fecha']:
+                        latest_assignments[key] = row
+        print(f"  Se identificaron {len(latest_assignments)} asignaciones activas.")
+
+        # 4. Procesar y preparar datos en memoria con el estado correcto
+        print("  Paso 4: Procesando y transformando datos...")
         data_for_copy = []
         iteracion_tracker = {}
         unmapped_jurados = 0
-        jurado_fields = ['IdJurado1', 'IdJurado2', 'IdJurado3', 'IdJurado4']
 
         for row in source_data:
             id_tramite_antiguo = row['IdTramite']
@@ -78,19 +95,25 @@ def migrate_tbl_asignacion_fast():
                 if old_docente_id and old_docente_id > 0:
                     new_docente_id = docente_map.get(old_docente_id)
                     if new_docente_id:
-                        # El orden debe coincidir con el de la tupla 'columns'
+                        orden = i + 1
+                        key = (id_tramite_antiguo, orden)
+                        
+                        # Determinar el estado
+                        latest_row = latest_assignments.get(key)
+                        estado = 1 if latest_row and latest_row['Id'] == row['Id'] else 0
+
                         data_for_copy.append(
                             (
-                                new_tramite_id,         # id_tramite
-                                5,                      # id_etapa
-                                i + 1,                  # orden
-                                current_iteracion,      # iteracion
-                                id_tipo_evento,         # tipo_evento
-                                new_docente_id,         # id_docente
-                                system_user_id,         # id_usuario_asignador
-                                row['Fecha'],           # fecha_asignacion
-                                1,                      # estado_asignacion
-                                None                    # imagen_sorteo
+                                new_tramite_id,
+                                5,
+                                orden,
+                                current_iteracion,
+                                id_tipo_evento,
+                                new_docente_id,
+                                system_user_id,
+                                row['Fecha'],
+                                estado,
+                                None
                             )
                         )
                     else:
@@ -100,9 +123,9 @@ def migrate_tbl_asignacion_fast():
         if unmapped_jurados > 0:
             print(f"  ADVERTENCIA: Se ignoraron {unmapped_jurados} jurados sin mapeo de ID.")
 
-        # 4. Cargar los datos en PostgreSQL usando COPY
+        # 5. Cargar los datos en PostgreSQL usando COPY
         if data_for_copy:
-            print("  Paso 4: Cargando datos en PostgreSQL con COPY...")
+            print("  Paso 5: Cargando datos en PostgreSQL con COPY...")
             
             buffer = io.StringIO()
             for record in data_for_copy:
@@ -111,7 +134,6 @@ def migrate_tbl_asignacion_fast():
             
             buffer.seek(0)
 
-            # Definir las columnas en el orden correcto para tbl_asignacion
             columns = (
                 'id_tramite', 'id_etapa', 'orden', 'iteracion', 'tipo_evento',
                 'id_docente', 'id_usuario_asignador', 'fecha_asignacion', 'estado_asignacion', 'imagen_sorteo'

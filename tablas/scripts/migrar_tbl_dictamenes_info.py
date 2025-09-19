@@ -64,7 +64,17 @@ def migrate_tbl_dictamenes_info():
         total_source = len(source_dictamenes)
         print(f"  Se encontraron {total_source} dictámenes para procesar.")
 
-        print("  Paso 3: Procesando y transformando datos...")
+        print("  Paso 3: Identificando el dictamen más reciente por trámite...")
+        latest_dates = {}
+        for det in source_dictamenes:
+            id_tramite = det['IdTramite']
+            fecha = det.get('Fecha')
+            if fecha:
+                if id_tramite not in latest_dates or fecha > latest_dates[id_tramite]:
+                    latest_dates[id_tramite] = fecha
+        print(f"  Se identificaron las fechas más recientes para {len(latest_dates)} trámites.")
+
+        print("  Paso 4: Procesando y transformando datos con la lógica de estado correcta...")
         records_to_insert = []
         omitted_count = 0
         
@@ -119,18 +129,22 @@ def migrate_tbl_dictamenes_info():
             if vb_sum == 3: tipo_aprobacion_id = 27
             elif vb_sum == 2: tipo_aprobacion_id = 26
             else: tipo_aprobacion_id = 28
+            
+            # Lógica de estado: 1 si es el más reciente, 0 si no lo es.
+            is_latest = (det.get('Fecha') == latest_dates.get(id_tramite_antiguo))
+            estado = 1 if is_latest else 0
 
             records_to_insert.append((
                 new_tramite_id, tramite_info.get('Codigo'), tipo_aprobacion_id,
                 det.get('Titulo'), denominacion_final, tesista1, tesista2, escuela_profesional,
                 presidente, primer_miembro, segundo_miembro, asesor,
-                None, det.get('Fecha'), None, 1, 1, None
+                None, det.get('Fecha'), None, estado, 1, None
             ))
 
         print(f"\n  Resumen del procesamiento: {total_source} registros leídos, {len(records_to_insert)} preparados para inserción, {omitted_count} omitidos.")
 
         if records_to_insert:
-            print("  Paso 4: Cargando datos en tbl_dictamenes_info con COPY...")
+            print("  Paso 5: Cargando datos en tbl_dictamenes_info con COPY...")
             
             buffer = io.StringIO()
             for record in records_to_insert:

@@ -12,10 +12,13 @@ from psycopg2.extras import execute_values
 def migrar_tbl_coasesores_historial():
     """
     Puebla la tabla tbl_coasesores_historial basándose en los datos de
-    tbl_coasesores (PostgreSQL) y tblDocAsesors (MySQL), generando un historial
-    condicional según el estado del coasesor.
+    tbl_coasesores (PostgreSQL) y tblDocAsesors (MySQL).
+    La lógica de historial se basa en el estado del coasesor:
+    - estado 0 (Registrado): Crea 1 registro de historial.
+    - estado 1 (Aceptado): Crea 2 registros (registrado -> aceptado).
+    - estado 2 (Rechazado): Crea 2 registros (registrado -> rechazado).
     """
-    print("--- Iniciando migración de TBL_COASESORES_HISTORIAL ---")
+    print("--- Iniciando migración de TBL_COASESORES_HISTORIAL (Lógica Corregida) ---")
     
     pg_conn = None
     mysql_conn = None
@@ -33,23 +36,25 @@ def migrar_tbl_coasesores_historial():
 
         # 2. Obtener IDs de las acciones relevantes desde PostgreSQL
         print("INFO: Obteniendo IDs de acciones para el historial...")
-        pg_cursor.execute("SELECT nombre, id FROM public.dic_acciones WHERE nombre IN ('coasesor registrado', 'coasesor aceptado')")
+        pg_cursor.execute("""
+            SELECT nombre, id FROM public.dic_acciones 
+            WHERE nombre IN ('coasesor registrado', 'coasesor aceptado', 'coasesor rechazado')
+        """)
         acciones = dict(pg_cursor.fetchall())
         
         id_accion_registrado = acciones.get('coasesor registrado')
         id_accion_aceptado = acciones.get('coasesor aceptado')
+        id_accion_rechazado = acciones.get('coasesor rechazado')
         
-        if not id_accion_registrado or not id_accion_aceptado:
-            raise Exception("No se encontraron las acciones 'coasesor registrado' o 'coasesor aceptado' en dic_acciones. Asegúrate de migrar los diccionarios primero.")
+        if not all([id_accion_registrado, id_accion_aceptado, id_accion_rechazado]):
+            raise Exception("No se encontraron todas las acciones requeridas ('registrado', 'aceptado', 'rechazado') en dic_acciones.")
         
-        print(f"INFO: ID 'coasesor registrado': {id_accion_registrado}, ID 'coasesor aceptado': {id_accion_aceptado}")
+        print(f"INFO: IDs de acciones -> Registrado: {id_accion_registrado}, Aceptado: {id_accion_aceptado}, Rechazado: {id_accion_rechazado}")
 
         # 3. Obtener fechas de registro originales desde MySQL
         print("INFO: Extrayendo fechas de registro desde MySQL (tblDocAsesors)...")
         mysql_cursor.execute("SELECT IdPilar, FechaReg FROM tblDocAsesors")
-        asesores_mysql = mysql_cursor.fetchall()
-        
-        fechas_registro_map = {asesor['IdPilar']: asesor['FechaReg'] for asesor in asesores_mysql}
+        fechas_registro_map = {asesor['IdPilar']: asesor['FechaReg'] for asesor in mysql_cursor.fetchall()}
         print(f"INFO: Se obtuvieron {len(fechas_registro_map)} fechas de registro.")
 
         # 4. Obtener los coasesores actuales desde PostgreSQL
@@ -63,25 +68,24 @@ def migrar_tbl_coasesores_historial():
         id_usuario_sistema = 27271 # ID fijo para el usuario verificador (sistema)
 
         for id_coasesor, id_investigador, estado in coasesores_pg:
-            fecha_registro = fechas_registro_map.get(id_investigador)
-            if not fecha_registro:
-                print(f"ADVERTENCIA: No se encontró fecha para el coasesor {id_investigador}. Se usará la fecha actual.")
-                fecha_registro = datetime.now()
+            fecha_registro = fechas_registro_map.get(id_investigador) or datetime.now()
+            if not fechas_registro_map.get(id_investigador):
+                print(f"ADVERTENCIA: No se encontró fecha para el coasesor con id_investigador {id_investigador}. Se usará la fecha actual.")
 
-            # CASO 1: Coasesor INACTIVO (estado = 0)
-            if estado == 0:
-                registros_historial.append((
-                    id_coasesor, fecha_registro, id_usuario_sistema, None, 0, id_accion_registrado
-                ))
-            # CASO 2: Coasesor ACTIVO (estado = 1)
-            elif estado == 1:
-                # Registro 1: "coasesor registrado"
-                registros_historial.append((
-                    id_coasesor, fecha_registro, id_usuario_sistema, None, 0, id_accion_registrado
-                ))
-                # Registro 2: "coasesor aceptado"
+            # Siempre se crea el evento de "registrado" primero
+            registros_historial.append((
+                id_coasesor, fecha_registro, id_usuario_sistema, None, 0, id_accion_registrado
+            ))
+
+            # Si está aceptado, se añade el segundo evento
+            if estado == 1:
                 registros_historial.append((
                     id_coasesor, fecha_registro + timedelta(seconds=1), id_usuario_sistema, None, 1, id_accion_aceptado
+                ))
+            # Si está rechazado, se añade el segundo evento
+            elif estado == 2:
+                registros_historial.append((
+                    id_coasesor, fecha_registro + timedelta(seconds=1), id_usuario_sistema, None, 2, id_accion_rechazado
                 ))
         
         print(f"INFO: Se generaron {len(registros_historial)} registros para el historial.")
@@ -110,14 +114,10 @@ def migrar_tbl_coasesores_historial():
         if pg_conn:
             pg_conn.rollback()
     finally:
-        if pg_cursor:
-            pg_cursor.close()
-        if pg_conn:
-            pg_conn.close()
-        if mysql_cursor:
-            mysql_cursor.close()
-        if mysql_conn:
-            mysql_conn.close()
+        if pg_cursor: pg_cursor.close()
+        if pg_conn: pg_conn.close()
+        if mysql_cursor: mysql_cursor.close()
+        if mysql_conn: mysql_conn.close()
         print("--- Fin de la migración de TBL_COASESORES_HISTORIAL ---")
 
 if __name__ == '__main__':

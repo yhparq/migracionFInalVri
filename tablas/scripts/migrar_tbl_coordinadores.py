@@ -54,6 +54,9 @@ def migrar_tbl_coordinadores():
         pg_conn = get_postgres_connection()
         pg_cur = pg_conn.cursor()
 
+        # Asegurar que la extensión pg_trgm esté habilitada
+        pg_cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+
         mysql_cur = mysql_conn.cursor(dictionary=True)
         mysql_cur.execute("SELECT Id, Id_Facultad, UserLevel, Estado, Resp, Usuario, Celular, Correo, Direccion, Horario FROM tblSecres")
         secretaries = mysql_cur.fetchall()

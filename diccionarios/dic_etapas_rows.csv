@@ -16,4 +16,3 @@ id,nombre,descripcion
 15,Sustentación,El tesista sustenta la tesis
 16,Carga de archivo final,El tesista carga el archivo final de su tesis
 17,Trámite Concluido,El proceso de tesis ha finalizado
-18,Global,Etapa para acciones que no pertenecen a un flujo específico

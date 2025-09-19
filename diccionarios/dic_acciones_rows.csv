@@ -1,79 +1,99 @@
-id,nombre,descripcion,id_etapa_pertenencia,id_servicios
-1,generar codigo proyecto,el tesista da inicio a su trámite y generó el código de proyecto del trámite,1,1
-2,integrantes del proyecto,se definió los integrantes para el proyecto de tesis,1,1
-3,culminación de etapa 1,"el tesista subió y cargó todos los datos y documentos necesarios requeridos en la etapa 1 (metadatos, línea, asesor, archivos)",1,1
-4,inicio de etapa 2,el proyecto pasó a la etapa dos a ser revisado por el coordinador de investigación,2,8
-5,formato de proyecto desaprobado / enviado para corregir,el coordinador desaprueba el formato de proyecto y lo envia para corrección del tesista,2,3
-6,formato de proyecto aprobado,el coordinador aprueba el formato de proyecto,2,3
-7,envio de correcciones,el tesista envia correcciones hechas por el coordinador,2,1
-8,culminación de etapa 2,el tesista es aprobado y culmina etapa 2,2,8
-9,inicio de etapa 3,el proyecto pasa a la etapa 3,3,8
-10,proyecto desaprobado/enviado para corregir por asesor,director/asesor solicita correcciones etapa 3,3,2
-11,proyecto aprobado por director/asesor,"el director asesor aprueba el proyecto ",3,2
-12,envió de correcciones,el tesista envia correcciones hechas por el director/asesor,3,1
-13,culminación de etapa 3,el tesista es aprobado y culmina la etapa 3,3,8
-14,inicio de etapa 4,el proyecto pasa a la etapa 4,4,8
-15,proyecto desaprobado/enviado para corregir única vez,sub/director pide correcciones unica vez,4,6
-16,envió de correcciones,el tesista envía correcciones por única vez,4,1
-17,proyecto desaprobado y archivado,sub/director  desaprueba el proyecto,4,6
-18,proyecto aprobado por sub/director,el sub/director aprueba el proyecto,4,6
-19,culminación de etapa 4,proyecto aprobado y culmina etapa 4,4,8
-20,inicio de etapa 5,el proyecto pasa a la etapa 5,5,8
-21,sorteo de jurados,sub/director realiza sorteo,5,6
-22,culminación de etapa 5,proyecto cuenta con jurados y culmina etapa 5,5,8
-23,inicio de etapa 6,proyecto inicia etapa 6,6,8
-24,jurados finalizan correcion,los mienbros de jurado finalizan sus correciones,6,2
-25,envio de correciones a los jurados,el tesista envia sus correciones a los jurados,6,1
-26,proyecto aprobado por mayoria,dsad,8,6
-27,proyecto aprobado por unanimidad,asdsa,8,6
-28,proyecto aprobado por reglamento,asdsa,8,6
-29,proyecto desaprobado,asd,8,6
-30,tesis aprobada,sda,15,6
-31,tesis aprobada con distincion,123,15,6
-32,tesis desaprobada,sda,15,6
-33,"Acepta ser Asesor/Director de Proyecto","Permite al docente aceptar la asesoría del proyecto.",3,2
-34,"Agregar Tesista","Permite agregar un nuevo tesista al trámite.",18,8
-35,"Ampliación de Proyecto de Tesis","Permite solicitar una ampliación para el proyecto.",18,1
-36,"Anulacion de Proyecto de Tesis","Permite anular el proyecto de tesis.",18,1
-37,"Archivado por exceso de tiempo en bandeja de jurado","El proyecto es archivado por exceso de tiempo en la bandeja del jurado.",5,8
-38,"Archivamiento de proyecto por exceso de tiempo Director","El proyecto es archivado por exceso de tiempo en la bandeja del director.",3,8
-39,"Cambio de Asesor/Director","Permite solicitar un cambio de asesor o director.",18,1
-40,"Cambio de Estado de Dictamen","Permite cambiar el estado del dictamen.",6,8
-41,"Cambio de Jurado","Permite solicitar un cambio de jurado.",18,1
-42,"Cambio de Linea de Investigacion","Permite cambiar la línea de investigación del proyecto.",18,1
-43,"Cambio de nombre de Tesista","Permite corregir o cambiar el nombre de un tesista.",18,1
-44,"Cambio de Titulo de Proyecto de Tesis","Permite solicitar un cambio en el título del proyecto.",18,1
-45,"Cambio de Titulo de Tesis","Permite solicitar un cambio en el título de la tesis.",15,1
-46,"Cancelacion de Proyecto","Permite cancelar el proyecto.",18,1
-47,"Cancelación de Proyecto por Desaprobación","El proyecto es cancelado por desaprobación.",6,8
-48,"Carga de requisitos para habilitacion etapa borrador","El tesista carga los requisitos para habilitar la etapa de borrador.",8,1
-49,"Correcion de estado","Permite realizar una corrección de estado sobre el trámite.",18,8
-50,"Correcion de Formato Borrador","Permite enviar a corrección el formato del borrador.",10,3
-51,"Correcion fecha acta de sustentacion","Permite corregir la fecha del acta de sustentación.",15,8
-52,"Docente renuncia a Tesis","Permite al docente renunciar a la asesoría de una tesis.",18,2
-53,"Eliminacion de un Tesista","Permite eliminar un tesista del trámite.",18,8
-54,"Habilitacion de tramite para Carga de correciones","Permite habilitar el trámite para la carga de correcciones.",5,8
-55,"Habilitacion Excepcional","Permite una habilitación excepcional del trámite.",18,8
-56,"Inhabilitacion de Tesis por Plagio","Permite inhabilitar una tesis por plagio.",18,8
-57,"Recepcion de ejemplares de borrador de tesis","Se recepcionan los ejemplares del borrador de tesis.",12,8
-58,"Rechazo del proyecto por el director","El director rechaza el proyecto.",3,2
-59,"Reconformación de Jurado","Permite solicitar la reconformación del jurado.",18,8
-60,"Renuncia a Tramite","Permite al tesista renunciar a su trámite.",18,1
-61,"Reprogramacion de Fecha de Sustentacion","Permite reprogramar la fecha de sustentación.",13,8
-62,"Restablecimiento de tramite","Permite restablecer un trámite.",18,8
-63,"Retiro de coasesor externo","Permite retirar a un coasesor externo.",18,8
-64,"Retorna Proyecto","Permite retornar el proyecto a un estado anterior.",18,8
-65,"Retrocede Estado","Permite retroceder el estado del trámite.",18,8
-66,"Solicitud de Sustentacion no presencial","Permite solicitar una sustentación no presencial.",13,1
-67,"Tramite archivado por exceso de tiempos de ejecucion","El trámite es archivado por exceder los tiempos de ejecución.",18,8
-68,"Corrección de formato de proyecto de tesis","Permite enviar a corrección el formato del proyecto.",2,3
-69,"Publicar sustentación","Permite publicar la fecha y hora de la sustentación.",13,8
-70,"Cambio de estado de docente","Permite cambiar el estado de un docente.",18,8
-71,"Validar linea docente","Permite validar la línea de investigación de un docente.",18,8
-72,"Genero Acta de Exposición y Defensa","Permite generar el Acta de Exposición y Defensa de la tesis.",13,8
-73,"Registro coordinador","Un administrador registra a un nuevo coordinador en el sistema.",18,8
-74,"Aceptacion del coordinador","El coordinador acepta el cargo asignado.",18,3
-75,"Dimision del coordinador","El coordinador dimite de su cargo.",18,3
-76,coasesor registrado,"Un registro nuevo de coasesor.",18,7
-77,coasesor aceptado,"El coasesor acepta el cargo asignado.",18,7
-78,coasesor rechazado,"El coasesor rechaza el cargo asignado.",18,7
+id,nombre,descripcion,id_etapa_pertenencia
+1,generar codigo proyecto,el tesista da inicio a su trámite y generó el código de proyecto del trámite,1
+2,integrantes del proyecto,se definió los integrantes para el proyecto de tesis,1
+3,culminación de etapa 1,"el tesista subió y cargó todos los datos y documentos necesarios requeridos en la etapa 1 (metadatos, línea, asesor, archivos)",1
+4,inicio de etapa 2,el proyecto pasó a la etapa dos a ser revisado por el coordinador de investigación,2
+5,formato de proyecto desaprobado / enviado para corregir,el coordinador desaprueba el formato de proyecto y lo envia para corrección del tesista,2
+6,formato de proyecto aprobado,el coordinador aprueba el formato de proyecto,2
+7,envio de correcciones,el tesista envia correcciones hechas por el coordinador,2
+8,culminación de etapa 2,el tesista es aprobado y culmina etapa 2,2
+9,inicio de etapa 3,el proyecto pasa a la etapa 3,3
+10,proyecto desaprobado/enviado para corregir por asesor,director/asesor solicita correcciones etapa 3,3
+11,proyecto aprobado por director/asesor,"el director asesor aprueba el proyecto ",3
+12,envió de correcciones,el tesista envia correcciones hechas por el director/asesor,3
+13,culminación de etapa 3,el tesista es aprobado y culmina la etapa 3,3
+14,inicio de etapa 4,el proyecto pasa a la etapa 4,4
+15,proyecto desaprobado/enviado para corregir única vez,sub/director pide correcciones unica vez,4
+16,envió de correcciones,el tesista envía correcciones por única vez,4
+17,proyecto desaprobado y archivado,sub/director  desaprueba el proyecto,4
+18,proyecto aprobado por sub/director,el sub/director aprueba el proyecto,4
+19,culminación de etapa 4,proyecto aprobado y culmina etapa 4,4
+20,inicio de etapa 5,el proyecto pasa a la etapa 5,5
+21,sorteo de jurados,sub/director realiza sorteo,5
+22,culminación de etapa 5,proyecto cuenta con jurados y culmina etapa 5,5
+23,inicio de etapa 6,proyecto inicia etapa 6,6
+24,jurados finalizan correcion,los mienbros de jurado finalizan sus correciones,6
+25,envio de correciones a los jurados,el tesista envia sus correciones a los jurados,6
+26,culminacion de etapa 6,tesista culmino etapa 6,6
+27,inicio de etapa 7,tesista inicia etapa 7,7
+33,el/los tesista subieron el pdf de constancia de bachiller de sunedu,el/los tesista subieron el pdf de constancia de bachiller de sunedu,9
+34,culminacion etapa 9,culminacion etapa 9,9
+35,inicio etapa 10,inicio etapa 10,10
+36,culminación etapa 10,el tesista subió su borrador de tesis sus metadatos y archivos necesarios,10
+37,inicio etapa 11,el tramite pasa a la etapa 11 de revision de formato para coordinador de investigación,11
+38,formato de borrador de tesis desaprobado / enviado para corregir,el coordinador desaprueba el formato de borrador y lo envia para corrección del tesista,11
+39,formato de borrador de tesis aprobado,el coordinador aprueba el formato de borrador de tesis,11
+40,envio de correcciones,el tesista envia correcciones hechas por el coordinador,11
+41,culminación de etapa 11,el formato de borrador del tesista es aprobado y culmina etapa 11,11
+42,inicio de etapa 12,borrador inicia etapa 12,12
+43,jurados finalizan correcion,los mienbros de jurado finalizan sus correciones al borrador de tesis,12
+44,envio de correciones a los jurados E12,el tesista envia sus correciones de borrador de tesis a los jurados,12
+45,culminacion de etapa 12,tesista culmino etapa 12,12
+46,inicio de etapa 13,tesista inicia etapa 13,13
+47,culminacion etapa 13,"el tesista subió
+memorandum de reunion de dictamen y acta de reunion de dictamen",13
+48,inicio de etapa 14,el tramite inició la etapa 14,14
+49,culminacion etapa 14,el tesista subio los archivos requeridos para la sustentacion,14
+50,inicio de etapa 15,el tramite pasó a etapa 15 correctamente,15
+70,proyecto aprobado por unanimidad,asdsa,8
+71,proyecto aprobado por reglamento,asdsa,8
+72,proyecto desaprobado,asd,8
+73,tesis aprobada,sda,15
+74,tesis aprobada con distincion,123,15
+75,tesis desaprobada,sda,15
+76,"Acepta ser Asesor/Director de Proyecto","Permite al docente aceptar la asesoría del proyecto.",3
+77,"Agregar Tesista","Permite agregar un nuevo tesista al trámite.",
+78,"Ampliación de Proyecto de Tesis","Permite solicitar una ampliación para el proyecto.",
+79,"Anulacion de Proyecto de Tesis","Permite anular el proyecto de tesis.",
+80,"Archivado por exceso de tiempo en bandeja de jurado","El proyecto es archivado por exceso de tiempo en la bandeja del jurado.",5
+81,"Archivamiento de proyecto por exceso de tiempo Director","El proyecto es archivado por exceso de tiempo en la bandeja del director.",3
+82,"Cambio de Asesor/Director","Permite solicitar un cambio de asesor o director.",
+83,"Cambio de Estado de Dictamen","Permite cambiar el estado del dictamen.",6
+84,"Cambio de Jurado","Permite solicitar un cambio de jurado.",
+85,"Cambio de Linea de Investigacion","Permite cambiar la línea de investigación del proyecto.",
+86,"Cambio de nombre de Tesista","Permite corregir o cambiar el nombre de un tesista.",
+87,"Cambio de Titulo de Proyecto de Tesis","Permite solicitar un cambio en el título del proyecto.",
+88,"Cambio de Titulo de Tesis","Permite solicitar un cambio en el título de la tesis.",15
+89,"Cancelacion de Proyecto","Permite cancelar el proyecto.",
+90,"Cancelación de Proyecto por Desaprobación","El proyecto es cancelado por desaprobación.",6
+91,"Carga de requisitos para habilitacion etapa borrador","El tesista carga los requisitos para habilitar la etapa de borrador.",8
+92,"Correcion de estado","Permite realizar una corrección de estado sobre el trámite.",
+93,"Correcion de Formato Borrador","Permite enviar a corrección el formato del borrador.",10
+94,"Correcion fecha acta de sustentacion","Permite corregir la fecha del acta de sustentación.",15
+95,"Docente renuncia a Tesis","Permite al docente renunciar a la asesoría de una tesis.",
+96,"Eliminacion de un Tesista","Permite eliminar un tesista del trámite.",
+97,"Habilitacion de tramite para Carga de correciones","Permite habilitar el trámite para la carga de correcciones.",5
+98,"Habilitacion Excepcional","Permite una habilitación excepcional del trámite.",
+99,"Inhabilitacion de Tesis por Plagio","Permite inhabilitar una tesis por plagio.",
+100,"Recepcion de ejemplares de borrador de tesis","Se recepcionan los ejemplares del borrador de tesis.",12
+101,"Rechazo del proyecto por el director","El director rechaza el proyecto.",3
+102,"Reconformación de Jurado","Permite solicitar la reconformación del jurado.",
+103,"Renuncia a Tramite","Permite al tesista renunciar a su trámite.",
+104,"Reprogramacion de Fecha de Sustentacion","Permite reprogramar la fecha de sustentación.",13
+105,"Restablecimiento de tramite","Permite restablecer un trámite.",
+106,"Retiro de coasesor externo","Permite retirar a un coasesor externo.",
+107,"Retorna Proyecto","Permite retornar el proyecto a un estado anterior.",
+108,"Retrocede Estado","Permite retroceder el estado del trámite.",
+109,"Solicitud de Sustentacion no presencial","Permite solicitar una sustentación no presencial.",13
+110,"Tramite archivado por exceso de tiempos de ejecucion","El trámite es archivado por exceder los tiempos de ejecución.",
+111,"Corrección de formato de proyecto de tesis","Permite enviar a corrección el formato del proyecto.",2
+112,"Publicar sustentación","Permite publicar la fecha y hora de la sustentación.",13
+113,"Cambio de estado de docente","Permite cambiar el estado de un docente.",
+114,"Validar linea docente","Permite validar la línea de investigación de un docente.",
+115,"Genero Acta de Exposición y Defensa","Permite generar el Acta de Exposición y Defensa de la tesis.",13
+116,"Registro coordinador","Un administrador registra a un nuevo coordinador en el sistema.",
+117,"Aceptacion del coordinador","El coordinador acepta el cargo asignado.",
+118,"Dimision del coordinador","El coordinador dimite de su cargo.",
+119,coasesor registrado,"Un registro nuevo de coasesor.",
+120,coasesor aceptado,"El coasesor acepta el cargo asignado.",
+121,coasesor rechazado,"El coasesor rechaza el cargo asignado.",

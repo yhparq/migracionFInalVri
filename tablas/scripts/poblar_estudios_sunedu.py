@@ -14,7 +14,8 @@ from db_connections import get_postgres_connection
 API_BASE_URL = "https://service7.unap.edu.pe/api/v1/sunedu/consulta/{dni}"
 API_TOKEN = "1|xrpNWzmI8EdDfvnKQpURERHiO4RraB4WmcIr810MjapBmmjXKWNGczJGTY"
 MAX_CONCURRENT_REQUESTS = 10  # Reducido para ser más cuidadoso con el API
-MAX_QUERIES = 800             # Límite de seguridad para no exceder 1000 consultas
+MAX_QUERIES = 900             # Límite para el siguiente lote
+OFFSET_QUERIES = 800          # Empezar después de los primeros 800
 BATCH_SIZE = 200              # Tamaño del lote para procesamiento
 DELAY_BETWEEN_BATCHES = 5     # Segundos de espera entre lotes
 
@@ -88,6 +89,13 @@ def populate_sunedu_data_directly():
         cur = conn.cursor()
         print("✅ Conectado a PostgreSQL.")
 
+        # --- SINCRONIZACIÓN DE SECUENCIAS ---
+        print("🔄 Sincronizando contadores de IDs...")
+        cur.execute("SELECT setval('tbl_estudios_id_seq1', (SELECT MAX(id) FROM tbl_estudios));")
+        cur.execute("SELECT setval('dic_universidades_id_seq', (SELECT MAX(id) FROM dic_universidades));")
+        conn.commit()
+        print("✅ Contadores de IDs sincronizados.")
+
         # 1. Pre-cargar diccionarios de la DB para mapeo rápido
         cur.execute("SELECT abreviatura, id FROM dic_grados_academicos")
         grados_map = {row[0]: row[1] for row in cur.fetchall()}
@@ -97,14 +105,16 @@ def populate_sunedu_data_directly():
         
         print(f"📚 Pre-cargados {len(grados_map)} grados académicos y {len(obtencion_map)} tipos de obtención.")
 
-        # 2. Obtener DNIs de DOCENTES, aplicando el límite de consultas
+        # 2. Obtener DNIs de DOCENTES, aplicando el límite y el offset
         cur.execute("""
             SELECT u.id, u.num_doc_identidad
             FROM tbl_usuarios u
             JOIN tbl_docentes d ON u.id = d.id_usuario
             WHERE LENGTH(TRIM(u.num_doc_identidad)) = 8
+            ORDER BY u.id
             LIMIT %s
-        """, (MAX_QUERIES,))
+            OFFSET %s
+        """, (MAX_QUERIES, OFFSET_QUERIES))
         users_to_process = cur.fetchall()
         
         if not users_to_process:

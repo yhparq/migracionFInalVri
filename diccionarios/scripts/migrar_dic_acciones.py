@@ -34,7 +34,7 @@ def migrate_dic_acciones_from_csv():
         
         with open(csv_file_path, 'r', encoding='utf-8') as f:
             # Las columnas en el CSV coinciden con la tabla de destino.
-            columns = ('id', 'nombre', 'descripcion', 'id_etapa_pertenencia', 'id_servicios')
+            columns = ('id', 'nombre', 'descripcion', 'id_etapa_pertenencia')
             sql_copy = f"COPY public.dic_acciones ({', '.join(columns)}) FROM STDIN WITH CSV HEADER DELIMITER ','"
             
             print("Iniciando carga masiva con COPY en PostgreSQL...")

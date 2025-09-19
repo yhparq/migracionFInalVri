@@ -37,6 +37,7 @@ from migrar_tbl_integrantes import migrate_tbl_integrantes
 from actualizar_sustentaciones import insertar_actas_de_sustentacion
 from migrar_tbl_tramites_metadatos import migrate_tbl_tramites_metadatos
 from migrar_tbl_archivos_tramites import migrate_tbl_archivos_tramites
+from migrar_tbl_programacion_sustentacion import migrate_tbl_programacion_sustentacion
 
 
 def clean_transactional_tables():
@@ -45,13 +46,13 @@ def clean_transactional_tables():
     ejecutando un TRUNCATE por cada tabla para mayor robustez.
     """
     print("--- Iniciando limpieza de tablas transaccionales ('tbl_*') ---")
-    
+
     pg_conn = None
     try:
         pg_conn = get_postgres_connection()
         if not pg_conn:
             raise Exception("No se pudo conectar a PostgreSQL.")
-        
+
         with pg_conn.cursor() as cursor:
             # 1. Obtener todos los nombres de tablas que empiezan con 'tbl_'
             print("  Obteniendo lista de tablas 'tbl_*'...")
@@ -61,7 +62,7 @@ def clean_transactional_tables():
                 WHERE table_schema = 'public' AND table_name LIKE 'tbl_%';
             """)
             tables = [row[0] for row in cursor.fetchall()]
-            
+
             if not tables:
                 print("  No se encontraron tablas 'tbl_*' para limpiar.")
                 return
@@ -93,13 +94,13 @@ def main():
     Orquesta la limpieza y ejecución de los scripts de migración para las tablas transaccionales.
     """
     print("--- INICIANDO PROCESO DE MIGRACIÓN DE TABLAS ---")
-    
+
     # 1. Limpiar las tablas transaccionales antes de empezar
     # clean_transactional_tables()
-    
+
     # 2. Ejecutar migraciones de tablas en el orden correcto
     print("\n--- Ejecutando scripts de migración de tablas ---")
-    
+
     # migrate_tbl_estructura_academica_from_csv()
     # migrate_usuarios_y_docentes_fast()
     # migrate_tbl_sublineas_vri_fast()
@@ -115,23 +116,35 @@ def main():
     # migrate_tbl_docentes_lineas_historial()
     # migrate_tbl_dictamenes_info()
     # migrate_tbl_dictamenes_sustentaciones()
-    # # insertar_actas_de_sustentacion()
+
+    # # insertar_actas_de_sustentacion() ----
+
     # migrar_tbl_coordinadores()
     # migrar_tbl_admins()
     # migrar_tbl_coordinador_carrera()
     # migrar_coordinadores_historial()
-    # populate_sunedu_data_directly()
-    # migrar_tbl_usuarios_servicios()
+
+
+    populate_sunedu_data_directly()
     # migrate_tbl_grado_docente()
+
     # migrate_perfil_investigador_from_csv()
     # migrate_coasesores()
     # migrar_tbl_coasesores_historial()
-    # migrar_log_acciones()
+    # migrar_tbl_usuarios_servicios()
     # migrate_tbl_integrantes()
+    # migrar_log_acciones()
     # migrate_tbl_tramites_metadatos()
-    migrate_tbl_archivos_tramites() 
-    
-    
+    # migrate_tbl_programacion_sustentacion()
+
+
+
+
+
+    # migrate_tbl_archivos_tramites()
+
+
+
     print("\n--- PROCESO DE MIGRACIÓN DE TABLAS FINALIZADO ---")
 
 if __name__ == '__main__':

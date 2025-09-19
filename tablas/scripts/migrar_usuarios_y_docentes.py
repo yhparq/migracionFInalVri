@@ -36,11 +36,16 @@ def migrate_usuarios_y_docentes_fast():
         existing_emails = {row[0] for row in postgres_cursor.fetchall()}
         print(f"Se encontraron {len(existing_emails)} correos existentes.")
 
-        # 3. Leer todos los docentes de MySQL
+        # 3. Leer todos los docentes y códigos AIRHS de MySQL
         print("Leyendo registros de tblDocentes desde MySQL...")
         mysql_cursor.execute("SELECT * FROM tblDocentes")
         docentes_records = mysql_cursor.fetchall()
         print(f"Se encontraron {len(docentes_records)} registros de docentes.")
+
+        print("Leyendo códigos AIRHS desde dicAIRHS...")
+        mysql_cursor.execute("SELECT NUM_DOC, AIRHS_CODPLAZA FROM dicAIRHS WHERE NUM_DOC IS NOT NULL AND AIRHS_CODPLAZA IS NOT NULL")
+        airhs_map = {row['NUM_DOC']: row['AIRHS_CODPLAZA'] for row in mysql_cursor.fetchall()}
+        print(f"Se cargaron {len(airhs_map)} mapeos de DNI a código AIRHS.")
 
         # --- ETAPA 1: MIGRAR A TBL_USUARIOS ---
         
@@ -65,7 +70,7 @@ def migrate_usuarios_y_docentes_fast():
             record['generated_email'] = email # Guardamos el email que se usará
             valid_docente_records.append(record)
 
-            usuarios_to_insert.append(( 
+            usuarios_to_insert.append((
                 record.get('Nombres'), record.get('Apellidos'), 'DNI', dni, email,
                 None, record.get('NroCelular'), None, record.get('Direccion'),
                 record.get('Sexo'), record.get('FechaNac'), record.get('Clave'),
@@ -103,9 +108,9 @@ def migrate_usuarios_y_docentes_fast():
         for record in valid_docente_records:
             new_user_id = user_map.get(record['generated_email'])
             if new_user_id:
-                codigo_airhs = record.get('CodAIRH')
-                if not codigo_airhs or not codigo_airhs.strip():
-                    codigo_airhs = 'S/C'
+                # Lógica mejorada para obtener el código AIRHS
+                dni = record.get('DNI')
+                codigo_airhs = airhs_map.get(dni, 'S/C')
 
                 id_especialidad = record.get('IdEspecialidad')
                 if not id_especialidad or id_especialidad == 0:
@@ -116,7 +121,7 @@ def migrate_usuarios_y_docentes_fast():
                 if not id_carrera or id_carrera == 0:
                     id_carrera = 1 # Usar 1 como valor por defecto
 
-                docentes_to_insert.append(( 
+                docentes_to_insert.append((
                     new_user_id,
                     record.get('IdCategoria'),
                     id_carrera,
@@ -125,7 +130,6 @@ def migrate_usuarios_y_docentes_fast():
                     1, # Se establece el estado a 1 (activo) por defecto
                     record.get('Id') # id_antiguo
                 ))
-
         if docentes_to_insert:
             print(f"Etapa 2: {len(docentes_to_insert)} registros de docentes para insertar.")
             buffer_docentes = io.StringIO()
